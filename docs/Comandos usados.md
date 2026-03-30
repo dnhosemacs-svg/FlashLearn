@@ -19,3 +19,8 @@ cd server
 npm init -y
 npm install express cors
 npm install -D typescript @types/express @types/cors @types/node tsx
+
+**Inicializar Git + first commit**
+git init
+git add .
+git commit -m "chore: inicializar FlashLearn con frontend y backend base"
