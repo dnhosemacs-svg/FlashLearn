@@ -12,3 +12,7 @@ Micro-app web de flashcards para repaso rapido (LocalStorage + API opcional).
 - `src/`: aplicacion frontend
 - `server/`: API backend
 - `docs/`: documentacion del proyecto
+
+## Gestion del proyecto
+
+- Tablero Trello: https://trello.com/b/YobbIEZR/flashlearn
