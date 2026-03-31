@@ -18,14 +18,18 @@ const cardVariants = cva('rounded-xl p-4', {
 
 interface CardProps extends UIContentProps, VariantProps<typeof cardVariants> {
   actions?: ReactNode
+  footer?: ReactNode
+  contentClassName?: string
 }
 
 export default function Card({
   title,
   description,
   actions,
+  footer,
   children,
   variant = 'default',
+  contentClassName = '',
   className = '',
 }: CardProps) {
   return (
@@ -39,7 +43,8 @@ export default function Card({
           {actions}
         </header>
       )}
-      {children && <section className="text-slate-200">{children}</section>}
+      {children && <section className={cn('text-slate-200', contentClassName)}>{children}</section>}
+      {footer && <footer className="mt-4 border-t border-slate-800 pt-3">{footer}</footer>}
     </article>
   )
 }
