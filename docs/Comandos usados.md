@@ -27,3 +27,9 @@ git commit -m "chore: inicializar FlashLearn con frontend y backend base"
 
 **Crear una rama de seguridad**
 git checkout -b chore/ui-cva-migration
+
+**Instalar deppendencias para variantes visuales con constantes compartidas y class-variance-authority**
+npm install class-variance-authority clsx tailwind-merge
+
+**Comprobar funcionamiento de la web**
+npm run build
