@@ -24,3 +24,6 @@ npm install -D typescript @types/express @types/cors @types/node tsx
 git init
 git add .
 git commit -m "chore: inicializar FlashLearn con frontend y backend base"
+
+**Crear una rama de seguridad**
+git checkout -b chore/ui-cva-migration
