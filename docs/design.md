@@ -272,6 +272,36 @@ Regla de oro: **negocio en servidor, experiencia en cliente**.
 
 ---
 
+## Diagrama de flujo de datos
+
+```mermaid
+flowchart LR
+  ui[Frontend React + TypeScript] --> hooks[Hooks de dominio y estado UI]
+  hooks --> state[Estados: loading / success / error]
+  hooks --> apiClient[API Client tipado src/api/client.ts]
+  apiClient --> expressApi[Backend Express /api/v1]
+  expressApi --> services[Capa de servicios]
+  services --> data[(Persistencia de negocio)]
+  data --> services
+  services --> expressApi
+  expressApi --> typedResponse[Response tipada]
+  typedResponse --> apiClient
+  apiClient --> hooks
+  hooks --> state
+  hooks --> ui
+```
+
+Flujo resumido:
+
+1. La UI dispara una accion (crear, editar, borrar, listar).
+2. Hooks de dominio orquestan estado local y llamada de red.
+3. El API client consume endpoints versionados `/api/v1`.
+4. Backend valida, aplica logica de negocio y persiste.
+5. El backend devuelve una response tipada al API client.
+6. Los hooks actualizan estados `loading/success/error` y la UI se re-renderiza.
+
+---
+
 ## Decisiones tomadas en esta fase
 
 - La UI se divide entre componentes base (`ui`) y componentes de dominio (`features`).
