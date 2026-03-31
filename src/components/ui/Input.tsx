@@ -1,5 +1,21 @@
-// src/components/ui/Input.tsx
 import type { InputHTMLAttributes } from 'react'
+import { cva } from 'class-variance-authority'
+import { cn } from '../../lib/cn'
+
+const inputVariants = cva(
+  'w-full rounded-md border bg-slate-900 px-3 py-2 text-slate-100 outline-none transition placeholder:text-slate-500',
+  {
+    variants: {
+      state: {
+        default: 'border-slate-700 focus:ring-2 focus:ring-indigo-500/70',
+        error: 'border-rose-500 focus:ring-2 focus:ring-rose-500/70',
+      },
+    },
+    defaultVariants: {
+      state: 'default',
+    },
+  },
+)
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -18,17 +34,10 @@ export default function Input({
   ...rest
 }: InputProps) {
   const messageId = id ? (error ? `${id}-error` : hint ? `${id}-hint` : undefined) : undefined
-  const inputClassName = [
-    'w-full rounded-md border bg-slate-900 px-3 py-2 text-slate-100 outline-none transition',
-    'placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-500/70',
-    error ? 'border-rose-500 focus:ring-rose-500/70' : 'border-slate-700',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ')
+  const inputClassName = cn(inputVariants({ state: error ? 'error' : 'default' }), className)
 
   return (
-    <div className={`space-y-1 ${containerClassName}`.trim()}>
+    <div className={cn('space-y-1', containerClassName)}>
       {label && (
         <label htmlFor={id} className="text-sm font-medium text-slate-200">
           {label}
