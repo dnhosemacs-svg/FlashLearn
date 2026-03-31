@@ -6,6 +6,17 @@ Definir una arquitectura simple, escalable y tipada para frontend y backend, emp
 
 ---
 
+## Guia rapida de lectura
+
+Si necesitas una vista rapida del documento, sigue este orden:
+
+1. `Decisiones tecnicas (resumen)` para entender el marco general.
+2. `Estrategia de estado` + `Persistencia cliente/servidor` para saber donde vive cada dato.
+3. `Reglas de sincronizacion` + `Diagrama de flujo de datos` para implementar sin inconsistencias.
+4. `Convenciones de carpetas y tipos` para mantener coherencia en nuevos archivos.
+
+---
+
 ## Mapa de componentes (frontend)
 
 ### Layout y navegación
@@ -302,8 +313,66 @@ Flujo resumido:
 
 ---
 
-## Decisiones tomadas en esta fase
+## Decisiones tecnicas (resumen)
 
-- La UI se divide entre componentes base (`ui`) y componentes de dominio (`features`).
-- Las páginas solo orquestan componentes; no concentran toda la lógica.
-- Se prepara la app para migrar de LocalStorage a API sin rehacer la interfaz.
+- **Frontend**: React + TypeScript + Vite para iteracion rapida, tipado y build simple.
+- **Estilos**: Tailwind CSS con componentes UI reutilizables y variantes (`cva + cn`).
+- **Routing**: React Router con layout principal y rutas anidadas.
+- **Backend**: Express + TypeScript por simplicidad y control total del contrato REST.
+- **Contrato API**: versionado en `/api/v1` con respuestas tipadas y codigos HTTP estandar.
+- **Arquitectura frontend**: separacion entre `ui`, `features`, `pages`, `hooks`, `api`, `types`.
+- **Fuente de verdad**: datos de negocio en servidor; cliente para estado de presentacion.
+- **Separacion de responsabilidades**: las paginas orquestan, los componentes `ui` son agnosticos y `features` contienen dominio.
+- **Estrategia de migracion**: se puede prototipar con mocks, pero el objetivo final es servidor como fuente canonica.
+
+---
+
+## Trade-offs y decisiones de compromiso
+
+- **Express sin framework opinionado**:
+  - ventaja: menos complejidad inicial, curva suave
+  - coste: mas convenciones manuales y disciplina de capas
+- **Sin base de datos en esta fase**:
+  - ventaja: velocidad para validar flujo y contrato
+  - coste: persistencia temporal y menor realismo productivo
+- **Componentes propios vs libreria UI completa**:
+  - ventaja: control visual y aprendizaje del dominio
+  - coste: mas trabajo de mantenimiento de estilos
+- **`cva + cn` en vez de clases sueltas**:
+  - ventaja: variantes consistentes y escalables
+  - coste: dependencia adicional y curva inicial minima
+- **Sin cache avanzada de server state aun**:
+  - ventaja: arquitectura facil de entender en primeras iteraciones
+  - coste: mas trabajo futuro al escalar sincronizacion y revalidacion
+
+---
+
+## Convenciones de carpetas y tipos
+
+### Convenciones de carpetas
+
+- `src/components/ui`: componentes base reutilizables y agnosticos de negocio.
+- `src/components/features/<dominio>`: componentes con conocimiento del dominio.
+- `src/pages`: composicion de pantallas y rutas.
+- `src/hooks`: hooks de dominio y hooks de UI.
+- `src/api`: cliente HTTP tipado y funciones de acceso a backend.
+- `src/types`: contratos de dominio, API y props compartidas.
+- `server/src/routes|controllers|services|config`: separacion por capas en backend.
+
+### Convenciones de nombres
+
+- Componentes en **PascalCase** (`CollectionItem.tsx`).
+- Hooks en **camelCase** con prefijo `use` (`useCollections.ts`).
+- Tipos/interfaces de dominio en `src/types` con nombres claros (`Collection`, `Flashcard`).
+- DTOs con sufijo `Dto` (`CreateCollectionDto`, `UpdateFlashcardDto`).
+- Archivos de API por recurso (`collections.api.ts`, `flashcards.api.ts`) cuando crezca la capa de red.
+
+### Convenciones de tipos
+
+- Evitar `any`; preferir tipos explicitos y unions controladas.
+- Separar tipo de dominio (entidad persistida) de tipo de formulario (entrada parcial).
+- Fechas en formato ISO string en contrato API.
+- IDs como `string` en frontend y backend para evitar acoplar formato interno.
+- Respuesta estandar:
+  - exito: `{ ok: true, data: ... }`
+  - error: `{ ok: false, error: { code, message } }`
