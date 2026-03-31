@@ -185,6 +185,93 @@ No guardar como fuente principal:
 
 ---
 
+## Persistencia cliente/servidor
+
+### Fuente de verdad
+
+- **Servidor (backend API)**: fuente de verdad unica para datos de negocio (`collections`, `flashcards`).
+- **Cliente (frontend)**: estado transitorio de presentacion y experiencia de usuario.
+
+### Responsabilidades por capa
+
+- Backend:
+  - persistir entidades de dominio
+  - validar entrada y reglas de negocio
+  - devolver respuestas estandarizadas
+- Frontend:
+  - renderizar estado de red (`loading`, `error`, `data`)
+  - manejar interacciones de UI (formularios, modales, filtros)
+  - no guardar entidades canonicas como origen principal
+
+### Uso permitido de localStorage
+
+`localStorage` se permite solo para preferencias de UI:
+
+- ultima coleccion abierta
+- configuracion de estudio (por ejemplo barajar)
+- flags de experiencia (por ejemplo onboarding visto)
+
+No usar `localStorage` como fuente principal de:
+
+- colecciones
+- flashcards
+
+### Estrategia de transicion (estado actual del proyecto)
+
+- En desarrollo temprano se pueden usar mocks en memoria para avanzar la UI.
+- Al conectar `src/api/client.ts`, se migra progresivamente cada feature a datos remotos.
+- La definicion final se mantiene: negocio en servidor, estado de UI en cliente.
+
+---
+
+## Reglas de sincronizacion
+
+### Flujo obligatorio de escritura (create/update/delete)
+
+1. La UI dispara una accion de usuario (submit, editar, borrar).
+2. El frontend llama al backend mediante `src/api/client.ts`.
+3. Solo si el backend confirma exito, se actualiza el estado mostrado en pantalla.
+4. Si falla, no se consolida el cambio y se muestra feedback de error.
+
+Regla clave: **no confirmar cambios de negocio de forma definitiva en cliente sin confirmacion del servidor**.
+
+### Flujo de lectura
+
+1. Al entrar a una vista, el frontend solicita datos al backend.
+2. Mientras llega la respuesta, mostrar estado `loading`.
+3. Si hay error, mostrar estado `error` recuperable.
+4. Si hay datos, renderizar `data` recibida como fuente actual.
+
+### Revalidacion y consistencia
+
+- Despues de operaciones mutantes (`POST`, `PATCH`, `DELETE`), refrescar la vista afectada o actualizar cache local con la respuesta del servidor.
+- Evitar que dos fuentes compitan por el mismo dato (por ejemplo API y localStorage para colecciones).
+- Si hay discrepancia entre cliente y servidor, prevalece el servidor.
+
+### Reglas de IDs y timestamps
+
+- `id`, `createdAt` y `updatedAt` los determina el servidor.
+- El cliente no inventa IDs canonicos para persistencia final.
+
+---
+
+## Que vive en cliente y que vive en servidor
+
+| Tipo de dato | Vive en cliente | Vive en servidor |
+|---|---|---|
+| Colecciones (`collections`) | no (solo copia temporal para render) | si (fuente de verdad) |
+| Tarjetas (`flashcards`) | no (solo copia temporal para render) | si (fuente de verdad) |
+| Resultado CRUD de negocio | no permanente | si |
+| Estado de formulario en curso | si | no |
+| Modal abierto/cerrado | si | no |
+| Filtros/sort de visualizacion | si | no (salvo que se quiera persistir preferencia) |
+| Preferencias de UX (tema, onboarding, ultima vista) | si (`localStorage`) | no |
+| Errores de validacion de dominio | se muestran en UI | se originan y validan en servidor |
+
+Regla de oro: **negocio en servidor, experiencia en cliente**.
+
+---
+
 ## Decisiones tomadas en esta fase
 
 - La UI se divide entre componentes base (`ui`) y componentes de dominio (`features`).
