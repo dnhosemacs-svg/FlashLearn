@@ -21,6 +21,7 @@ Este documento describe los componentes actuales del proyecto, sus props princip
 | `FlashcardForm` | Feature (`flashcards`) | Crear flashcards con validacion de pregunta/respuesta | `src/components/features/flashcards/FlashcardForm.tsx` |
 | `FlashcardItem` | Feature (`flashcards`) | Render de flashcard con tags y acciones | `src/components/features/flashcards/FlashcardItem.tsx` |
 | `FlashcardList` | Feature (`flashcards`) | Listado de flashcards + estado vacio | `src/components/features/flashcards/FlashcardList.tsx` |
+| `StudyCard` | Feature (`study`) | Tarjeta activa de estudio (pregunta/respuesta) | `src/components/features/study/StudyCard.tsx` |
 | `StudyControls` | Feature (`study`) | Controles de sesion de estudio (anterior/siguiente/revelar/barajar) | `src/components/features/study/StudyControls.tsx` |
 
 ---
@@ -247,6 +248,19 @@ Ejemplo:
 />
 ```
 
+#### `StudyCard`
+
+Props clave:
+
+- `flashcard: Flashcard`
+- `isRevealed: boolean`
+
+Ejemplo:
+
+```tsx
+<StudyCard flashcard={currentFlashcard} isRevealed={isRevealed} />
+```
+
 ---
 
 ## Casos de reutilizacion
@@ -267,13 +281,17 @@ Ejemplo:
   - lista de colecciones vacia
   - lista de flashcards vacia
   - fallback por URL invalida
+  - vista de estudio sin tarjetas
+- `StudyCard`:
+  - sesion de estudio en `StudyPage`
+- `StudyControls`:
+  - sesion de estudio en `StudyPage`
 
 ### Reutilizacion prevista en siguientes pasos
 
 - `Modal` para confirmacion de borrado y edicion rapida.
 - `Badge` para tags de flashcards y estados de estudio.
 - `Spinner` para estados `loading` al conectar backend/API.
-- `StudyControls` para `StudyPage` con navegacion de sesion real.
 
 ---
 
@@ -283,3 +301,4 @@ Ejemplo:
 - Si depende del dominio (colecciones/tarjetas), ubicarlo en `features`.
 - Si no depende del dominio, ubicarlo en `ui`.
 - Mantener props tipadas y nombres consistentes con `src/types`.
+- Preferir componentes "controlados por props" para mantener UI desacoplada de la logica de pagina.
