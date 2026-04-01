@@ -1,6 +1,7 @@
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import type { Collection } from '../../../types/domain'
+import { Link } from 'react-router-dom'
 
 interface CollectionItemProps {
   collection: Collection
@@ -19,6 +20,12 @@ export default function CollectionItem({
       description={collection.description || 'Sin descripcion'}
       actions={
         <div className="flex gap-2">
+          <Link to={`/collections/${collection.id}`}>
+            <Button variant="secondary" size="sm">
+              Abrir
+              </Button>
+          </Link>
+
           <Button variant="ghost" size="sm" onClick={() => onEdit(collection.id)}>
             Editar
           </Button>

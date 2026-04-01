@@ -7,6 +7,7 @@ import CollectionsPage from './pages/CollectionsPage.tsx'
 import HomePage from './pages/HomePage.tsx'
 import NotFoundPage from './pages/NotFoundPage.tsx'
 import StudyPage from './pages/StudyPage.tsx'
+import CollectionDetailPage from './pages/CollectionDetailPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="study" element={<StudyPage />} />
           <Route path="home" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="collections/:collectionId" element={<CollectionDetailPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
