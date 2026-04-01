@@ -19,17 +19,27 @@ export default function CollectionItem({
       title={collection.name}
       description={collection.description || 'Sin descripcion'}
       actions={
-        <div className="flex gap-2">
-          <Link to={`/collections/${collection.id}`}>
-            <Button variant="secondary" size="sm">
+        <div className="flex flex-wrap justify-end gap-2">
+          <Link to={`/collections/${collection.id}`} className="w-full sm:w-auto">
+            <Button variant="secondary" size="sm" className="w-full sm:w-auto">
               Abrir
-              </Button>
+            </Button>
           </Link>
 
-          <Button variant="ghost" size="sm" onClick={() => onEdit(collection.id)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full sm:w-auto"
+            onClick={() => onEdit(collection.id)}
+          >
             Editar
           </Button>
-          <Button variant="danger" size="sm" onClick={() => onDelete(collection.id)}>
+          <Button
+            variant="danger"
+            size="sm"
+            className="w-full sm:w-auto"
+            onClick={() => onDelete(collection.id)}
+          >
             Borrar
           </Button>
         </div>

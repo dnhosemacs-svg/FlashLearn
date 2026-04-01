@@ -1,18 +1,11 @@
 import { useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
-import Badge from '../components/ui/Badge'
-import Button from '../components/ui/Button'
-import Card from '../components/ui/Card'
-import Modal from '../components/ui/Modal'
-import Spinner from '../components/ui/Spinner'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
 
 export default function CollectionsPage() {
   const [collections, setCollections] = useState<Collection[]>([])
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false)
-  const [isSimulating, setIsSimulating] = useState(false)
 
   const handleCreateCollection = (data: CreateCollectionInput) => {
     const now = new Date().toISOString()
@@ -63,87 +56,34 @@ export default function CollectionsPage() {
     (collection) => collection.id === editingCollectionId,
   )
 
-  const handleRunSimulation = () => {
-    setIsSimulating(true)
-    window.setTimeout(() => {
-      setIsSimulating(false)
-    }, 1200)
-  }
-
   return (
     <main className="page-shell">
       <h1 className="page-title">Colecciones</h1>
       <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
 
       <section className="section-stack">
-        <Card
-          title="Demo UI: Modal + Badge + Spinner"
-          description="Bloque de prueba visual para componentes base reutilizables."
-          variant="bordered"
-          footer={
-            <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" onClick={() => setIsDemoModalOpen(true)}>
-                Abrir modal
-              </Button>
-              <Button variant="ghost" onClick={handleRunSimulation} isLoading={isSimulating}>
-                Simular carga
-              </Button>
-            </div>
-          }
-        >
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge label="default" />
-            <Badge label="info" variant="info" />
-            <Badge label="success" variant="success" />
-            <Badge label="warning" variant="warning" />
-            <Badge label="danger" variant="danger" />
-          </div>
-          {isSimulating && (
-            <div className="mt-4">
-              <Spinner size="sm" label="Procesando demo" />
-            </div>
+        <div className="card-grid-2">
+          {editingCollection ? (
+            <CollectionForm
+              mode="edit"
+              initialValues={{
+                name: editingCollection.name,
+                description: editingCollection.description,
+              }}
+              submitLabel="Guardar cambios"
+              onSubmit={handleUpdateCollection}
+              onCancel={handleCancelEdit}
+            />
+          ) : (
+            <CollectionForm onSubmit={handleCreateCollection} />
           )}
-        </Card>
-
-        {editingCollection ? (
-          <CollectionForm
-            mode="edit"
-            initialValues={{
-              name: editingCollection.name,
-              description: editingCollection.description,
-            }}
-            submitLabel="Guardar cambios"
-            onSubmit={handleUpdateCollection}
-            onCancel={handleCancelEdit}
+          <CollectionList
+            collections={collections}
+            onEditCollection={handleEditCollection}
+            onDeleteCollection={handleDeleteCollection}
           />
-        ) : (
-          <CollectionForm onSubmit={handleCreateCollection} />
-        )}
-        <CollectionList
-          collections={collections}
-          onEditCollection={handleEditCollection}
-          onDeleteCollection={handleDeleteCollection}
-        />
+        </div>
       </section>
-
-      <Modal
-        open={isDemoModalOpen}
-        onClose={() => setIsDemoModalOpen(false)}
-        title="Demo del componente Modal"
-        description="Este modal valida apertura, cierre y estructura reutilizable."
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setIsDemoModalOpen(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={() => setIsDemoModalOpen(false)}>Confirmar</Button>
-          </>
-        }
-      >
-        <p className="text-sm text-slate-300">
-          Puedes cerrarlo con el backdrop, con la tecla Escape o con los botones del footer.
-        </p>
-      </Modal>
     </main>
   )
 }
