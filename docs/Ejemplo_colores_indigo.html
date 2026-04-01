@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcards de Estudio</title>
+    <script>
+      window.tailwind = window.tailwind || {}
+      window.tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body id="page-body" class="bg-[#f1f5f9] text-[#1e293b] transition-colors">
+    <main id="page-main" class="min-h-screen p-4 md:p-8 space-y-6 bg-[#f1f5f9]">
+      <header class="space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h1 id="title" class="text-3xl font-bold text-[#3730a3]">Flashcards de Estudio</h1>
+          <button
+            id="theme-toggle"
+            type="button"
+            class="rounded-md bg-[#8b5cf6] px-4 py-2 text-sm font-medium text-white hover:bg-[#7c3aed]"
+          >
+            Cambiar a modo oscuro
+          </button>
+        </div>
+        <p id="subtitle" class="text-[#475569]">
+          Diseña, estudia y repasa tus flashcards de forma sencilla y efectiva.
+        </p>
+      </header>
+
+      <section class="grid gap-4 lg:gap-6 md:grid-cols-2">
+        <article class="theme-card rounded-xl border border-[#a5b4fc] bg-[#e0e7ff] p-4 space-y-4 shadow-sm shadow-indigo-200/40">
+          <h2 class="theme-heading text-2xl font-bold text-[#312e81]">Card A</h2>
+          <p class="theme-text text-[#334155]">
+            Texto secundario para comprobar contraste y legibilidad en diferentes tamaños de pantalla.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button class="theme-primary rounded-md bg-[#6366f1] px-4 py-2 text-sm font-medium text-white hover:bg-[#5856eb]">
+              Acción primaria
+            </button>
+            <button class="theme-secondary rounded-md bg-[#8b5cf6] px-4 py-2 text-sm font-medium text-white hover:bg-[#7c3aed]">
+              Acción secundaria
+            </button>
+          </div>
+        </article>
+
+        <article class="theme-card rounded-xl border border-[#a5b4fc] bg-[#e0e7ff] p-4 space-y-4 shadow-sm shadow-indigo-200/40">
+          <h2 class="theme-heading text-2xl font-bold text-[#312e81]">Card B</h2>
+          <p class="theme-text text-[#334155]">
+            Revisa cómo se comporta el gap entre cards en móvil (`gap-4`) y desktop (`lg:gap-6`).
+          </p>
+          <ul class="theme-text space-y-2 text-sm text-[#334155]">
+            <li class="theme-list-item rounded-md bg-[#c7d2fe] p-3">Elemento 1</li>
+            <li class="theme-list-item rounded-md bg-[#c7d2fe] p-3">Elemento 2</li>
+            <li class="theme-list-item rounded-md bg-[#c7d2fe] p-3">Elemento 3</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+    <script>
+      const toggleButton = document.getElementById('theme-toggle')
+      const body = document.getElementById('page-body')
+      const main = document.getElementById('page-main')
+      const title = document.getElementById('title')
+      const subtitle = document.getElementById('subtitle')
+      const cards = Array.from(document.querySelectorAll('.theme-card'))
+      const headings = Array.from(document.querySelectorAll('.theme-heading'))
+      const texts = Array.from(document.querySelectorAll('.theme-text'))
+      const listItems = Array.from(document.querySelectorAll('.theme-list-item'))
+      const primaryButtons = Array.from(document.querySelectorAll('.theme-primary'))
+      const secondaryButtons = Array.from(document.querySelectorAll('.theme-secondary'))
+      let isDark = false
+
+      function applyTheme() {
+        if (isDark) {
+          body.className = 'bg-[#1e1b4b] text-white transition-colors'
+          main.className = 'min-h-screen p-4 md:p-8 space-y-6 bg-[#1e1b4b]'
+          title.className = 'text-3xl font-bold text-[#c7d2fe]'
+          subtitle.className = 'text-[#c7d2fe]'
+          toggleButton.className =
+            'rounded-md bg-[#5b21b6] px-4 py-2 text-sm font-medium text-white hover:bg-[#4c1d95]'
+          cards.forEach((c) => (c.className = 'theme-card rounded-xl border border-[#4338ca] bg-[#312e81] p-4 space-y-4'))
+          headings.forEach((h) => (h.className = 'theme-heading text-2xl font-bold text-[#e0e7ff]'))
+          texts.forEach((t) => {
+            const isListText = t.className.includes('text-sm')
+            t.className = isListText
+              ? 'theme-text space-y-2 text-sm text-[#a5b4fc]'
+              : 'theme-text text-[#a5b4fc]'
+          })
+          listItems.forEach((li) => (li.className = 'theme-list-item rounded-md bg-[#4338ca] p-3 text-[#e0e7ff]'))
+          primaryButtons.forEach((b) => (b.className = 'theme-primary rounded-md bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#6d28d9]'))
+          secondaryButtons.forEach((b) => (b.className = 'theme-secondary rounded-md bg-[#5b21b6] px-4 py-2 text-sm font-medium text-white hover:bg-[#4c1d95]'))
+        } else {
+          body.className = 'bg-[#f1f5f9] text-[#1e293b] transition-colors'
+          main.className = 'min-h-screen p-4 md:p-8 space-y-6 bg-[#f1f5f9]'
+          title.className = 'text-3xl font-bold text-[#3730a3]'
+          subtitle.className = 'text-[#475569]'
+          toggleButton.className =
+            'rounded-md bg-[#8b5cf6] px-4 py-2 text-sm font-medium text-white hover:bg-[#7c3aed]'
+          cards.forEach((c) => (c.className = 'theme-card rounded-xl border border-[#a5b4fc] bg-[#e0e7ff] p-4 space-y-4 shadow-sm shadow-indigo-200/40'))
+          headings.forEach((h) => (h.className = 'theme-heading text-2xl font-bold text-[#312e81]'))
+          texts.forEach((t) => {
+            const isListText = t.className.includes('text-sm')
+            t.className = isListText
+              ? 'theme-text space-y-2 text-sm text-[#334155]'
+              : 'theme-text text-[#334155]'
+          })
+          listItems.forEach((li) => (li.className = 'theme-list-item rounded-md bg-[#c7d2fe] p-3 text-[#1e293b]'))
+          primaryButtons.forEach((b) => (b.className = 'theme-primary rounded-md bg-[#6366f1] px-4 py-2 text-sm font-medium text-white hover:bg-[#5856eb]'))
+          secondaryButtons.forEach((b) => (b.className = 'theme-secondary rounded-md bg-[#8b5cf6] px-4 py-2 text-sm font-medium text-white hover:bg-[#7c3aed]'))
+        }
+
+        toggleButton.textContent = isDark
+          ? 'Cambiar a modo claro'
+          : 'Cambiar a modo oscuro'
+      }
+
+      toggleButton.addEventListener('click', () => {
+        isDark = !isDark
+        applyTheme()
+      })
+
+      applyTheme()
+    </script>
+  </body>
+</html>
