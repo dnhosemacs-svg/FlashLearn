@@ -1,11 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
 
+const COLLECTIONS_STORAGE_KEY = 'flashlearn.collections'
+
+function loadStoredCollections(): Collection[] {
+  const stored = localStorage.getItem(COLLECTIONS_STORAGE_KEY)
+  if (!stored) return []
+
+  try {
+    const parsed = JSON.parse(stored)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
 export default function CollectionsPage() {
-  const [collections, setCollections] = useState<Collection[]>([])
+  const [collections, setCollections] = useState<Collection[]>(loadStoredCollections)
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
+
+  useEffect(() => {
+    localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
+  }, [collections])
 
   const handleCreateCollection = (data: CreateCollectionInput) => {
     const now = new Date().toISOString()

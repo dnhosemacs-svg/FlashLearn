@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
@@ -7,9 +7,32 @@ import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
 import type { CreateFlashcardInput, Flashcard } from '../types/domain'
 
+const FLASHCARDS_STORAGE_KEY = 'flashlearn.flashcards'
+
+function loadStoredFlashcards(): Flashcard[] {
+  const stored = localStorage.getItem(FLASHCARDS_STORAGE_KEY)
+  if (!stored) return []
+
+  try {
+    const parsed = JSON.parse(stored)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
-  const [flashcards, setFlashcards] = useState<Flashcard[]>([])
+  const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>(loadStoredFlashcards)
+
+  const flashcards = useMemo(
+    () => allFlashcards.filter((card) => card.collectionId === collectionId),
+    [allFlashcards, collectionId],
+  )
+
+  useEffect(() => {
+    localStorage.setItem(FLASHCARDS_STORAGE_KEY, JSON.stringify(allFlashcards))
+  }, [allFlashcards])
 
   const handleCreateFlashcard = (data: CreateFlashcardInput) => {
     if (!collectionId) return
@@ -25,11 +48,11 @@ export default function CollectionDetailPage() {
       updatedAt: now,
     }
   
-    setFlashcards((prev) => [newFlashcard, ...prev])
+    setAllFlashcards((prev) => [newFlashcard, ...prev])
   }
   
   const handleDeleteFlashcard = (flashcardId: string) => {
-    setFlashcards((prev) => prev.filter((card) => card.id !== flashcardId))
+    setAllFlashcards((prev) => prev.filter((card) => card.id !== flashcardId))
   }
   
   const handleEditFlashcard = (flashcardId: string) => {
