@@ -21,7 +21,7 @@ interface SpinnerProps extends VariantProps<typeof spinnerVariants> {
 
 export default function Spinner({ size, className, label = 'Cargando' }: SpinnerProps) {
   return (
-    <span className="inline-flex items-center gap-2 text-slate-300" role="status" aria-live="polite">
+    <span className="inline-flex items-center gap-2 text-indigo-700" role="status" aria-live="polite">
       <span className={cn(spinnerVariants({ size }), className)} aria-hidden="true" />
       <span className="text-sm">{label}...</span>
     </span>

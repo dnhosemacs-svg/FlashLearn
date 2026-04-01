@@ -38,7 +38,7 @@ export default function CollectionDetailPage() {
 
   if (!collectionId) {
     return (
-      <main className="min-h-screen p-8">
+      <main className="page-shell">
         <EmptyState
           title="Colección no válida"
           description="No se encontró un identificador de colección en la URL."
@@ -53,18 +53,18 @@ export default function CollectionDetailPage() {
   }
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="mb-6 flex items-center justify-between gap-3">
+    <main className="page-shell">
+      <div className="page-header">
         <div>
-          <h1 className="text-3xl font-bold">Detalle de colección</h1>
-          <p className="mt-2 text-slate-300">ID: {collectionId}</p>
+          <h1 className="page-title">Detalle de colección</h1>
+          <p className="page-subtitle">ID: {collectionId}</p>
         </div>
         <Link to="/collections">
           <Button variant="ghost">Volver</Button>
         </Link>
       </div>
 
-      <section className="grid gap-6 lg:grid-cols-2">
+      <section className="card-grid-2">
         <FlashcardForm onSubmit={handleCreateFlashcard} />
 
         <Card

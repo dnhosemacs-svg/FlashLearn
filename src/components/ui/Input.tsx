@@ -3,11 +3,11 @@ import { cva } from 'class-variance-authority'
 import { cn } from '../../lib/cn'
 
 const inputVariants = cva(
-  'w-full rounded-md border bg-slate-900 px-3 py-2 text-slate-100 outline-none transition placeholder:text-slate-500',
+  'w-full rounded-md border bg-white px-3 py-2 text-slate-800 outline-none transition placeholder:text-slate-500',
   {
     variants: {
       state: {
-        default: 'border-slate-700 focus:ring-2 focus:ring-indigo-500/70',
+        default: 'border-indigo-200 focus:ring-2 focus:ring-indigo-500/70',
         error: 'border-rose-500 focus:ring-2 focus:ring-rose-500/70',
       },
     },
@@ -39,7 +39,7 @@ export default function Input({
   return (
     <div className={cn('space-y-1', containerClassName)}>
       {label && (
-        <label htmlFor={id} className="text-sm font-medium text-slate-200">
+        <label htmlFor={id} className="text-sm font-medium text-indigo-900">
           {label}
         </label>
       )}
@@ -55,7 +55,7 @@ export default function Input({
           {error}
         </p>
       ) : hint ? (
-        <p id={messageId} className="text-sm text-slate-400">
+        <p id={messageId} className="text-sm text-slate-600">
           {hint}
         </p>
       ) : null}

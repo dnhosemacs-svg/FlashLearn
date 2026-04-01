@@ -1,8 +1,8 @@
 export default function StudyPage() {
-    return (
-      <main className="min-h-screen p-8">
-        <h1 className="text-3xl font-bold">Estudio</h1>
-        <p className="mt-2 text-slate-300">Modo estudio</p>
-      </main>
-    )
-  }
+  return (
+    <main className="page-shell">
+      <h1 className="page-title">Estudio</h1>
+      <p className="page-subtitle">Modo estudio</p>
+    </main>
+  )
+}

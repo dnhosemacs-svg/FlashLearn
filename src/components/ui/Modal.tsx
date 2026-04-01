@@ -41,7 +41,7 @@ export default function Modal({
       <button
         type="button"
         aria-label="Cerrar modal"
-        className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-indigo-950/40 backdrop-blur-sm"
         onClick={() => {
           if (closeOnBackdrop) onClose()
         }}
@@ -52,18 +52,18 @@ export default function Modal({
         aria-modal="true"
         aria-label={title ?? 'Dialogo'}
         className={cn(
-          'relative z-10 w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-xl shadow-black/30',
+          'relative z-10 w-full max-w-lg rounded-xl border border-indigo-300 bg-indigo-50 p-5 shadow-xl shadow-indigo-200/40',
           className,
         )}
       >
         {(title || description) && (
           <header className="mb-4">
-            {title && <h3 className="text-lg font-semibold text-slate-100">{title}</h3>}
-            {description && <p className="mt-1 text-sm text-slate-400">{description}</p>}
+            {title && <h3 className="text-lg font-semibold text-indigo-900">{title}</h3>}
+            {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
           </header>
         )}
 
-        <div className="text-slate-200">{children}</div>
+        <div className="text-slate-700">{children}</div>
 
         <footer className="mt-5 flex flex-wrap justify-end gap-2">
           {footer ?? (

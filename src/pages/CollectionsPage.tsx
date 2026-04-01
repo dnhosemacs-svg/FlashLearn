@@ -71,11 +71,11 @@ export default function CollectionsPage() {
   }
 
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold">Colecciones</h1>
-      <p className="mt-2 text-slate-300">Crea y administra tus colecciones de estudio</p>
+    <main className="page-shell">
+      <h1 className="page-title">Colecciones</h1>
+      <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
 
-      <section className="mt-8 space-y-6">
+      <section className="section-stack">
         <Card
           title="Demo UI: Modal + Badge + Spinner"
           description="Bloque de prueba visual para componentes base reutilizables."

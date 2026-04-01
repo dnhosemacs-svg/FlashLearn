@@ -12,8 +12,8 @@ body,
 
 body {
   margin: 0;
-  background-color: #020617;
-  color: #f1f5f9;
+  background-color: #f1f5f9;
+  color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -33,7 +33,37 @@ h2,
 h3,
 h4 {
   margin: 0;
-  color: #f8fafc;
+  color: #3730a3;
   font-weight: 600;
   letter-spacing: -0.02em;
+}
+
+@layer components {
+  .page-shell {
+    @apply min-h-screen p-4 md:p-8;
+  }
+
+  .page-header {
+    @apply mb-6 flex items-center justify-between gap-3;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold;
+  }
+
+  .page-subtitle {
+    @apply mt-2 text-slate-600;
+  }
+
+  .section-stack {
+    @apply mt-8 space-y-6;
+  }
+
+  .card-grid-2 {
+    @apply grid gap-4 lg:grid-cols-2 lg:gap-6;
+  }
+
+  .text-muted {
+    @apply text-sm text-slate-600;
+  }
 }
