@@ -23,7 +23,7 @@ function loadStoredFlashcards(): Flashcard[] {
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
-  const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>(loadStoredFlashcards)
+  const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>([])
   const [searchQuery, setSearchQuery] = useState('')
 
   const flashcards = useMemo(
@@ -50,8 +50,16 @@ export default function CollectionDetailPage() {
   }, [flashcards, normalizedQuery])
 
   useEffect(() => {
+    setAllFlashcards(loadStoredFlashcards())
+  }, [])
+
+  useEffect(() => {
     localStorage.setItem(FLASHCARDS_STORAGE_KEY, JSON.stringify(allFlashcards))
   }, [allFlashcards])
+
+  useEffect(() => {
+    setSearchQuery('')
+  }, [collectionId])
 
   const handleCreateFlashcard = (data: CreateFlashcardInput) => {
     if (!collectionId) return

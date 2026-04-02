@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import StudyCard from '../components/features/study/StudyCard'
 import StudyControls from '../components/features/study/StudyControls'
 import EmptyState from '../components/ui/EmptyState'
@@ -28,14 +28,39 @@ function shuffleArray<T>(items: T[]) {
 }
 
 export default function StudyPage() {
-  const [flashcards, setFlashcards] = useState<Flashcard[]>(loadStoredFlashcards)
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isRevealed, setIsRevealed] = useState(false)
-
   const currentFlashcard = useMemo(
     () => flashcards[currentIndex],
     [flashcards, currentIndex],
   )
+
+  useEffect(() => {
+    setFlashcards(loadStoredFlashcards())
+  }, [])
+
+  useEffect(() => {
+    const handleFocus = () => {
+      setFlashcards(loadStoredFlashcards())
+    }
+  
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [])
+
+  useEffect(() => {
+    if (flashcards.length === 0) {
+      setCurrentIndex(0)
+      setIsRevealed(false)
+      return
+    }
+  
+    if (currentIndex > flashcards.length - 1) {
+      setCurrentIndex(flashcards.length - 1)
+      setIsRevealed(false)
+    }
+  }, [flashcards, currentIndex])
 
   const handlePrev = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0))

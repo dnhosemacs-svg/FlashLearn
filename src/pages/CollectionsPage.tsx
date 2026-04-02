@@ -20,11 +20,15 @@ function loadStoredCollections(): Collection[] {
 }
 
 export default function CollectionsPage() {
-  const [collections, setCollections] = useState<Collection[]>(loadStoredCollections)
+  const [collections, setCollections] = useState<Collection[]>([])
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    setCollections(loadStoredCollections())
+  }, [])
 
   useEffect(() => {
     localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
