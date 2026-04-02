@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
+import Button from '../components/ui/Button'
+import Modal from '../components/ui/Modal'
 
 const COLLECTIONS_STORAGE_KEY = 'flashlearn.collections'
 
@@ -20,6 +22,8 @@ function loadStoredCollections(): Collection[] {
 export default function CollectionsPage() {
   const [collections, setCollections] = useState<Collection[]>(loadStoredCollections)
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
 
   useEffect(() => {
     localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
@@ -39,10 +43,8 @@ export default function CollectionsPage() {
   }
 
   const handleDeleteCollection = (collectionId: string) => {
-    if (editingCollectionId === collectionId) {
-      setEditingCollectionId(null)
-    }
-    setCollections((prev) => prev.filter((collection) => collection.id !== collectionId))
+    setPendingDeleteCollectionId(collectionId)
+    setIsDeleteModalOpen(true)
   }
 
   const handleEditCollection = (collectionId: string) => {
@@ -74,6 +76,25 @@ export default function CollectionsPage() {
     (collection) => collection.id === editingCollectionId,
   )
 
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setPendingDeleteCollectionId(null)
+  }
+
+  const handleConfirmDeleteCollection = () => {
+    if (!pendingDeleteCollectionId) return
+  
+    if (editingCollectionId === pendingDeleteCollectionId) {
+      setEditingCollectionId(null)
+    }
+  
+    setCollections((prev) =>
+      prev.filter((collection) => collection.id !== pendingDeleteCollectionId),
+    )
+  
+    handleCloseDeleteModal()
+  }
+
   return (
     <main className="page-shell">
       <h1 className="page-title">Colecciones</h1>
@@ -102,6 +123,25 @@ export default function CollectionsPage() {
           />
         </div>
       </section>
+
+      <Modal
+        open={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        title="Borrar colección"
+        description="Esta acción no se puede deshacer."
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={handleCloseDeleteModal}>
+              Cancelar
+            </Button>
+            <Button type="button" variant="danger" onClick={handleConfirmDeleteCollection}>
+              Borrar
+            </Button>
+          </>
+        }
+      >
+        <p>¿Seguro que quieres borrar esta colección?</p>
+      </Modal>
     </main>
   )
 }
