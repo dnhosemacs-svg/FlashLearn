@@ -39,9 +39,29 @@ export default function FlashcardForm({ onSubmit }: FlashcardFormProps) {
   return (
     <Card title="Nueva flashcard" description="Crea una tarjeta de estudio">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input id="flashcard-question" label="Pregunta" value={question} error={questionError} onChange={(e) => setQuestion(e.target.value)} />
-        <Input id="flashcard-answer" label="Respuesta" value={answer} error={answerError} onChange={(e) => setAnswer(e.target.value)} />
-        <Input id="flashcard-tags" label="Tags (opcional)" hint="Separados por coma" value={tagsText} onChange={(e) => setTagsText(e.target.value)} />
+        <Input 
+          id="flashcard-question" 
+          label="Pregunta" 
+          value={question} 
+          error={questionError} 
+          onChange={(e) => {
+            setQuestion(e.target.value)
+            if (questionError) setQuestionError('')
+          }} />
+        <Input 
+          id="flashcard-answer" 
+          label="Respuesta" 
+          value={answer} error={answerError} 
+          onChange={(e) => {
+            setAnswer(e.target.value)
+            if (answerError) setAnswerError('')
+          }} />
+        <Input 
+        id="flashcard-tags" 
+        label="Tags (opcional)" 
+        hint="Separados por coma" 
+        value={tagsText} 
+        onChange={(e) => setTagsText(e.target.value)} />
         <Button type="submit">Guardar flashcard</Button>
       </form>
     </Card>
