@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
@@ -24,6 +24,7 @@ export default function CollectionsPage() {
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
@@ -76,6 +77,18 @@ export default function CollectionsPage() {
     (collection) => collection.id === editingCollectionId,
   )
 
+  const normalizedQuery = searchQuery.trim().toLowerCase()
+
+  const filteredCollections = useMemo(() => {
+    if (!normalizedQuery) return collections
+
+    return collections.filter((collection) => {
+      const name = collection.name.toLowerCase()
+      const description = (collection.description ?? '').toLowerCase()
+      return name.includes(normalizedQuery) || description.includes(normalizedQuery)
+    })
+  }, [collections, normalizedQuery])
+
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false)
     setPendingDeleteCollectionId(null)
@@ -100,6 +113,16 @@ export default function CollectionsPage() {
       <h1 className="page-title">Colecciones</h1>
       <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
 
+      <div className="mt-4">
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder="Buscar colecciones por nombre o descripcion..."
+          className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+        />
+      </div>
+
       <section className="section-stack">
         <div className="card-grid-2">
           {editingCollection ? (
@@ -117,7 +140,7 @@ export default function CollectionsPage() {
             <CollectionForm onSubmit={handleCreateCollection} />
           )}
           <CollectionList
-            collections={collections}
+            collections={filteredCollections}
             onEditCollection={handleEditCollection}
             onDeleteCollection={handleDeleteCollection}
           />

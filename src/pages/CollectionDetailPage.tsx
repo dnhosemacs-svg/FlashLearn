@@ -24,11 +24,30 @@ function loadStoredFlashcards(): Flashcard[] {
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
   const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>(loadStoredFlashcards)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const flashcards = useMemo(
     () => allFlashcards.filter((card) => card.collectionId === collectionId),
     [allFlashcards, collectionId],
   )
+
+  const normalizedQuery = searchQuery.trim().toLowerCase()
+
+  const filteredFlashcards = useMemo(() => {
+    if (!normalizedQuery) return flashcards
+
+    return flashcards.filter((card) => {
+      const question = card.question.toLowerCase()
+      const answer = card.answer.toLowerCase()
+      const tags = (card.tags ?? []).join(' ').toLowerCase()
+
+      return (
+        question.includes(normalizedQuery) ||
+        answer.includes(normalizedQuery) ||
+        tags.includes(normalizedQuery)
+      )
+    })
+  }, [flashcards, normalizedQuery])
 
   useEffect(() => {
     localStorage.setItem(FLASHCARDS_STORAGE_KEY, JSON.stringify(allFlashcards))
@@ -87,19 +106,31 @@ export default function CollectionDetailPage() {
         </Link>
       </div>
 
-      <section className="card-grid-2">
-        <FlashcardForm onSubmit={handleCreateFlashcard} />
+      <div className="mt-4">
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder="Buscar por pregunta, respuesta o tags..."
+          className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+        />
+      </div>
 
-        <Card
-          title="Tarjetas de la colección"
-          description="Listado de flashcards creadas en esta colección."
-        >
-          <FlashcardList
-            flashcards={flashcards}
-            onEditFlashcard={handleEditFlashcard}
-            onDeleteFlashcard={handleDeleteFlashcard}
-          />
-        </Card>
+      <section className="section-stack">
+        <div className="card-grid-2">
+          <FlashcardForm onSubmit={handleCreateFlashcard} />
+
+          <Card
+            title="Tarjetas de la colección"
+            description="Listado de flashcards creadas en esta colección."
+          >
+            <FlashcardList
+              flashcards={filteredFlashcards}
+              onEditFlashcard={handleEditFlashcard}
+              onDeleteFlashcard={handleDeleteFlashcard}
+            />
+          </Card>
+        </div>
       </section>
     </main>
   )
