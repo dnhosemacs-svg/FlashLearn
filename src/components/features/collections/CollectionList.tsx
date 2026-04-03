@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import EmptyState from '../../ui/EmptyState'
 import type { Collection } from '../../../types/domain'
 import CollectionItem from './CollectionItem'
@@ -8,7 +9,7 @@ interface CollectionListProps {
   onDeleteCollection: (collectionId: string) => void
 }
 
-export default function CollectionList({
+function CollectionList({
   collections,
   onEditCollection,
   onDeleteCollection,
@@ -35,3 +36,5 @@ export default function CollectionList({
     </section>
   )
 }
+
+export default memo(CollectionList)

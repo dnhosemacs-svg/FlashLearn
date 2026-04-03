@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import StudyCard from '../components/features/study/StudyCard'
 import StudyControls from '../components/features/study/StudyControls'
 import EmptyState from '../components/ui/EmptyState'
@@ -77,25 +77,25 @@ export default function StudyPage() {
     }
   }, [flashcards, currentIndex])
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0))
     setIsRevealed(false)
-  }
+  }, [])
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentIndex((prev) => Math.min(prev + 1, flashcards.length - 1))
     setIsRevealed(false)
-  }
+  }, [flashcards.length])
 
-  const handleReveal = () => {
+  const handleReveal = useCallback(() => {
     setIsRevealed((prev) => !prev)
-  }
+  }, [])
 
-  const handleShuffle = () => {
+  const handleShuffle = useCallback(() => {
     setFlashcards((prev) => shuffleArray(prev))
     setCurrentIndex(0)
     setIsRevealed(false)
-  }
+  }, [])
 
   if (flashcards.length === 0) {
     return (

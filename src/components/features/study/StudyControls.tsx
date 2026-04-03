@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import Button from '../../ui/Button'
 
 interface StudyControlsProps {
@@ -10,7 +11,7 @@ interface StudyControlsProps {
   isRevealed: boolean
 }
 
-export default function StudyControls({
+function StudyControls({
   onPrev,
   onNext,
   onReveal,
@@ -28,3 +29,5 @@ export default function StudyControls({
     </div>
   )
 }
+
+export default memo(StudyControls)

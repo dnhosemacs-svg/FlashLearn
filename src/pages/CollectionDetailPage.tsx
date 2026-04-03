@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
@@ -69,7 +69,7 @@ export default function CollectionDetailPage() {
     setSearchQuery('')
   }, [collectionId])
 
-  const handleCreateFlashcard = (data: CreateFlashcardInput) => {
+  const handleCreateFlashcard = useCallback((data: CreateFlashcardInput) => {
     if (!collectionId) return
   
     const now = new Date().toISOString()
@@ -84,15 +84,15 @@ export default function CollectionDetailPage() {
     }
   
     setAllFlashcards((prev) => [newFlashcard, ...prev])
-  }
-  
-  const handleDeleteFlashcard = (flashcardId: string) => {
+  }, [collectionId])
+
+  const handleDeleteFlashcard = useCallback((flashcardId: string) => {
     setAllFlashcards((prev) => prev.filter((card) => card.id !== flashcardId))
-  }
+  }, [])
   
-  const handleEditFlashcard = (flashcardId: string) => {
+  const handleEditFlashcard = useCallback((flashcardId: string) => {
     console.log(`Editar flashcard: ${flashcardId}`)
-  }
+  }, [])
 
   if (!collectionId) {
     return (

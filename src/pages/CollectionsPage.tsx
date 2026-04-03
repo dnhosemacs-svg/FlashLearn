@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
@@ -38,11 +38,11 @@ export default function CollectionsPage() {
     const total = collections.length
     const withDescription = collections.filter((c) => !!c.description?.trim()).length
     const withoutDescription = total - withDescription
-  
+
     return { total, withDescription, withoutDescription }
   }, [collections])
 
-  const handleCreateCollection = (data: CreateCollectionInput) => {
+  const handleCreateCollection = useCallback((data: CreateCollectionInput) => {
     const now = new Date().toISOString()
     const newCollection: Collection = {
       id: crypto.randomUUID(),
@@ -53,37 +53,60 @@ export default function CollectionsPage() {
     }
 
     setCollections((prev) => [newCollection, ...prev])
-  }
+  }, [])
 
-  const handleDeleteCollection = (collectionId: string) => {
+  const handleDeleteCollection = useCallback((collectionId: string) => {
     setPendingDeleteCollectionId(collectionId)
     setIsDeleteModalOpen(true)
-  }
+  }, [])
 
-  const handleEditCollection = (collectionId: string) => {
+  const handleEditCollection = useCallback((collectionId: string) => {
     setEditingCollectionId(collectionId)
-  }
+  }, [])
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = useCallback(() => {
     setEditingCollectionId(null)
-  }
+  }, [])
 
-  const handleUpdateCollection = (data: UpdateCollectionInput) => {
-    const now = new Date().toISOString()
+  const handleUpdateCollection = useCallback(
+    (data: UpdateCollectionInput) => {
+      const now = new Date().toISOString()
+      setCollections((prev) =>
+        prev.map((collection) =>
+          collection.id === editingCollectionId
+            ? {
+                ...collection,
+                name: data.name,
+                description: data.description,
+                updatedAt: now,
+              }
+            : collection,
+        ),
+      )
+      setEditingCollectionId(null)
+    },
+    [editingCollectionId],
+  )
+
+  const handleCloseDeleteModal = useCallback(() => {
+    setIsDeleteModalOpen(false)
+    setPendingDeleteCollectionId(null)
+  }, [])
+
+  const handleConfirmDeleteCollection = useCallback(() => {
+    if (!pendingDeleteCollectionId) return
+
+    if (editingCollectionId === pendingDeleteCollectionId) {
+      setEditingCollectionId(null)
+    }
+
     setCollections((prev) =>
-      prev.map((collection) =>
-        collection.id === editingCollectionId
-          ? {
-              ...collection,
-              name: data.name,
-              description: data.description,
-              updatedAt: now,
-            }
-          : collection,
-      ),
+      prev.filter((collection) => collection.id !== pendingDeleteCollectionId),
     )
-    setEditingCollectionId(null)
-  }
+
+    setIsDeleteModalOpen(false)
+    setPendingDeleteCollectionId(null)
+  }, [pendingDeleteCollectionId, editingCollectionId])
 
   const editingCollection = collections.find(
     (collection) => collection.id === editingCollectionId,
@@ -100,25 +123,6 @@ export default function CollectionsPage() {
       return name.includes(normalizedQuery) || description.includes(normalizedQuery)
     })
   }, [collections, normalizedQuery])
-
-  const handleCloseDeleteModal = () => {
-    setIsDeleteModalOpen(false)
-    setPendingDeleteCollectionId(null)
-  }
-
-  const handleConfirmDeleteCollection = () => {
-    if (!pendingDeleteCollectionId) return
-  
-    if (editingCollectionId === pendingDeleteCollectionId) {
-      setEditingCollectionId(null)
-    }
-  
-    setCollections((prev) =>
-      prev.filter((collection) => collection.id !== pendingDeleteCollectionId),
-    )
-  
-    handleCloseDeleteModal()
-  }
 
   return (
     <main className="page-shell">

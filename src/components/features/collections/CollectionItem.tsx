@@ -1,7 +1,8 @@
+import { memo } from 'react'
+import { Link } from 'react-router-dom'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import type { Collection } from '../../../types/domain'
-import { Link } from 'react-router-dom'
 
 interface CollectionItemProps {
   collection: Collection
@@ -9,11 +10,7 @@ interface CollectionItemProps {
   onDelete: (collectionId: string) => void
 }
 
-export default function CollectionItem({
-  collection,
-  onEdit,
-  onDelete,
-}: CollectionItemProps) {
+function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
   return (
     <Card
       title={collection.name}
@@ -50,3 +47,5 @@ export default function CollectionItem({
     </Card>
   )
 }
+
+export default memo(CollectionItem)
