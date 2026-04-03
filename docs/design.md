@@ -11,7 +11,7 @@ Definir una arquitectura simple, escalable y tipada para frontend y backend, emp
 Si necesitas una vista rapida del documento, sigue este orden:
 
 1. `Decisiones tecnicas (resumen)` para entender el marco general.
-2. `Estrategia de estado` + `Persistencia cliente/servidor` para saber donde vive cada dato.
+2. `Estrategia de estado` + `Hooks de dominio (MVP actual)` + `StudyPage` / `Verificacion Fase 4` + `Persistencia cliente/servidor` para saber donde vive cada dato y como validar el MVP.
 3. `Reglas de sincronizacion` + `Diagrama de flujo de datos` para implementar sin inconsistencias.
 4. `Convenciones de carpetas y tipos` para mantener coherencia en nuevos archivos.
 
@@ -100,6 +100,14 @@ src/
         StudyCard.tsx
         StudyControls.tsx
         ProgressIndicator.tsx
+  hooks/
+    index.ts
+    useCollections.ts
+    useFlashcards.ts
+  lib/
+    storage/
+      collectionsStorage.ts
+      flashcardsStorage.ts
   pages/
     HomePage.tsx
     CollectionsPage.tsx
@@ -108,6 +116,7 @@ src/
     NotFoundPage.tsx
   types/
     domain.ts
+    async.ts
     api.ts
 ```
 
@@ -193,6 +202,69 @@ No guardar como fuente principal:
 - Si coordina varias pantallas/componente -> contexto.
 - Si representa negocio persistente -> backend/API.
 - Si es preferencia del usuario y no rompe consistencia de negocio -> `localStorage`.
+
+---
+
+## Hooks de dominio (MVP actual)
+
+### Ubicacion
+
+- `src/hooks/useCollections.ts` — colecciones: carga, persistencia provisional y CRUD.
+- `src/hooks/useFlashcards.ts` — flashcards globales o filtradas por coleccion.
+- `src/hooks/index.ts` — reexportaciones; en paginas se importa desde `../hooks`.
+
+### Tipado de red
+
+- `src/types/async.ts`: `AsyncStatus` (`idle` | `loading` | `success` | `error`) y `AsyncState` (`status`, `error: string | null`).
+- Los hooks exponen `network` para que la UI muestre carga, error y accion **Reintentar** (`refresh()`).
+
+### Persistencia provisional
+
+- `src/lib/storage/collectionsStorage.ts` y `flashcardsStorage.ts` encapsulan `localStorage` hasta sustituir por llamadas a `/api/v1`.
+- Solo se guarda en disco cuando `network.status === 'success'`, para no pisar datos con un array vacio antes de terminar la carga inicial.
+
+### Contrato resumido
+
+| Hook | Parametros | Expone (principal) |
+|------|------------|---------------------|
+| `useCollections()` | — | `collections`, `network`, `refresh`, `create`, `update`, `remove` |
+| `useFlashcards(collectionId?)` | id opcional | `flashcards`, `allFlashcards`, `network`, `refresh`, `create`, `remove` |
+
+- Sin `collectionId`, `flashcards` devuelve todas las tarjetas (util en `StudyPage`). Con `collectionId`, la lista queda filtrada y `create` asocia la tarjeta a esa coleccion (`CollectionDetailPage`).
+
+### Limitacion hasta Context o API unificada
+
+Cada montaje del hook en una pagina mantiene su propio estado en React. Los datos en disco se actualizan al persistir; otra pestaña o vista puede releer con `refresh()` (por ejemplo `StudyPage` al recuperar el foco de la ventana). Cuando exista cliente HTTP unico o Context, la fuente de verdad pasara a servidor o a un store compartido.
+
+### StudyPage: datos y sesion local (paso 7)
+
+Implementacion en `src/pages/StudyPage.tsx`:
+
+- **`useFlashcards()`** sin argumento: la lista de estudio incluye **todas** las flashcards del almacenamiento provisional (todas las colecciones).
+- **Estado de red**: mismo patron que `CollectionsPage` y `CollectionDetailPage` — `Spinner` mientras la carga inicial no ha devuelto datos, pantalla de error con **Reintentar** (`refresh()`).
+- **Barajar sin persistir el orden**: la pagina mantiene `sessionOrder` solo en memoria. El orden barajado **no** se escribe en `localStorage` (el hook persiste el array canónico de tarjetas). Cuando cambia la referencia de datos cargados (`loadedFlashcards`, p. ej. tras `refresh()`), se resetea `sessionOrder` para alinear el mazo con el origen.
+- **Sincronizacion entre rutas**: listener `focus` en `window` dispara `refresh()` para releer disco tras crear tarjetas en otra vista o en otra pestaña.
+
+---
+
+## Verificacion Fase 4 — hooks y storage (paso 8)
+
+### Comprobacion automatica
+
+- `npm run build` debe completar sin errores de TypeScript ni de Vite.
+
+### Comprobacion manual (flujo de usuario)
+
+1. **Colecciones** (`/collections`): crear, editar, buscar, borrar con confirmacion; recargar el navegador y comprobar que los datos siguen (persistencia via hook + `collectionsStorage`).
+2. **Detalle** (`/collections/:id`): crear y borrar flashcards; buscar por texto/tags; cambiar a otra coleccion por URL y comprobar que el campo de busqueda se vacia.
+3. **Estudio** (`/study`): con tarjetas creadas, navegar anterior/siguiente, revelar, barajar; volver desde detalle y usar **foco de ventana** (o recargar) para comprobar que aparecen tarjetas nuevas.
+4. **Errores** (opcional): simular fallo en la lectura inicial y comprobar mensaje + **Reintentar** en cada pagina que consume `useCollections` o `useFlashcards`.
+
+### Criterios de hecho
+
+- Las paginas de dominio no duplican logica de `localStorage`: usan `useCollections` / `useFlashcards` y, bajo ellos, `src/lib/storage/*`.
+- Los hooks exponen `network` (`AsyncState`) y `refresh` de forma homogenea.
+- Este documento refleja la estructura real (`hooks/`, `lib/storage/`, `types/async.ts`) y el comportamiento de `StudyPage` descrito en el paso 7.
 
 ---
 

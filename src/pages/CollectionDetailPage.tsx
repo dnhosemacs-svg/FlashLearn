@@ -5,31 +5,13 @@ import Card from '../components/ui/Card'
 import EmptyState from '../components/ui/EmptyState'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
-import type { CreateFlashcardInput, Flashcard } from '../types/domain'
-
-const FLASHCARDS_STORAGE_KEY = 'flashlearn.flashcards'
-
-function loadStoredFlashcards(): Flashcard[] {
-  const stored = localStorage.getItem(FLASHCARDS_STORAGE_KEY)
-  if (!stored) return []
-
-  try {
-    const parsed = JSON.parse(stored)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
+import Spinner from '../components/ui/Spinner'
+import { useFlashcards } from '../hooks'
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
-  const [allFlashcards, setAllFlashcards] = useState<Flashcard[]>([])
+  const { flashcards, network, refresh, create, remove } = useFlashcards(collectionId)
   const [searchQuery, setSearchQuery] = useState('')
-
-  const flashcards = useMemo(
-    () => allFlashcards.filter((card) => card.collectionId === collectionId),
-    [allFlashcards, collectionId],
-  )
 
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
@@ -53,43 +35,14 @@ export default function CollectionDetailPage() {
     const total = flashcards.length
     const withTags = flashcards.filter((card) => (card.tags?.length ?? 0) > 0).length
     const withoutTags = total - withTags
-  
+
     return { total, withTags, withoutTags }
   }, [flashcards])
-
-  useEffect(() => {
-    setAllFlashcards(loadStoredFlashcards())
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem(FLASHCARDS_STORAGE_KEY, JSON.stringify(allFlashcards))
-  }, [allFlashcards])
 
   useEffect(() => {
     setSearchQuery('')
   }, [collectionId])
 
-  const handleCreateFlashcard = useCallback((data: CreateFlashcardInput) => {
-    if (!collectionId) return
-  
-    const now = new Date().toISOString()
-    const newFlashcard: Flashcard = {
-      id: crypto.randomUUID(),
-      collectionId,
-      question: data.question,
-      answer: data.answer,
-      tags: data.tags,
-      createdAt: now,
-      updatedAt: now,
-    }
-  
-    setAllFlashcards((prev) => [newFlashcard, ...prev])
-  }, [collectionId])
-
-  const handleDeleteFlashcard = useCallback((flashcardId: string) => {
-    setAllFlashcards((prev) => prev.filter((card) => card.id !== flashcardId))
-  }, [])
-  
   const handleEditFlashcard = useCallback((flashcardId: string) => {
     console.log(`Editar flashcard: ${flashcardId}`)
   }, [])
@@ -106,6 +59,44 @@ export default function CollectionDetailPage() {
             <Button variant="ghost">Volver a colecciones</Button>
           </Link>
         </div>
+      </main>
+    )
+  }
+
+  if (network.status === 'loading' && flashcards.length === 0) {
+    return (
+      <main className="page-shell">
+        <div className="page-header">
+          <h1 className="page-title">Detalle de colección</h1>
+          <Link to="/collections">
+            <Button variant="ghost">Volver</Button>
+          </Link>
+        </div>
+        <div className="mt-8 flex justify-center">
+          <Spinner label="Cargando tarjetas" />
+        </div>
+      </main>
+    )
+  }
+
+  if (network.status === 'error') {
+    return (
+      <main className="page-shell">
+        <div className="page-header">
+          <h1 className="page-title">Detalle de colección</h1>
+          <Link to="/collections">
+            <Button variant="ghost">Volver</Button>
+          </Link>
+        </div>
+        <EmptyState
+          title="No se pudieron cargar las tarjetas"
+          description={network.error ?? 'Error desconocido'}
+          action={
+            <Button type="button" onClick={() => void refresh()}>
+              Reintentar
+            </Button>
+          }
+        />
       </main>
     )
   }
@@ -138,7 +129,7 @@ export default function CollectionDetailPage() {
 
       <section className="section-stack">
         <div className="card-grid-2">
-          <FlashcardForm onSubmit={handleCreateFlashcard} />
+          <FlashcardForm onSubmit={create} />
 
           <Card
             title="Tarjetas de la colección"
@@ -147,7 +138,7 @@ export default function CollectionDetailPage() {
             <FlashcardList
               flashcards={filteredFlashcards}
               onEditFlashcard={handleEditFlashcard}
-              onDeleteFlashcard={handleDeleteFlashcard}
+              onDeleteFlashcard={remove}
             />
           </Card>
         </div>

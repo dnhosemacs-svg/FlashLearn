@@ -1,38 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
-import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
 import Button from '../components/ui/Button'
+import EmptyState from '../components/ui/EmptyState'
 import Modal from '../components/ui/Modal'
-
-const COLLECTIONS_STORAGE_KEY = 'flashlearn.collections'
-
-function loadStoredCollections(): Collection[] {
-  const stored = localStorage.getItem(COLLECTIONS_STORAGE_KEY)
-  if (!stored) return []
-
-  try {
-    const parsed = JSON.parse(stored)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
+import Spinner from '../components/ui/Spinner'
+import { useCollections } from '../hooks'
+import type { UpdateCollectionInput } from '../types/domain'
 
 export default function CollectionsPage() {
-  const [collections, setCollections] = useState<Collection[]>([])
+  const { collections, network, refresh, create, update, remove } = useCollections()
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-
-  useEffect(() => {
-    setCollections(loadStoredCollections())
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
-  }, [collections])
 
   const collectionsStats = useMemo(() => {
     const total = collections.length
@@ -41,19 +22,6 @@ export default function CollectionsPage() {
 
     return { total, withDescription, withoutDescription }
   }, [collections])
-
-  const handleCreateCollection = useCallback((data: CreateCollectionInput) => {
-    const now = new Date().toISOString()
-    const newCollection: Collection = {
-      id: crypto.randomUUID(),
-      name: data.name,
-      description: data.description,
-      createdAt: now,
-      updatedAt: now,
-    }
-
-    setCollections((prev) => [newCollection, ...prev])
-  }, [])
 
   const handleDeleteCollection = useCallback((collectionId: string) => {
     setPendingDeleteCollectionId(collectionId)
@@ -70,22 +38,11 @@ export default function CollectionsPage() {
 
   const handleUpdateCollection = useCallback(
     (data: UpdateCollectionInput) => {
-      const now = new Date().toISOString()
-      setCollections((prev) =>
-        prev.map((collection) =>
-          collection.id === editingCollectionId
-            ? {
-                ...collection,
-                name: data.name,
-                description: data.description,
-                updatedAt: now,
-              }
-            : collection,
-        ),
-      )
+      if (!editingCollectionId) return
+      update(editingCollectionId, data)
       setEditingCollectionId(null)
     },
-    [editingCollectionId],
+    [editingCollectionId, update],
   )
 
   const handleCloseDeleteModal = useCallback(() => {
@@ -100,13 +57,11 @@ export default function CollectionsPage() {
       setEditingCollectionId(null)
     }
 
-    setCollections((prev) =>
-      prev.filter((collection) => collection.id !== pendingDeleteCollectionId),
-    )
+    remove(pendingDeleteCollectionId)
 
     setIsDeleteModalOpen(false)
     setPendingDeleteCollectionId(null)
-  }, [pendingDeleteCollectionId, editingCollectionId])
+  }, [pendingDeleteCollectionId, editingCollectionId, remove])
 
   const editingCollection = collections.find(
     (collection) => collection.id === editingCollectionId,
@@ -123,6 +78,38 @@ export default function CollectionsPage() {
       return name.includes(normalizedQuery) || description.includes(normalizedQuery)
     })
   }, [collections, normalizedQuery])
+
+  if (network.status === 'loading' && collections.length === 0) {
+    return (
+      <main className="page-shell">
+        <h1 className="page-title">Colecciones</h1>
+        <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
+        <div className="mt-8 flex justify-center">
+          <Spinner label="Cargando colecciones" />
+        </div>
+      </main>
+    )
+  }
+
+  if (network.status === 'error') {
+    return (
+      <main className="page-shell">
+        <h1 className="page-title">Colecciones</h1>
+        <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
+        <section className="section-stack">
+          <EmptyState
+            title="No se pudieron cargar las colecciones"
+            description={network.error ?? 'Error desconocido'}
+            action={
+              <Button type="button" onClick={() => void refresh()}>
+                Reintentar
+              </Button>
+            }
+          />
+        </section>
+      </main>
+    )
+  }
 
   return (
     <main className="page-shell">
@@ -157,7 +144,7 @@ export default function CollectionsPage() {
               onCancel={handleCancelEdit}
             />
           ) : (
-            <CollectionForm onSubmit={handleCreateCollection} />
+            <CollectionForm onSubmit={create} />
           )}
           <CollectionList
             collections={filteredCollections}
