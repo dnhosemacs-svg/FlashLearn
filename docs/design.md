@@ -212,6 +212,7 @@ No guardar como fuente principal:
 - `src/hooks/useCollections.ts` — colecciones: carga, persistencia provisional y CRUD.
 - `src/hooks/useFlashcards.ts` — flashcards globales o filtradas por coleccion.
 - `src/hooks/index.ts` — reexportaciones; en paginas se importa desde `../hooks`.
+- Documentacion detallada (que hace cada hook, cuando usarlo, ejemplos): `docs/hooks.md`.
 
 ### Tipado de red
 
