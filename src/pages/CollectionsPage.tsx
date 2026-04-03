@@ -34,6 +34,14 @@ export default function CollectionsPage() {
     localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
   }, [collections])
 
+  const collectionsStats = useMemo(() => {
+    const total = collections.length
+    const withDescription = collections.filter((c) => !!c.description?.trim()).length
+    const withoutDescription = total - withDescription
+  
+    return { total, withDescription, withoutDescription }
+  }, [collections])
+
   const handleCreateCollection = (data: CreateCollectionInput) => {
     const now = new Date().toISOString()
     const newCollection: Collection = {
@@ -126,6 +134,10 @@ export default function CollectionsPage() {
           className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
         />
       </div>
+
+      <p className="mt-2 text-sm text-slate-600">
+        Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
+      </p>
 
       <section className="section-stack">
         <div className="card-grid-2">

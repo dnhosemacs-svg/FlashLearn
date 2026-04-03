@@ -35,6 +35,21 @@ export default function StudyPage() {
     () => flashcards[currentIndex],
     [flashcards, currentIndex],
   )
+  
+  const studyStats = useMemo(() => {
+    const total = flashcards.length
+    const current = total === 0 ? 0 : currentIndex + 1
+    const progressPercent = total === 0 ? 0 : Math.round((current / total) * 100)
+  
+    const revealedLabel = isRevealed ? 'Respuesta visible' : 'Respuesta oculta'
+  
+    return {
+      total,
+      current,
+      progressPercent,
+      revealedLabel,
+    }
+  }, [flashcards.length, currentIndex, isRevealed])
 
   useEffect(() => {
     setFlashcards(loadStoredFlashcards())
@@ -104,7 +119,8 @@ export default function StudyPage() {
 
       <section className="section-stack lg:mx-auto lg:max-w-3xl">
         <p className="text-sm text-slate-600">
-          Progreso: {currentIndex + 1} / {flashcards.length}
+          Progreso: {studyStats.current} / {studyStats.total} ({studyStats.progressPercent}%) ·{' '}
+          {studyStats.revealedLabel}
         </p>
 
         {currentFlashcard && (

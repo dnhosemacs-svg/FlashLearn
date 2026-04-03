@@ -49,6 +49,14 @@ export default function CollectionDetailPage() {
     })
   }, [flashcards, normalizedQuery])
 
+  const flashcardsStats = useMemo(() => {
+    const total = flashcards.length
+    const withTags = flashcards.filter((card) => (card.tags?.length ?? 0) > 0).length
+    const withoutTags = total - withTags
+  
+    return { total, withTags, withoutTags }
+  }, [flashcards])
+
   useEffect(() => {
     setAllFlashcards(loadStoredFlashcards())
   }, [])
@@ -123,6 +131,10 @@ export default function CollectionDetailPage() {
           className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
         />
       </div>
+
+      <p className="mt-2 text-sm text-slate-600">
+        Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
+      </p>
 
       <section className="section-stack">
         <div className="card-grid-2">
