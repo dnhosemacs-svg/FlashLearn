@@ -9,21 +9,24 @@ import NotFoundPage from './pages/NotFoundPage.tsx'
 import StudyPage from './pages/StudyPage.tsx'
 import CollectionDetailPage from './pages/CollectionDetailPage.tsx'
 import { CollectionsProvider } from './context/CollectionsContext'
+import { FlashcardsProvider } from './context/FlashcardsContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <CollectionsProvider>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<HomePage />} />
-            <Route path="collections" element={<CollectionsPage />} />
-            <Route path="study" element={<StudyPage />} />
-            <Route path="home" element={<Navigate to="/" replace />} />
-            <Route path="*" element={<NotFoundPage />} />
-            <Route path="collections/:collectionId" element={<CollectionDetailPage />} />
-          </Route>
-        </Routes>
+        <FlashcardsProvider>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route index element={<HomePage />} />
+              <Route path="collections" element={<CollectionsPage />} />
+              <Route path="study" element={<StudyPage />} />
+              <Route path="home" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFoundPage />} />
+              <Route path="collections/:collectionId" element={<CollectionDetailPage />} />
+            </Route>
+          </Routes>
+        </FlashcardsProvider>
       </CollectionsProvider>
     </BrowserRouter>
   </StrictMode>,

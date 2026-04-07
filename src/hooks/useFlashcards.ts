@@ -11,6 +11,8 @@ export interface UseFlashcardsResult {
   network: AsyncState
   refresh: () => Promise<void>
   create: (input: CreateFlashcardInput) => void
+  /** Crea una tarjeta en la colección indicada (útil con el provider global sin `collectionId` fijo). */
+  createForCollection: (collectionId: string, input: CreateFlashcardInput) => void
   remove: (id: string) => void
 }
 
@@ -50,24 +52,27 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
     return allFlashcards.filter((card) => card.collectionId === collectionId)
   }, [allFlashcards, collectionId])
 
+  const createForCollection = useCallback((targetCollectionId: string, input: CreateFlashcardInput) => {
+    const now = new Date().toISOString()
+    const newFlashcard: Flashcard = {
+      id: crypto.randomUUID(),
+      collectionId: targetCollectionId,
+      question: input.question,
+      answer: input.answer,
+      tags: input.tags,
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    setAllFlashcards((prev) => [newFlashcard, ...prev])
+  }, [])
+
   const create = useCallback(
     (input: CreateFlashcardInput) => {
       if (!collectionId) return
-
-      const now = new Date().toISOString()
-      const newFlashcard: Flashcard = {
-        id: crypto.randomUUID(),
-        collectionId,
-        question: input.question,
-        answer: input.answer,
-        tags: input.tags,
-        createdAt: now,
-        updatedAt: now,
-      }
-
-      setAllFlashcards((prev) => [newFlashcard, ...prev])
+      createForCollection(collectionId, input)
     },
-    [collectionId],
+    [collectionId, createForCollection],
   )
 
   const remove = useCallback((id: string) => {
@@ -80,6 +85,7 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
     network,
     refresh,
     create,
+    createForCollection,
     remove,
   }
 }

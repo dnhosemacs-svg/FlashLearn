@@ -6,12 +6,18 @@ import EmptyState from '../components/ui/EmptyState'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
 import Spinner from '../components/ui/Spinner'
-import { useFlashcards } from '../hooks'
+import { useFlashcardsContext } from '../context/FlashcardsContext'
+import type { CreateFlashcardInput } from '../types/domain'
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
-  const { flashcards, network, refresh, create, remove } = useFlashcards(collectionId)
+  const { allFlashcards, network, refresh, createForCollection, remove } = useFlashcardsContext()
   const [searchQuery, setSearchQuery] = useState('')
+
+  const flashcards = useMemo(
+    () => (collectionId ? allFlashcards.filter((card) => card.collectionId === collectionId) : []),
+    [allFlashcards, collectionId],
+  )
 
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
@@ -46,6 +52,14 @@ export default function CollectionDetailPage() {
   const handleEditFlashcard = useCallback((flashcardId: string) => {
     console.log(`Editar flashcard: ${flashcardId}`)
   }, [])
+
+  const handleCreateFlashcard = useCallback(
+    (data: CreateFlashcardInput) => {
+      if (!collectionId) return
+      createForCollection(collectionId, data)
+    },
+    [collectionId, createForCollection],
+  )
 
   if (!collectionId) {
     return (
@@ -129,7 +143,7 @@ export default function CollectionDetailPage() {
 
       <section className="section-stack">
         <div className="card-grid-2">
-          <FlashcardForm onSubmit={create} />
+          <FlashcardForm onSubmit={handleCreateFlashcard} />
 
           <Card
             title="Tarjetas de la colección"

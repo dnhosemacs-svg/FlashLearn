@@ -4,7 +4,7 @@ import StudyControls from '../components/features/study/StudyControls'
 import Button from '../components/ui/Button'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
-import { useFlashcards } from '../hooks'
+import { useFlashcardsContext } from '../context/FlashcardsContext'
 import type { Flashcard } from '../types/domain'
 
 function shuffleArray<T>(items: T[]) {
@@ -17,7 +17,7 @@ function shuffleArray<T>(items: T[]) {
 }
 
 export default function StudyPage() {
-  const { flashcards: loadedFlashcards, network, refresh } = useFlashcards()
+  const { flashcards: loadedFlashcards, network, refresh } = useFlashcardsContext()
   /** Orden local al barajar; se resetea cuando cambian las tarjetas cargadas. */
   const [sessionOrder, setSessionOrder] = useState<Flashcard[] | null>(null)
 
