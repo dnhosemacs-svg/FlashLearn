@@ -12,14 +12,16 @@ import {useNavigate} from 'react-router-dom'
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
-  const { allFlashcards, network, refresh, createForCollection, remove } = useFlashcardsContext()
+  const { allFlashcards, network, refresh, createForCollection, update, remove } = useFlashcardsContext()
+  const [editingFlashcardId, setEditingFlashcardId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
-  
+
   const flashcards = useMemo(
     () => (collectionId ? allFlashcards.filter((card) => card.collectionId === collectionId) : []),
     [allFlashcards, collectionId],
   )
+  const editingFlashcard = flashcards.find((card) => card.id === editingFlashcardId)
 
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
@@ -52,7 +54,20 @@ export default function CollectionDetailPage() {
   }, [collectionId])
 
   const handleEditFlashcard = useCallback((flashcardId: string) => {
-    console.log(`Editar flashcard: ${flashcardId}`)
+    setEditingFlashcardId(flashcardId)
+  }, [])
+
+  const handleUpdateFlashcard = useCallback(
+    (data: CreateFlashcardInput) => {
+      if (!editingFlashcardId) return
+      update(editingFlashcardId, data)
+      setEditingFlashcardId(null)
+    },
+    [editingFlashcardId, update],
+  )
+
+  const handleCancelEditFlashcard = useCallback(() => {
+    setEditingFlashcardId(null)
   }, [])
 
   const handleCreateFlashcard = useCallback(
@@ -143,7 +158,21 @@ export default function CollectionDetailPage() {
 
       <section className="section-stack">
         <div className="card-grid-2">
-          <FlashcardForm onSubmit={handleCreateFlashcard} />
+        {editingFlashcard ? (
+  <FlashcardForm
+    mode="edit"
+    initialValues={{
+      question: editingFlashcard.question,
+      answer: editingFlashcard.answer,
+      tags: editingFlashcard.tags,
+    }}
+    submitLabel="Guardar cambios"
+    onSubmit={handleUpdateFlashcard}
+    onCancel={handleCancelEditFlashcard}
+  />
+) : (
+  <FlashcardForm onSubmit={handleCreateFlashcard} />
+)}
 
           <Card
             title="Tarjetas de la colección"
