@@ -1,13 +1,25 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import Button from '../components/ui/Button'
 
 export default function NotFoundPage() {
+  const navigate = useNavigate()
+
   return (
     <main className="page-shell">
       <h1 className="page-title">404</h1>
-      <p className="page-subtitle">Página no encontrada</p>
-      <Link to="/" className="mt-4 inline-block underline">
-        Volver al inicio
-      </Link>
+      <p className="page-subtitle">La página que buscas no existe.</p>
+
+      <section className="section-stack mt-6 max-w-xl">
+        <p className="text-slate-700">
+          Puede que la URL esté mal escrita o que la página haya cambiado de ruta.
+        </p>
+
+        <div>
+          <Button type="button" onClick={() => navigate('/')}>
+            Volver al inicio
+          </Button>
+        </div>
+      </section>
     </main>
   )
 }
