@@ -107,7 +107,7 @@ export default function CollectionsPage() {
    - Si llamas al hook **con** `collectionId`, `flashcards` son solo las de esa coleccion.
    - Si llamas **sin** argumento, `flashcards` es el mismo conjunto que `allFlashcards` (todas las tarjetas).
 3. Persiste en disco cuando `network.status === 'success'`, igual que colecciones.
-4. **`create(input)`** solo tiene efecto si hay **`collectionId`** en el hook; en ese caso crea la tarjeta con ese `collectionId`.
+4. **`create(input)`** delega en **`createForCollection(collectionId, input)`** cuando el hook se instancio con `collectionId`; si no hay id, `create` no hace nada (en el provider global usa **`createForCollection`**).
 5. **`remove(id)`** borra del store global (todas las colecciones).
 6. **`refresh()`** — recarga desde almacenamiento.
 
@@ -115,11 +115,12 @@ export default function CollectionsPage() {
 
 | Situacion | Como llamarlo |
 |-----------|----------------|
-| Detalle de una coleccion: listar y crear tarjetas de **esa** coleccion | `useFlashcards(collectionId)` con el id de la URL o de la coleccion activa |
-| Modo estudio con **todas** las tarjetas | `useFlashcards()` sin argumentos |
+| App con **`FlashcardsProvider`** (recomendado MVP) | **`useFlashcardsContext()`**; en detalle filtra `allFlashcards` por URL y crea con **`createForCollection(collectionId, input)`** |
+| Detalle sin provider (solo hook) | `useFlashcards(collectionId)` |
+| Modo estudio con **todas** las tarjetas | `useFlashcardsContext()` o `useFlashcards()` sin argumentos |
 | Necesitas el listado completo aunque filtres en UI | Usa `allFlashcards` del resultado |
 
-Hoy lo usan **`CollectionDetailPage`** (con id) y **`StudyPage`** (sin id).
+Hoy **`CollectionDetailPage`** y **`StudyPage`** usan **`useFlashcardsContext()`** (ver `docs/context.md`).
 
 ### API resumida
 
@@ -130,19 +131,28 @@ interface UseFlashcardsResult {
   network: AsyncState
   refresh: () => Promise<void>
   create: (input: CreateFlashcardInput) => void
+  createForCollection: (collectionId: string, input: CreateFlashcardInput) => void
   remove: (id: string) => void
 }
 ```
 
-### Ejemplo practico — detalle de coleccion
+- **`create`**: solo actua si instanciaste el hook con `useFlashcards(collectionId)`; si no hay id, no hace nada.
+- **`createForCollection`**: siempre crea en la coleccion indicada; imprescindible con **`FlashcardsProvider`** (hook sin id en el provider). Ver `docs/context.md`.
+
+### Ejemplo practico — detalle de coleccion (con contexto)
 
 ```tsx
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useFlashcards } from '../hooks'
+import { useFlashcardsContext } from '../context/FlashcardsContext'
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
-  const { flashcards, network, refresh, create, remove } = useFlashcards(collectionId)
+  const { allFlashcards, network, createForCollection, remove } = useFlashcardsContext()
+  const flashcards = useMemo(
+    () => allFlashcards.filter((f) => f.collectionId === collectionId),
+    [allFlashcards, collectionId]
+  )
 
   if (network.status === 'loading' && flashcards.length === 0) {
     return <Spinner label="Cargando tarjetas" />
@@ -150,11 +160,10 @@ export default function CollectionDetailPage() {
 
   return (
     <>
-      <FlashcardForm onSubmit={create} />
-      <FlashcardList
-        flashcards={flashcards}
-        onDeleteFlashcard={remove}
+      <FlashcardForm
+        onSubmit={(data) => createForCollection(collectionId!, data)}
       />
+      <FlashcardList flashcards={flashcards} onDeleteFlashcard={remove} />
     </>
   )
 }
@@ -163,10 +172,10 @@ export default function CollectionDetailPage() {
 ### Ejemplo practico — estudio global
 
 ```tsx
-import { useFlashcards } from '../hooks'
+import { useFlashcardsContext } from '../context/FlashcardsContext'
 
 export default function StudyPage() {
-  const { flashcards, network, refresh } = useFlashcards()
+  const { flashcards, network, refresh } = useFlashcardsContext()
 
   useEffect(() => {
     const onFocus = () => void refresh()
@@ -182,9 +191,11 @@ export default function StudyPage() {
 
 ## Notas importantes (MVP actual)
 
-1. **Varias instancias del mismo hook**: cada componente que llama `useCollections()` o `useFlashcards()` tiene **su propio estado en React**. El disco se mantiene coherente al persistir, pero la memoria de otra pantalla no se actualiza sola hasta un **`refresh()`** (por eso `StudyPage` refresca al foco de ventana).
-2. **Sustitucion por API**: la intencion es reemplazar las llamadas dentro de los hooks (`load*` / `save*`) por un cliente HTTP tipado (`src/api/client.ts` o similar), manteniendo la misma forma del retorno (`collections`, `network`, `refresh`, acciones).
-3. **Barajar en estudio**: el orden aleatorio de repaso puede vivir en **estado local de la pagina**; no hace falta persistirlo en el hook ni en `localStorage` si no es un requisito de producto.
+1. **Colecciones**: usa **`CollectionsProvider`** + **`useCollectionsContext()`** en paginas; asi hay una sola instancia en memoria.
+2. **Flashcards**: usa **`FlashcardsProvider`** + **`useFlashcardsContext()`**; una sola instancia. Si llamas `useFlashcards()` suelto en una pagina ademas del provider, tendras **dos** copias (evitarlo).
+3. **Antes del contexto de flashcards**, cada `useFlashcards()` tenia su propio estado; el disco se alineaba al persistir y con **`refresh()`** al cambiar de foco. Con el provider global, detalle y estudio comparten el mismo array en memoria.
+4. **Sustitucion por API**: la intencion es reemplazar las llamadas dentro de los hooks (`load*` / `save*`) por un cliente HTTP tipado (`src/api/client.ts` o similar), manteniendo la misma forma del retorno (`collections`, `network`, `refresh`, acciones).
+5. **Barajar en estudio**: el orden aleatorio de repaso puede vivir en **estado local de la pagina**; no hace falta persistirlo en el hook ni en `localStorage` si no es un requisito de producto.
 
 ---
 

@@ -100,6 +100,9 @@ src/
         StudyCard.tsx
         StudyControls.tsx
         ProgressIndicator.tsx
+  context/
+    CollectionsContext.tsx
+    FlashcardsContext.tsx
   hooks/
     index.ts
     useCollections.ts
@@ -209,10 +212,13 @@ No guardar como fuente principal:
 
 ### Ubicacion
 
+- `src/context/CollectionsContext.tsx` — provider + `useCollectionsContext()`.
+- `src/context/FlashcardsContext.tsx` — provider + `useFlashcardsContext()`.
 - `src/hooks/useCollections.ts` — colecciones: carga, persistencia provisional y CRUD.
-- `src/hooks/useFlashcards.ts` — flashcards globales o filtradas por coleccion.
+- `src/hooks/useFlashcards.ts` — flashcards (una instancia global via provider; `createForCollection` para detalle).
 - `src/hooks/index.ts` — reexportaciones; en paginas se importa desde `../hooks`.
 - Documentacion detallada (que hace cada hook, cuando usarlo, ejemplos): `docs/hooks.md`.
+- Contextos React (`CollectionsProvider`, `FlashcardsProvider`): `docs/context.md`.
 
 ### Tipado de red
 
@@ -233,9 +239,12 @@ No guardar como fuente principal:
 
 - Sin `collectionId`, `flashcards` devuelve todas las tarjetas (util en `StudyPage`). Con `collectionId`, la lista queda filtrada y `create` asocia la tarjeta a esa coleccion (`CollectionDetailPage`).
 
-### Limitacion hasta Context o API unificada
+### Estado global actual (providers)
 
-Cada montaje del hook en una pagina mantiene su propio estado en React. Los datos en disco se actualizan al persistir; otra pestaña o vista puede releer con `refresh()` (por ejemplo `StudyPage` al recuperar el foco de la ventana). Cuando exista cliente HTTP unico o Context, la fuente de verdad pasara a servidor o a un store compartido.
+- **Colecciones**: `CollectionsProvider` + `useCollectionsContext()` — una sola lista en memoria compartida entre `HomePage` y `CollectionsPage`.
+- **Flashcards**: `FlashcardsProvider` + `useFlashcardsContext()` — una sola lista; el detalle filtra por URL y crea con `createForCollection`. Detalle y `StudyPage` comparten datos sin depender solo del foco para sincronizar.
+
+Detalle en `docs/context.md`. Cuando exista API unificada, los providers pueden seguir envolviendo la misma forma de datos cambiando la implementacion interna de los hooks.
 
 ### StudyPage: datos y sesion local (paso 7)
 
