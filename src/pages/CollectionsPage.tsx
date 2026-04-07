@@ -5,11 +5,11 @@ import Button from '../components/ui/Button'
 import EmptyState from '../components/ui/EmptyState'
 import Modal from '../components/ui/Modal'
 import Spinner from '../components/ui/Spinner'
-import { useCollections } from '../hooks'
+import { useCollectionsContext } from '../context/CollectionsContext'
 import type { UpdateCollectionInput } from '../types/domain'
 
 export default function CollectionsPage() {
-  const { collections, network, refresh, create, update, remove } = useCollections()
+  const { collections, network, refresh, create, update, remove } = useCollectionsContext()
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
