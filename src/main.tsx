@@ -8,6 +8,8 @@ import HomePage from './pages/HomePage.tsx'
 import NotFoundPage from './pages/NotFoundPage.tsx'
 import StudyPage from './pages/StudyPage.tsx'
 import CollectionDetailPage from './pages/CollectionDetailPage.tsx'
+import AboutPage from './pages/AboutPage.tsx'
+import SettingsPage from './pages/SettingsPage.tsx'
 import { CollectionsProvider } from './context/CollectionsContext'
 import { FlashcardsProvider } from './context/FlashcardsContext'
 
@@ -21,6 +23,8 @@ createRoot(document.getElementById('root')!).render(
               <Route index element={<HomePage />} />
               <Route path="collections" element={<CollectionsPage />} />
               <Route path="study" element={<StudyPage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="settings" element={<SettingsPage />} />
               <Route path="home" element={<Navigate to="/" replace />} />
               <Route path="*" element={<NotFoundPage />} />
               <Route path="collections/:collectionId" element={<CollectionDetailPage />} />

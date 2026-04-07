@@ -8,6 +8,8 @@ export default function App() {
           <Link to="/">Inicio</Link>
           <Link to="/collections">Colecciones</Link>
           <Link to="/study">Estudio</Link>
+          <Link to="/about">Acerca</Link>
+          <Link to="/settings">Ajustes</Link>
         </nav>
       </header>
 
