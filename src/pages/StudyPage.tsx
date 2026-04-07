@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import FlashcardsSummary from '../components/features/flashcards/FlashcardsSummary'
 import StudyCard from '../components/features/study/StudyCard'
 import StudyControls from '../components/features/study/StudyControls'
 import Button from '../components/ui/Button'
@@ -140,6 +141,10 @@ export default function StudyPage() {
     <main className="page-shell">
       <h1 className="page-title">Estudio</h1>
       <p className="page-subtitle">Practica con tus flashcards</p>
+
+      <div className="mt-4 lg:mx-auto lg:max-w-3xl">
+        <FlashcardsSummary title="Resumen del mazo" description="Estadísticas globales de tus tarjetas." />
+      </div>
 
       <section className="section-stack lg:mx-auto lg:max-w-3xl">
         <p className="text-sm text-slate-600">

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import FlashcardsSummary from '../components/features/flashcards/FlashcardsSummary'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import { useCollectionsContext } from '../context/CollectionsContext'
@@ -27,6 +28,8 @@ export default function HomePage() {
             {collections.length === 1 ? 'colección' : 'colecciones'} en local.
           </p>
         )}
+
+        <FlashcardsSummary />
 
         <div className="flex flex-wrap gap-3">
           <Link to="/collections" className="inline-block">
