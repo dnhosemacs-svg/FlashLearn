@@ -8,12 +8,14 @@ import FlashcardList from '../components/features/flashcards/FlashcardList'
 import Spinner from '../components/ui/Spinner'
 import { useFlashcardsContext } from '../context/FlashcardsContext'
 import type { CreateFlashcardInput } from '../types/domain'
+import {useNavigate} from 'react-router-dom'
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
   const { allFlashcards, network, refresh, createForCollection, remove } = useFlashcardsContext()
   const [searchQuery, setSearchQuery] = useState('')
-
+  const navigate = useNavigate()
+  
   const flashcards = useMemo(
     () => (collectionId ? allFlashcards.filter((card) => card.collectionId === collectionId) : []),
     [allFlashcards, collectionId],
@@ -69,9 +71,7 @@ export default function CollectionDetailPage() {
           description="No se encontró un identificador de colección en la URL."
         />
         <div className="mt-4">
-          <Link to="/collections">
-            <Button variant="ghost">Volver a colecciones</Button>
-          </Link>
+            <Button variant="ghost" onClick={() => navigate('/collections')}>Volver a colecciones</Button>
         </div>
       </main>
     )

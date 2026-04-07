@@ -1,12 +1,13 @@
-import { Link } from 'react-router-dom'
 import FlashcardsSummary from '../components/features/flashcards/FlashcardsSummary'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import { useCollectionsContext } from '../context/CollectionsContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
   const { collections, network, refresh } = useCollectionsContext()
-
+  const navigate = useNavigate()
+  
   return (
     <main className="page-shell">
       <h1 className="page-title">FlashLearn</h1>
@@ -32,12 +33,8 @@ export default function HomePage() {
         <FlashcardsSummary />
 
         <div className="flex flex-wrap gap-3">
-          <Link to="/collections" className="inline-block">
-            <Button variant="primary">Ir a colecciones</Button>
-          </Link>
-          <Link to="/study" className="inline-block">
-            <Button variant="secondary">Modo estudio</Button>
-          </Link>
+            <Button variant="primary" onClick={() => navigate('/collections')}>Ir a colecciones</Button>
+            <Button variant="secondary" onClick={() => navigate('/study')}>Modo estudio</Button>
         </div>
       </section>
     </main>
