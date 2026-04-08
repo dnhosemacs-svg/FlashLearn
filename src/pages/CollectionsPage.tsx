@@ -6,10 +6,12 @@ import EmptyState from '../components/ui/EmptyState'
 import Modal from '../components/ui/Modal'
 import Spinner from '../components/ui/Spinner'
 import { useCollectionsContext } from '../context/CollectionsContext'
+import { useFlashcardsContext } from '../context/FlashcardsContext'
 import type { UpdateCollectionInput } from '../types/domain'
 
 export default function CollectionsPage() {
   const { collections, network, refresh, create, update, remove } = useCollectionsContext()
+  const { removeByCollection } = useFlashcardsContext()
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
@@ -57,11 +59,13 @@ export default function CollectionsPage() {
       setEditingCollectionId(null)
     }
 
+    // Borrado en cascada: elimina flashcards de la colección antes de borrar la colección.
+    removeByCollection(pendingDeleteCollectionId)
     remove(pendingDeleteCollectionId)
 
     setIsDeleteModalOpen(false)
     setPendingDeleteCollectionId(null)
-  }, [pendingDeleteCollectionId, editingCollectionId, remove])
+  }, [pendingDeleteCollectionId, editingCollectionId, remove, removeByCollection])
 
   const editingCollection = collections.find(
     (collection) => collection.id === editingCollectionId,

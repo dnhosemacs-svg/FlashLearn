@@ -14,6 +14,8 @@ export interface UseFlashcardsResult {
   /** Crea una tarjeta en la colección indicada (útil con el provider global sin `collectionId` fijo). */
   createForCollection: (collectionId: string, input: CreateFlashcardInput) => void
   remove: (id: string) => void
+  /** Borra todas las tarjetas asociadas a una colección (borrado en cascada). */
+  removeByCollection: (collectionId: string) => void
   update: (id: string, input: UpdateFlashcardInput) => void
 }
 
@@ -97,6 +99,10 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
     setAllFlashcards((prev) => prev.filter((card) => card.id !== id))
   }, [])
 
+  const removeByCollection = useCallback((targetCollectionId: string) => {
+    setAllFlashcards((prev) => prev.filter((card) => card.collectionId !== targetCollectionId))
+  }, [])
+
   return {
     flashcards,
     allFlashcards,
@@ -106,5 +112,6 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
     createForCollection,
     update,
     remove,
+    removeByCollection,
   }
 }

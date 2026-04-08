@@ -36,7 +36,7 @@ export default function StudyPage() {
     setSessionOrder(null)
     setCurrentIndex(0)
     setIsRevealed(false)
-  }, [filteredFlashcards, selectedCollectionId])
+  }, [selectedCollectionId, filteredFlashcards])
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isRevealed, setIsRevealed] = useState(false)
@@ -95,10 +95,10 @@ export default function StudyPage() {
   }, [])
 
   const handleShuffle = useCallback(() => {
-    setSessionOrder((prev) => shuffleArray([...(prev ?? filteredFlashcards)]))
+    setSessionOrder(() => shuffleArray([...filteredFlashcards]))
     setCurrentIndex(0)
     setIsRevealed(false)
-  }, [loadedFlashcards])
+  }, [filteredFlashcards])
 
   if (network.status === 'loading' && loadedFlashcards.length === 0) {
     return (
