@@ -142,9 +142,14 @@ export default function CollectionsPage() {
               submitLabel="Guardar cambios"
               onSubmit={handleUpdateCollection}
               onCancel={handleCancelEdit}
+              existingNames={collections.map((c) => c.name)}
+              currentName={editingCollection.name}
             />
           ) : (
-            <CollectionForm onSubmit={create} />
+            <CollectionForm
+              onSubmit={create}
+              existingNames={collections.map((c) => c.name)}
+            />
           )}
           <CollectionList
             collections={filteredCollections}

@@ -14,6 +14,8 @@ interface CollectionFormProps {
   }
   submitLabel?: string
   onCancel?: () => void
+  existingNames?: string[]
+  currentName?: string
 }
 
 export default function CollectionForm({
@@ -23,16 +25,20 @@ export default function CollectionForm({
   initialValues,
   submitLabel,
   onCancel,
+  existingNames = [],
+  currentName,
 }: CollectionFormProps) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [nameError, setNameError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
     setName(initialValues?.name ?? '')
     setDescription(initialValues?.description ?? '')
     setNameError('')
-  }, [initialValues])
+    setSuccessMessage('')
+  }, [initialValues, mode])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -42,6 +48,20 @@ export default function CollectionForm({
 
     if (!trimmedName) {
       setNameError('El nombre es obligatorio')
+      setSuccessMessage('')
+      return
+    }
+
+    const normalizedName = trimmedName.toLowerCase()
+    const normalizedCurrent = (currentName ?? '').trim().toLowerCase()
+
+    const isDuplicate =
+      normalizedName !== normalizedCurrent &&
+      existingNames.some((n) => n.trim().toLowerCase() === normalizedName)
+
+    if (isDuplicate) {
+      setNameError('Ya existe una colección con ese nombre')
+      setSuccessMessage('')
       return
     }
 
@@ -50,6 +70,12 @@ export default function CollectionForm({
       name: trimmedName,
       description: trimmedDescription || undefined,
     })
+
+    setSuccessMessage(
+      mode === 'edit'
+        ? 'Colección actualizada correctamente.'
+        : 'Colección creada correctamente.',
+    )
 
     if (mode === 'create') {
       setName('')
@@ -87,6 +113,8 @@ export default function CollectionForm({
           placeholder="Ej: Hooks y patrones de React"
           onChange={(event) => setDescription(event.target.value)}
         />
+
+        {successMessage ? <p className="text-sm text-green-700">{successMessage}</p> : null}
 
         <div className="flex flex-wrap gap-2">
           <Button type="submit" isLoading={isSubmitting}>
