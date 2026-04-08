@@ -26,7 +26,7 @@ function FlashcardItem({ flashcard, onEdit, onDelete }: FlashcardItemProps) {
         </div>
       }
     >
-      <p className="text-sm text-slate-300">{flashcard.answer}</p>
+      <p className="text-sm text-indigo-600">{flashcard.answer}</p>
 
       {flashcard.tags?.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
