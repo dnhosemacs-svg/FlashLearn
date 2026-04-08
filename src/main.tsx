@@ -27,7 +27,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="settings" element={<SettingsPage />} />
               <Route path="home" element={<Navigate to="/" replace />} />
               <Route path="*" element={<NotFoundPage />} />
-              <Route path="collections/:collectionId" element={<CollectionDetailPage />} />
+              <Route path="collections/:collectionRef" element={<CollectionDetailPage />} />
             </Route>
           </Routes>
         </FlashcardsProvider>

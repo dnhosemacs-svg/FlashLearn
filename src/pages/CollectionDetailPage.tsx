@@ -11,13 +11,22 @@ import { useCollectionsContext } from '../context/CollectionsContext'
 import type { CreateFlashcardInput } from '../types/domain'
 import {useNavigate} from 'react-router-dom'
 
+const UUID_AT_END_REGEX =
+  /([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
+
 export default function CollectionDetailPage() {
-  const { collectionId } = useParams<{ collectionId: string }>()
+  const { collectionRef } = useParams<{ collectionRef: string }>()
   const { allFlashcards, network, refresh, createForCollection, update, remove } = useFlashcardsContext()
   const { collections } = useCollectionsContext()
   const [editingFlashcardId, setEditingFlashcardId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
+
+  const collectionId = useMemo(() => {
+    if (!collectionRef) return undefined
+    const match = collectionRef.match(UUID_AT_END_REGEX)
+    return match?.[1] ?? collectionRef
+  }, [collectionRef])
 
   const flashcards = useMemo(
     () => (collectionId ? allFlashcards.filter((card) => card.collectionId === collectionId) : []),

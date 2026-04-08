@@ -10,14 +10,24 @@ interface CollectionItemProps {
   onDelete: (collectionId: string) => void
 }
 
+function toSlug(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
+  const collectionRef = `${toSlug(collection.name) || 'coleccion'}-${collection.id}`
+
   return (
     <Card
       title={collection.name}
       description={collection.description || 'Sin descripcion'}
       actions={
         <div className="flex flex-wrap justify-end gap-2">
-          <Link to={`/collections/${collection.id}`} className="w-full sm:w-auto">
+          <Link to={`/collections/${collectionRef}`} className="w-full sm:w-auto">
             <Button variant="secondary" size="sm" className="w-full sm:w-auto">
               Abrir
             </Button>
