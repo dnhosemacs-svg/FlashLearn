@@ -7,6 +7,7 @@ import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import { useFlashcardsContext } from '../context/FlashcardsContext'
 import type { Flashcard } from '../types/domain'
+import { useCollectionsContext } from '../context/CollectionsContext'
 
 function shuffleArray<T>(items: T[]) {
   const copy = [...items]
@@ -19,14 +20,23 @@ function shuffleArray<T>(items: T[]) {
 
 export default function StudyPage() {
   const { flashcards: loadedFlashcards, network, refresh } = useFlashcardsContext()
+  const { collections } = useCollectionsContext()
   /** Orden local al barajar; se resetea cuando cambian las tarjetas cargadas. */
   const [sessionOrder, setSessionOrder] = useState<Flashcard[] | null>(null)
-
-  const deck = sessionOrder ?? loadedFlashcards
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string>('all')
+  
+  const filteredFlashcards = useMemo(() => {
+    if (selectedCollectionId === 'all') return loadedFlashcards
+    return loadedFlashcards.filter((c) => c.collectionId === selectedCollectionId)
+  }, [loadedFlashcards, selectedCollectionId])
+  
+  const deck = sessionOrder ?? filteredFlashcards
 
   useEffect(() => {
     setSessionOrder(null)
-  }, [loadedFlashcards])
+    setCurrentIndex(0)
+    setIsRevealed(false)
+  }, [filteredFlashcards, selectedCollectionId])
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isRevealed, setIsRevealed] = useState(false)
@@ -85,7 +95,7 @@ export default function StudyPage() {
   }, [])
 
   const handleShuffle = useCallback(() => {
-    setSessionOrder((prev) => shuffleArray([...(prev ?? loadedFlashcards)]))
+    setSessionOrder((prev) => shuffleArray([...(prev ?? filteredFlashcards)]))
     setCurrentIndex(0)
     setIsRevealed(false)
   }, [loadedFlashcards])
@@ -151,6 +161,24 @@ export default function StudyPage() {
           Progreso: {studyStats.current} / {studyStats.total} ({studyStats.progressPercent}%) ·{' '}
           {studyStats.revealedLabel}
         </p>
+
+        <div className="mt-4 lg:mx-auto lg:max-w-3xl">
+          <label className="block text-sm font-medium text-slate-700">
+            Colección
+          </label>
+          <select
+            value={selectedCollectionId}
+            onChange={(e) => setSelectedCollectionId(e.target.value)}
+            className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+          >
+            <option value="all">Todas las colecciones</option>
+            {collections.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {currentFlashcard && (
           <StudyCard flashcard={currentFlashcard} isRevealed={isRevealed} />
