@@ -7,12 +7,14 @@ import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
 import Spinner from '../components/ui/Spinner'
 import { useFlashcardsContext } from '../context/FlashcardsContext'
+import { useCollectionsContext } from '../context/CollectionsContext'
 import type { CreateFlashcardInput } from '../types/domain'
 import {useNavigate} from 'react-router-dom'
 
 export default function CollectionDetailPage() {
   const { collectionId } = useParams<{ collectionId: string }>()
   const { allFlashcards, network, refresh, createForCollection, update, remove } = useFlashcardsContext()
+  const { collections } = useCollectionsContext()
   const [editingFlashcardId, setEditingFlashcardId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
@@ -22,6 +24,10 @@ export default function CollectionDetailPage() {
     [allFlashcards, collectionId],
   )
   const editingFlashcard = flashcards.find((card) => card.id === editingFlashcardId)
+  const collectionName = useMemo(
+    () => collections.find((collection) => collection.id === collectionId)?.name ?? collectionId,
+    [collections, collectionId],
+  )
 
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
@@ -135,7 +141,7 @@ export default function CollectionDetailPage() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Detalle de colección</h1>
-          <p className="page-subtitle">ID: {collectionId}</p>
+          <p className="page-subtitle">Colección: {collectionName}</p>
         </div>
         <Link to="/collections">
           <Button variant="ghost">Volver</Button>
