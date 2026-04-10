@@ -1,20 +1,8 @@
-import express from 'express'
-import cors from 'cors'
+import { createApp } from './app/createApp.js'
+import { env } from './config/env.js'
 
-const app = express()
-const PORT = Number(process.env.PORT) || 4000
+const app = createApp()
 
-app.use(cors())
-app.use(express.json())
-
-app.get('/api/v1/health', (_req, res) => {
-  res.status(200).json({
-    ok: true,
-    service: 'flashlearn-api',
-    timestamp: new Date().toISOString(),
-  })
-})
-
-app.listen(PORT, () => {
-  console.log(`API running on http://localhost:${PORT}`)
+app.listen(env.port, () => {
+  console.log(`API running on http://localhost:${env.port}`)
 })
