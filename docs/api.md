@@ -1,234 +1,53 @@
 # API de FlashLearn (v1)
 
-## Objetivo
+Documentación del contrato backend actual en `server/`.
 
-Definir el contrato inicial de la API REST para el MVP de FlashLearn, usando dos recursos principales:
-
-- `collections`
-- `flashcards`
-
-Base URL:
-
-- `/api/v1`
+- Base URL: `/api/v1`
+- Formato de respuesta actual:
+  - éxito: objeto o array JSON directo
+  - error: `{ "message": "..." }`
 
 ---
 
-## Recursos y alcance minimo (MVP)
+## Tabla de endpoints
 
-### 1) Recurso `collections`
-
-Representa una coleccion de estudio (tema o asignatura) que agrupa tarjetas.
-
-Campos minimos:
-
-- `id: string`
-- `name: string`
-- `description?: string`
-- `createdAt: string` (ISO 8601)
-- `updatedAt: string` (ISO 8601)
-
-Operaciones MVP:
-
-- crear coleccion
-- listar colecciones
-- obtener detalle de una coleccion
-- editar coleccion
-- eliminar coleccion
-
-### 2) Recurso `flashcards`
-
-Representa una tarjeta de estudio asociada a una coleccion.
-
-Campos minimos:
-
-- `id: string`
-- `collectionId: string`
-- `question: string`
-- `answer: string`
-- `tags?: string[]`
-- `createdAt: string` (ISO 8601)
-- `updatedAt: string` (ISO 8601)
-
-Operaciones MVP:
-
-- crear tarjeta en coleccion
-- listar tarjetas por coleccion
-- editar tarjeta
-- eliminar tarjeta
-
-### Relacion entre recursos
-
-- Una `collection` tiene muchas `flashcards` (1:N).
-- Cada `flashcard` pertenece exactamente a una `collection`.
-- Al eliminar una `collection`, sus `flashcards` se eliminan en cascada (decision MVP).
-
----
-
-## Endpoints MVP
-
-### Collections
-
-- `GET /api/v1/collections`
-- `POST /api/v1/collections`
-- `GET /api/v1/collections/:collectionId`
-- `PATCH /api/v1/collections/:collectionId`
-- `DELETE /api/v1/collections/:collectionId`
-
-### Flashcards
-
-- `GET /api/v1/collections/:collectionId/flashcards`
-- `POST /api/v1/collections/:collectionId/flashcards`
-- `PATCH /api/v1/flashcards/:flashcardId`
-- `DELETE /api/v1/flashcards/:flashcardId`
-
----
-
-## Contratos de entrada (DTOs)
-
-### CreateCollectionDto
-
-```json
-{
-  "name": "Programacion",
-  "description": "Conceptos de TypeScript y React"
-}
-```
-
-Reglas:
-
-- `name` requerido, 2-80 caracteres.
-- `description` opcional, maximo 280 caracteres.
-
-### UpdateCollectionDto
-
-```json
-{
-  "name": "Programacion Web",
-  "description": "Actualizada"
-}
-```
-
-Reglas:
-
-- todos los campos opcionales
-- si se envian, deben cumplir la misma validacion que en creacion
-
-### CreateFlashcardDto
-
-```json
-{
-  "question": "Que es useEffect?",
-  "answer": "Un hook para efectos secundarios en React",
-  "tags": ["react", "hooks"]
-}
-```
-
-Reglas:
-
-- `question` requerido, 1-300 caracteres.
-- `answer` requerido, 1-1000 caracteres.
-- `tags` opcional, array de strings.
-
-### UpdateFlashcardDto
-
-```json
-{
-  "question": "Que hace useMemo?",
-  "answer": "Memoriza calculos costosos",
-  "tags": ["react", "performance"]
-}
-```
-
-Reglas:
-
-- todos los campos opcionales
-- si se envian, deben cumplir la validacion de creacion
-
----
-
-## Formato de respuesta
-
-### Exito
-
-```json
-{
-  "ok": true,
-  "data": {}
-}
-```
-
-### Error
-
-```json
-{
-  "ok": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "El campo name es obligatorio"
-  }
-}
-```
-
-Codigos de error sugeridos:
-
-- `VALIDATION_ERROR`
-- `NOT_FOUND`
-- `CONFLICT`
-- `INTERNAL_ERROR`
-
----
-
-## Codigos HTTP del MVP
-
-- `200 OK`: lectura, actualizacion y borrado correctos
-- `201 Created`: creacion correcta
-- `400 Bad Request`: entrada invalida
-- `404 Not Found`: recurso no encontrado
-- `500 Internal Server Error`: error no controlado
-
----
-
-## Codigos HTTP por endpoint
-
-| Endpoint | 200 | 201 | 400 | 404 | 500 |
-|---------|-----|-----|-----|-----|-----|
-| `GET /api/v1/collections` | si | no | no | no | si |
-| `POST /api/v1/collections` | no | si | si | no | si |
-| `GET /api/v1/collections/:collectionId` | si | no | no | si | si |
-| `PATCH /api/v1/collections/:collectionId` | si | no | si | si | si |
-| `DELETE /api/v1/collections/:collectionId` | si | no | no | si | si |
-| `GET /api/v1/collections/:collectionId/flashcards` | si | no | no | si | si |
-| `POST /api/v1/collections/:collectionId/flashcards` | no | si | si | si | si |
-| `PATCH /api/v1/flashcards/:flashcardId` | si | no | si | si | si |
-| `DELETE /api/v1/flashcards/:flashcardId` | si | no | no | si | si |
-
-Notas:
-
-- En `DELETE`, tambien es valido devolver `204 No Content` si no se retorna cuerpo.
-- Un `400` aplica cuando la ruta existe pero el body no cumple validaciones.
-- Un `404` aplica cuando el recurso indicado por ID no existe.
-
----
-
-## Fuera de alcance en este MVP
-
-- autenticacion y usuarios
-- sincronizacion multi-dispositivo
-- estadisticas de aprendizaje
-- compartir colecciones por enlace
-- importacion/exportacion avanzada
-
-Estas capacidades se evaluan en fases posteriores.
+| Método | Endpoint | Descripción | Códigos |
+|---|---|---|---|
+| GET | `/api/v1/health` | Estado del servicio | `200`, `500` |
+| GET | `/api/v1/collections` | Listar colecciones | `200`, `500` |
+| POST | `/api/v1/collections` | Crear colección | `201`, `400`, `409`, `500` |
+| GET | `/api/v1/collections/:id` | Obtener colección por id | `200`, `404`, `500` |
+| PATCH | `/api/v1/collections/:id` | Actualizar colección | `200`, `400`, `404`, `409`, `500` |
+| DELETE | `/api/v1/collections/:id` | Borrar colección (cascada de flashcards) | `204`, `404`, `500` |
+| GET | `/api/v1/flashcards` | Listar flashcards (opcional filtro `collectionId`) | `200`, `500` |
+| GET | `/api/v1/flashcards/:id` | Obtener flashcard por id | `200`, `404`, `500` |
+| POST | `/api/v1/flashcards` | Crear flashcard | `201`, `400`, `404`, `500` |
+| PATCH | `/api/v1/flashcards/:id` | Actualizar flashcard | `200`, `400`, `404`, `500` |
+| DELETE | `/api/v1/flashcards/:id` | Borrar flashcard | `204`, `404`, `500` |
 
 ---
 
 ## Ejemplos request/response
 
+### Health
+
+```http
+GET /api/v1/health
+```
+
+`200 OK`
+
+```json
+{
+  "ok": true,
+  "service": "flashlearn-api",
+  "timestamp": "2026-04-10T07:35:32.709Z"
+}
+```
+
 ### Collections
 
-#### 1) Crear coleccion (exito)
-
-Request:
+#### Crear colección
 
 ```http
 POST /api/v1/collections
@@ -242,154 +61,149 @@ Content-Type: application/json
 }
 ```
 
-Response `201 Created`:
+`201 Created`
 
 ```json
 {
-  "ok": true,
-  "data": {
-    "id": "col_001",
+  "id": "ab83bed9-28cb-4909-9d72-3e7e6082922e",
+  "name": "React",
+  "description": "Hooks y componentes",
+  "createdAt": "2026-04-10T07:35:32.709Z",
+  "updatedAt": "2026-04-10T07:35:32.709Z"
+}
+```
+
+#### Listar colecciones
+
+```http
+GET /api/v1/collections
+```
+
+`200 OK`
+
+```json
+[
+  {
+    "id": "ab83bed9-28cb-4909-9d72-3e7e6082922e",
     "name": "React",
     "description": "Hooks y componentes",
-    "createdAt": "2026-03-31T18:00:00.000Z",
-    "updatedAt": "2026-03-31T18:00:00.000Z"
+    "createdAt": "2026-04-10T07:35:32.709Z",
+    "updatedAt": "2026-04-10T07:35:32.709Z"
   }
-}
-```
-
-#### 2) Crear coleccion (error de validacion)
-
-Request:
-
-```http
-POST /api/v1/collections
-Content-Type: application/json
-```
-
-```json
-{
-  "name": ""
-}
-```
-
-Response `400 Bad Request`:
-
-```json
-{
-  "ok": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "El campo name es obligatorio y debe tener al menos 2 caracteres"
-  }
-}
-```
-
-#### 3) Obtener coleccion por ID (no encontrada)
-
-Request:
-
-```http
-GET /api/v1/collections/col_999
-```
-
-Response `404 Not Found`:
-
-```json
-{
-  "ok": false,
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "Collection no encontrada"
-  }
-}
+]
 ```
 
 ### Flashcards
 
-#### 4) Crear flashcard en coleccion (exito)
-
-Request:
+#### Crear flashcard
 
 ```http
-POST /api/v1/collections/col_001/flashcards
+POST /api/v1/flashcards
 Content-Type: application/json
 ```
 
 ```json
 {
-  "question": "Que hace useMemo?",
-  "answer": "Memoriza calculos para evitar recomputaciones innecesarias",
-  "tags": ["react", "performance"]
+  "collectionId": "ab83bed9-28cb-4909-9d72-3e7e6082922e",
+  "question": "¿Qué hace useMemo?",
+  "answer": "Memoriza cálculos",
+  "tags": ["react", "hooks"]
 }
 ```
 
-Response `201 Created`:
+`201 Created`
 
 ```json
 {
-  "ok": true,
-  "data": {
-    "id": "fc_001",
-    "collectionId": "col_001",
-    "question": "Que hace useMemo?",
-    "answer": "Memoriza calculos para evitar recomputaciones innecesarias",
-    "tags": ["react", "performance"],
-    "createdAt": "2026-03-31T18:05:00.000Z",
-    "updatedAt": "2026-03-31T18:05:00.000Z"
-  }
+  "id": "f4f3a32c-bd5a-447f-a5f2-d5c8964f6a9e",
+  "collectionId": "ab83bed9-28cb-4909-9d72-3e7e6082922e",
+  "question": "¿Qué hace useMemo?",
+  "answer": "Memoriza cálculos",
+  "tags": ["react", "hooks"],
+  "createdAt": "2026-04-10T07:40:00.000Z",
+  "updatedAt": "2026-04-10T07:40:00.000Z"
 }
 ```
 
-#### 5) Editar flashcard (error por ID inexistente)
-
-Request:
+#### Listar flashcards por colección
 
 ```http
-PATCH /api/v1/flashcards/fc_999
-Content-Type: application/json
+GET /api/v1/flashcards?collectionId=ab83bed9-28cb-4909-9d72-3e7e6082922e
 ```
 
-```json
-{
-  "answer": "Respuesta nueva"
-}
-```
-
-Response `404 Not Found`:
+`200 OK`
 
 ```json
-{
-  "ok": false,
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "Flashcard no encontrada"
+[
+  {
+    "id": "f4f3a32c-bd5a-447f-a5f2-d5c8964f6a9e",
+    "collectionId": "ab83bed9-28cb-4909-9d72-3e7e6082922e",
+    "question": "¿Qué hace useMemo?",
+    "answer": "Memoriza cálculos",
+    "tags": ["react", "hooks"],
+    "createdAt": "2026-04-10T07:40:00.000Z",
+    "updatedAt": "2026-04-10T07:40:00.000Z"
   }
-}
+]
 ```
 
-#### 6) Listar flashcards por coleccion (exito)
+---
 
-Request:
+## Errores y códigos posibles
 
-```http
-GET /api/v1/collections/col_001/flashcards
-```
+### `400 Bad Request` (validación)
 
-Response `200 OK`:
+Se devuelve cuando el body no cumple validación.
 
 ```json
 {
-  "ok": true,
-  "data": [
-    {
-      "id": "fc_001",
-      "collectionId": "col_001",
-      "question": "Que hace useMemo?",
-      "answer": "Memoriza calculos para evitar recomputaciones innecesarias",
-      "tags": ["react", "performance"],
-      "createdAt": "2026-03-31T18:05:00.000Z",
-      "updatedAt": "2026-03-31T18:05:00.000Z"
-    }
-  ]
+  "message": "name es obligatorio"
 }
 ```
+
+Ejemplos:
+- `POST /collections` sin `name`
+- `POST /flashcards` sin `question` o `answer`
+
+### `404 Not Found`
+
+Se devuelve cuando no existe el recurso solicitado.
+
+```json
+{
+  "message": "Colección no encontrada"
+}
+```
+
+Ejemplos:
+- `GET /collections/:id` inexistente
+- `POST /flashcards` con `collectionId` inexistente
+- `PATCH/DELETE /flashcards/:id` inexistente
+
+### `409 Conflict`
+
+Se devuelve en conflicto de negocio de colecciones (nombre duplicado).
+
+```json
+{
+  "message": "Ya existe una colección con ese nombre"
+}
+```
+
+### `500 Internal Server Error`
+
+Error no controlado capturado por middleware global.
+
+```json
+{
+  "message": "Error interno del servidor"
+}
+```
+
+---
+
+## Notas de dominio
+
+- Relación `collections` -> `flashcards` es 1:N.
+- Borrado en cascada: al eliminar una colección, se eliminan sus flashcards asociadas.
+- Persistencia actual: en memoria del proceso backend (sin base de datos todavía).
