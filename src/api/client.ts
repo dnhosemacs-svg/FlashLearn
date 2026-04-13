@@ -1,10 +1,11 @@
+import type { ApiErrorResponse } from '../types/api'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api/v1'
 
 export class HttpError extends Error {
   status: number
-  body: unknown
+  body: ApiErrorResponse | unknown
 
-  constructor(message: string, status: number, body: unknown) {
+  constructor(message: string, status: number, body: ApiErrorResponse | unknown) {
     super(message)
     this.name = 'HttpError'
     this.status = status
@@ -18,6 +19,15 @@ interface RequestOptions {
   method?: HttpMethod
   body?: unknown
   signal?: AbortSignal
+}
+
+function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'message' in value &&
+    typeof (value as { message: unknown }).message === 'string'
+  )
 }
 
 async function parseResponseBody(response: Response): Promise<unknown> {
@@ -48,14 +58,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const parsedBody = await parseResponseBody(response)
 
   if (!response.ok) {
-    const message =
-      typeof parsedBody === 'object' &&
-      parsedBody !== null &&
-      'message' in parsedBody &&
-      typeof (parsedBody as { message: unknown }).message === 'string'
-        ? (parsedBody as { message: string }).message
-        : `HTTP ${response.status}`
-
+    const message = isApiErrorResponse(parsedBody) ? parsedBody.message : `HTTP ${response.status}`
     throw new HttpError(message, response.status, parsedBody)
   }
 

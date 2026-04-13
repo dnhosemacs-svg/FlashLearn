@@ -1,37 +1,38 @@
 import { apiClient } from './client'
-import type { Flashcard, UpdateFlashcardInput } from '../types/domain'
+import type {
+  DeleteFlashcardResponse,
+  GetFlashcardByIdResponse,
+  GetFlashcardsResponse,
+  PatchFlashcardRequest,
+  PatchFlashcardResponse,
+  PostFlashcardRequest,
+  PostFlashcardResponse,
+} from '../types/api'
 
-export interface CreateFlashcardApiInput {
-  collectionId: string
-  question: string
-  answer: string
-  tags?: string[]
-}
-
-export function getFlashcards(collectionId?: string, signal?: AbortSignal): Promise<Flashcard[]> {
+export function getFlashcards(collectionId?: string, signal?: AbortSignal): Promise<GetFlashcardsResponse> {
   const query = collectionId ? `?collectionId=${encodeURIComponent(collectionId)}` : ''
-  return apiClient.get<Flashcard[]>(`/flashcards${query}`, signal)
+  return apiClient.get<GetFlashcardsResponse>(`/flashcards${query}`, signal)
 }
 
-export function getFlashcardById(id: string, signal?: AbortSignal): Promise<Flashcard> {
-  return apiClient.get<Flashcard>(`/flashcards/${id}`, signal)
+export function getFlashcardById(id: string, signal?: AbortSignal): Promise<GetFlashcardByIdResponse> {
+  return apiClient.get<GetFlashcardByIdResponse>(`/flashcards/${id}`, signal)
 }
 
 export function postFlashcard(
-  input: CreateFlashcardApiInput,
+  input: PostFlashcardRequest,
   signal?: AbortSignal,
-): Promise<Flashcard> {
-  return apiClient.post<Flashcard, CreateFlashcardApiInput>('/flashcards', input, signal)
+): Promise<PostFlashcardResponse> {
+  return apiClient.post<PostFlashcardResponse, PostFlashcardRequest>('/flashcards', input, signal)
 }
 
 export function patchFlashcard(
   id: string,
-  input: UpdateFlashcardInput,
+  input: PatchFlashcardRequest,
   signal?: AbortSignal,
-): Promise<Flashcard> {
-  return apiClient.patch<Flashcard, UpdateFlashcardInput>(`/flashcards/${id}`, input, signal)
+): Promise<PatchFlashcardResponse> {
+  return apiClient.patch<PatchFlashcardResponse, PatchFlashcardRequest>(`/flashcards/${id}`, input, signal)
 }
 
-export function deleteFlashcard(id: string, signal?: AbortSignal): Promise<null> {
-  return apiClient.delete<null>(`/flashcards/${id}`, signal)
+export function deleteFlashcard(id: string, signal?: AbortSignal): Promise<DeleteFlashcardResponse> {
+  return apiClient.delete<DeleteFlashcardResponse>(`/flashcards/${id}`, signal)
 }

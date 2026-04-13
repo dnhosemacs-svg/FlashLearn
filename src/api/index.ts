@@ -14,5 +14,4 @@ export {
   postFlashcard,
   patchFlashcard,
   deleteFlashcard,
-  type CreateFlashcardApiInput,
 } from './flashcardsApi'

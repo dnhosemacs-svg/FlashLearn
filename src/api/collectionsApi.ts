@@ -1,29 +1,37 @@
 import { apiClient } from './client'
-import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
+import type {
+  DeleteCollectionResponse,
+  GetCollectionByIdResponse,
+  GetCollectionsResponse,
+  PatchCollectionRequest,
+  PatchCollectionResponse,
+  PostCollectionRequest,
+  PostCollectionResponse,
+} from '../types/api'
 
-export function getCollections(signal?: AbortSignal): Promise<Collection[]> {
-  return apiClient.get<Collection[]>('/collections', signal)
+export function getCollections(signal?: AbortSignal): Promise<GetCollectionsResponse> {
+  return apiClient.get<GetCollectionsResponse>('/collections', signal)
 }
 
-export function getCollectionById(id: string, signal?: AbortSignal): Promise<Collection> {
-  return apiClient.get<Collection>(`/collections/${id}`, signal)
+export function getCollectionById(id: string, signal?: AbortSignal): Promise<GetCollectionByIdResponse> {
+  return apiClient.get<GetCollectionByIdResponse>(`/collections/${id}`, signal)
 }
 
 export function postCollection(
-  input: CreateCollectionInput,
+  input: PostCollectionRequest,
   signal?: AbortSignal,
-): Promise<Collection> {
-  return apiClient.post<Collection, CreateCollectionInput>('/collections', input, signal)
+): Promise<PostCollectionResponse> {
+  return apiClient.post<PostCollectionResponse, PostCollectionRequest>('/collections', input, signal)
 }
 
 export function patchCollection(
   id: string,
-  input: UpdateCollectionInput,
+  input: PatchCollectionRequest,
   signal?: AbortSignal,
-): Promise<Collection> {
-  return apiClient.patch<Collection, UpdateCollectionInput>(`/collections/${id}`, input, signal)
+): Promise<PatchCollectionResponse> {
+  return apiClient.patch<PatchCollectionResponse, PatchCollectionRequest>(`/collections/${id}`, input, signal)
 }
 
-export function deleteCollection(id: string, signal?: AbortSignal): Promise<null> {
-  return apiClient.delete<null>(`/collections/${id}`, signal)
+export function deleteCollection(id: string, signal?: AbortSignal): Promise<DeleteCollectionResponse> {
+  return apiClient.delete<DeleteCollectionResponse>(`/collections/${id}`, signal)
 }
