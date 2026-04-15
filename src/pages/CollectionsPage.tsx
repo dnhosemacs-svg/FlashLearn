@@ -5,8 +5,8 @@ import CollectionListSkeleton from '../components/features/collections/Collectio
 import Button from '../components/ui/Button'
 import EmptyState from '../components/ui/EmptyState'
 import Modal from '../components/ui/Modal'
-import { useCollectionsContext } from '../context/CollectionsContext'
-import { useFlashcardsContext } from '../context/FlashcardsContext'
+import { useCollectionsContext } from '../context/useCollectionsContext'
+import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import { loadCollectionsSearch, saveCollectionsSearch } from '../lib/storage/uiStateStorage'
 import type { UpdateCollectionInput } from '../types/domain'
 
@@ -146,6 +146,7 @@ export default function CollectionsPage() {
         <div className="card-grid-2">
           {editingCollection ? (
             <CollectionForm
+              key={`edit-${editingCollection.id}`}
               mode="edit"
               initialValues={{
                 name: editingCollection.name,
@@ -159,6 +160,7 @@ export default function CollectionsPage() {
             />
           ) : (
             <CollectionForm
+              key="create-collection"
               onSubmit={(data) => void create(data)}
               existingNames={collections.map((c) => c.name)}
             />

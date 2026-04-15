@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import Input from '../../ui/Input'
@@ -28,17 +28,10 @@ export default function CollectionForm({
   existingNames = [],
   currentName,
 }: CollectionFormProps) {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState(initialValues?.name ?? '')
+  const [description, setDescription] = useState(initialValues?.description ?? '')
   const [nameError, setNameError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-
-  useEffect(() => {
-    setName(initialValues?.name ?? '')
-    setDescription(initialValues?.description ?? '')
-    setNameError('')
-    setSuccessMessage('')
-  }, [initialValues, mode])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useCallback, useMemo, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import EmptyState from '../components/ui/EmptyState'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
 import Skeleton from '../components/ui/Skeleton'
-import { useFlashcardsContext } from '../context/FlashcardsContext'
-import { useCollectionsContext } from '../context/CollectionsContext'
+import { useCollectionsContext } from '../context/useCollectionsContext'
+import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import type { CreateFlashcardInput } from '../types/domain'
-import { useNavigate } from 'react-router-dom'
 
 const UUID_AT_END_REGEX =
   /([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
@@ -63,10 +62,6 @@ export default function CollectionDetailPage() {
 
     return { total, withTags, withoutTags }
   }, [flashcards])
-
-  useEffect(() => {
-    setSearchQuery('')
-  }, [collectionId])
 
   const handleEditFlashcard = useCallback((flashcardId: string) => {
     setEditingFlashcardId(flashcardId)
@@ -181,6 +176,7 @@ export default function CollectionDetailPage() {
         <div className="card-grid-2">
         {editingFlashcard ? (
   <FlashcardForm
+    key={`edit-${editingFlashcard.id}`}
     mode="edit"
     initialValues={{
       question: editingFlashcard.question,
@@ -192,7 +188,10 @@ export default function CollectionDetailPage() {
     onCancel={handleCancelEditFlashcard}
   />
 ) : (
-  <FlashcardForm onSubmit={(data) => void handleCreateFlashcard(data)} />
+  <FlashcardForm
+    key={`create-${collectionId}`}
+    onSubmit={(data) => void handleCreateFlashcard(data)}
+  />
 )}
 
           <Card

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import Input from '../../ui/Input'
@@ -23,21 +23,12 @@ export default function FlashcardForm({
   submitLabel,
   onCancel,
 }: FlashcardFormProps) {
-  const [question, setQuestion] = useState('')
-  const [answer, setAnswer] = useState('')
-  const [tagsText, setTagsText] = useState('')
+  const [question, setQuestion] = useState(initialValues?.question ?? '')
+  const [answer, setAnswer] = useState(initialValues?.answer ?? '')
+  const [tagsText, setTagsText] = useState((initialValues?.tags ?? []).join(', '))
   const [questionError, setQuestionError] = useState('')
   const [answerError, setAnswerError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-
-  useEffect(() => {
-    setQuestion(initialValues?.question ?? '')
-    setAnswer(initialValues?.answer ?? '')
-    setTagsText((initialValues?.tags ?? []).join(', '))
-    setQuestionError('')
-    setAnswerError('')
-    setSuccessMessage('')
-  }, [initialValues, mode])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

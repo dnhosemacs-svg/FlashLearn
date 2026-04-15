@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
   deleteCollection,
   getCollections,
@@ -45,9 +45,13 @@ export function useCollections(): UseCollectionsResult {
     }
   }, [collections.length])
 
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
+  const didInitRef = useRef<true | null>(null)
+  if (didInitRef.current == null) {
+    didInitRef.current = true
+    queueMicrotask(() => {
+      void refresh()
+    })
+  }
 
   const create = useCallback(async (input: CreateCollectionInput) => {
     const created = await postCollection(input)

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useFlashcardsContext } from '../../../context/FlashcardsContext'
+import { useFlashcardsContext } from '../../../context/useFlashcardsContext'
 import Card from '../../ui/Card'
 import Spinner from '../../ui/Spinner'
 

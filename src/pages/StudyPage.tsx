@@ -5,9 +5,9 @@ import StudyControls from '../components/features/study/StudyControls'
 import Button from '../components/ui/Button'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
-import { useFlashcardsContext } from '../context/FlashcardsContext'
+import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import type { Flashcard } from '../types/domain'
-import { useCollectionsContext } from '../context/CollectionsContext'
+import { useCollectionsContext } from '../context/useCollectionsContext'
 
 function shuffleArray<T>(items: T[]) {
   const copy = [...items]
@@ -24,28 +24,27 @@ export default function StudyPage() {
   /** Orden local al barajar; se resetea cuando cambian las tarjetas cargadas. */
   const [sessionOrder, setSessionOrder] = useState<Flashcard[] | null>(null)
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>('all')
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isRevealed, setIsRevealed] = useState(false)
   
   const filteredFlashcards = useMemo(() => {
     if (selectedCollectionId === 'all') return loadedFlashcards
     return loadedFlashcards.filter((c) => c.collectionId === selectedCollectionId)
   }, [loadedFlashcards, selectedCollectionId])
   
-  const deck = sessionOrder ?? filteredFlashcards
+  const deck = useMemo(() => {
+    if (!sessionOrder) return filteredFlashcards
+    const availableIds = new Set(filteredFlashcards.map((card) => card.id))
+    return sessionOrder.filter((card) => availableIds.has(card.id))
+  }, [sessionOrder, filteredFlashcards])
 
-  useEffect(() => {
-    setSessionOrder(null)
-    setCurrentIndex(0)
-    setIsRevealed(false)
-  }, [selectedCollectionId, filteredFlashcards])
-
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isRevealed, setIsRevealed] = useState(false)
-
-  const currentFlashcard = useMemo(() => deck[currentIndex], [deck, currentIndex])
+  const maxIndex = Math.max(deck.length - 1, 0)
+  const effectiveIndex = Math.min(currentIndex, maxIndex)
+  const currentFlashcard = useMemo(() => deck[effectiveIndex], [deck, effectiveIndex])
 
   const studyStats = useMemo(() => {
     const total = deck.length
-    const current = total === 0 ? 0 : currentIndex + 1
+    const current = total === 0 ? 0 : effectiveIndex + 1
     const progressPercent = total === 0 ? 0 : Math.round((current / total) * 100)
 
     const revealedLabel = isRevealed ? 'Respuesta visible' : 'Respuesta oculta'
@@ -56,7 +55,7 @@ export default function StudyPage() {
       progressPercent,
       revealedLabel,
     }
-  }, [deck.length, currentIndex, isRevealed])
+  }, [deck.length, effectiveIndex, isRevealed])
 
   useEffect(() => {
     const handleFocus = () => {
@@ -66,19 +65,6 @@ export default function StudyPage() {
     window.addEventListener('focus', handleFocus)
     return () => window.removeEventListener('focus', handleFocus)
   }, [refresh])
-
-  useEffect(() => {
-    if (deck.length === 0) {
-      setCurrentIndex(0)
-      setIsRevealed(false)
-      return
-    }
-
-    if (currentIndex > deck.length - 1) {
-      setCurrentIndex(deck.length - 1)
-      setIsRevealed(false)
-    }
-  }, [deck, currentIndex])
 
   const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0))
@@ -168,7 +154,12 @@ export default function StudyPage() {
           </label>
           <select
             value={selectedCollectionId}
-            onChange={(e) => setSelectedCollectionId(e.target.value)}
+            onChange={(e) => {
+              setSelectedCollectionId(e.target.value)
+              setSessionOrder(null)
+              setCurrentIndex(0)
+              setIsRevealed(false)
+            }}
             className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
           >
             <option value="all">Todas las colecciones</option>
@@ -189,8 +180,8 @@ export default function StudyPage() {
           onNext={handleNext}
           onReveal={handleReveal}
           onShuffle={handleShuffle}
-          canPrev={currentIndex > 0}
-          canNext={currentIndex < deck.length - 1}
+          canPrev={effectiveIndex > 0}
+          canNext={effectiveIndex < deck.length - 1}
           isRevealed={isRevealed}
         />
       </section>

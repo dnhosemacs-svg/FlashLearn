@@ -1,7 +1,7 @@
 import FlashcardsSummary from '../components/features/flashcards/FlashcardsSummary'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
-import { useCollectionsContext } from '../context/CollectionsContext'
+import { useCollectionsContext } from '../context/useCollectionsContext'
 import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {

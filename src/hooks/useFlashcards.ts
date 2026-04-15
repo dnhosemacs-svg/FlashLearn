@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import {
   deleteFlashcard,
   getFlashcards,
@@ -54,9 +54,13 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
     }
   }, [allFlashcards.length])
 
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
+  const didInitRef = useRef<true | null>(null)
+  if (didInitRef.current == null) {
+    didInitRef.current = true
+    queueMicrotask(() => {
+      void refresh()
+    })
+  }
 
   const flashcards = useMemo(() => {
     if (!collectionId) return allFlashcards
