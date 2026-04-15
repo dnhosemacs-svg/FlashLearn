@@ -14,21 +14,33 @@ export interface UseCollectionsResult {
 
 export function useCollections(): UseCollectionsResult {
   const [collections, setCollections] = useState<Collection[]>([])
-  const [network, setNetwork] = useState<AsyncState>({ status: 'idle', error: null })
+  const [network, setNetwork] = useState<AsyncState>({
+    status: 'idle',
+    error: null,
+    isRefreshing: false,
+  })
 
   const refresh = useCallback(async () => {
-    setNetwork({ status: 'loading', error: null })
+    setNetwork((prev) => {
+      const hasData = collections.length > 0
+      if (hasData) {
+        return { ...prev, isRefreshing: true, error: null }
+      }
+      return { status: 'loading', error: null, isRefreshing: false }
+    })
+  
     try {
       const data = loadStoredCollections()
       setCollections(data)
-      setNetwork({ status: 'success', error: null })
+      setNetwork({ status: 'success', error: null, isRefreshing: false })
     } catch (error) {
       setNetwork({
         status: 'error',
         error: error instanceof Error ? error.message : 'Error al cargar colecciones',
+        isRefreshing: false,
       })
     }
-  }, [])
+  }, [collections.length])
 
   useEffect(() => {
     void refresh()

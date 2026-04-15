@@ -5,11 +5,11 @@ import Card from '../components/ui/Card'
 import EmptyState from '../components/ui/EmptyState'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
-import Spinner from '../components/ui/Spinner'
+import Skeleton from '../components/ui/Skeleton'
 import { useFlashcardsContext } from '../context/FlashcardsContext'
 import { useCollectionsContext } from '../context/CollectionsContext'
 import type { CreateFlashcardInput } from '../types/domain'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const UUID_AT_END_REGEX =
   /([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
@@ -116,8 +116,11 @@ export default function CollectionDetailPage() {
             <Button variant="ghost">Volver</Button>
           </Link>
         </div>
-        <div className="mt-8 flex justify-center">
-          <Spinner label="Cargando tarjetas" />
+        <div className="mt-6 space-y-3">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
         </div>
       </main>
     )
@@ -151,6 +154,9 @@ export default function CollectionDetailPage() {
         <div>
           <h1 className="page-title">Detalle de colección</h1>
           <p className="page-subtitle">Colección: {collectionName}</p>
+          {network.isRefreshing ? (
+            <p className="mt-1 text-sm text-indigo-600">Actualizando tarjetas...</p>
+          ) : null}
         </div>
         <Link to="/collections">
           <Button variant="ghost">Volver</Button>

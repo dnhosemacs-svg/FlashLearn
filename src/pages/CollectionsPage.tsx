@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
+import CollectionListSkeleton from '../components/features/collections/CollectionListSkeleton'
 import Button from '../components/ui/Button'
 import EmptyState from '../components/ui/EmptyState'
 import Modal from '../components/ui/Modal'
-import Spinner from '../components/ui/Spinner'
 import { useCollectionsContext } from '../context/CollectionsContext'
 import { useFlashcardsContext } from '../context/FlashcardsContext'
 import type { UpdateCollectionInput } from '../types/domain'
@@ -88,9 +88,9 @@ export default function CollectionsPage() {
       <main className="page-shell">
         <h1 className="page-title">Colecciones</h1>
         <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
-        <div className="mt-8 flex justify-center">
-          <Spinner label="Cargando colecciones" />
-        </div>
+        <section className="section-stack mt-6">
+          <CollectionListSkeleton count={4} />
+        </section>
       </main>
     )
   }
@@ -119,6 +119,9 @@ export default function CollectionsPage() {
     <main className="page-shell">
       <h1 className="page-title">Colecciones</h1>
       <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
+      {network.isRefreshing ? (
+        <p className="mt-2 text-sm text-indigo-600">Actualizando colecciones...</p>
+      ) : null}
 
       <div className="mt-4">
         <input
