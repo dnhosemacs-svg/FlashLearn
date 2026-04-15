@@ -73,9 +73,9 @@ export default function CollectionDetailPage() {
   }, [])
 
   const handleUpdateFlashcard = useCallback(
-    (data: CreateFlashcardInput) => {
+    async (data: CreateFlashcardInput) => {
       if (!editingFlashcardId) return
-      update(editingFlashcardId, data)
+      await update(editingFlashcardId, data)
       setEditingFlashcardId(null)
     },
     [editingFlashcardId, update],
@@ -86,9 +86,9 @@ export default function CollectionDetailPage() {
   }, [])
 
   const handleCreateFlashcard = useCallback(
-    (data: CreateFlashcardInput) => {
+    async (data: CreateFlashcardInput) => {
       if (!collectionId) return
-      createForCollection(collectionId, data)
+      await createForCollection(collectionId, data)
     },
     [collectionId, createForCollection],
   )
@@ -188,11 +188,11 @@ export default function CollectionDetailPage() {
       tags: editingFlashcard.tags,
     }}
     submitLabel="Guardar cambios"
-    onSubmit={handleUpdateFlashcard}
+    onSubmit={(data) => void handleUpdateFlashcard(data)}
     onCancel={handleCancelEditFlashcard}
   />
 ) : (
-  <FlashcardForm onSubmit={handleCreateFlashcard} />
+  <FlashcardForm onSubmit={(data) => void handleCreateFlashcard(data)} />
 )}
 
           <Card
@@ -202,7 +202,7 @@ export default function CollectionDetailPage() {
             <FlashcardList
               flashcards={filteredFlashcards}
               onEditFlashcard={handleEditFlashcard}
-              onDeleteFlashcard={remove}
+              onDeleteFlashcard={(id) => void remove(id)}
             />
           </Card>
         </div>

@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { loadStoredCollections, saveCollections } from '../lib/storage/collectionsStorage'
+import {
+  deleteCollection,
+  getCollections,
+  patchCollection,
+  postCollection,
+} from '../api/collectionsApi'
 import type { AsyncState } from '../types/async'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
 
@@ -7,9 +12,9 @@ export interface UseCollectionsResult {
   collections: Collection[]
   network: AsyncState
   refresh: () => Promise<void>
-  create: (input: CreateCollectionInput) => void
-  update: (id: string, input: UpdateCollectionInput) => void
-  remove: (id: string) => void
+  create: (input: CreateCollectionInput) => Promise<void>
+  update: (id: string, input: UpdateCollectionInput) => Promise<void>
+  remove: (id: string) => Promise<void>
 }
 
 export function useCollections(): UseCollectionsResult {
@@ -23,14 +28,12 @@ export function useCollections(): UseCollectionsResult {
   const refresh = useCallback(async () => {
     setNetwork((prev) => {
       const hasData = collections.length > 0
-      if (hasData) {
-        return { ...prev, isRefreshing: true, error: null }
-      }
+      if (hasData) return { ...prev, isRefreshing: true, error: null }
       return { status: 'loading', error: null, isRefreshing: false }
     })
   
     try {
-      const data = loadStoredCollections()
+      const data = await getCollections()
       setCollections(data)
       setNetwork({ status: 'success', error: null, isRefreshing: false })
     } catch (error) {
@@ -46,41 +49,19 @@ export function useCollections(): UseCollectionsResult {
     void refresh()
   }, [refresh])
 
-  useEffect(() => {
-    if (network.status !== 'success') return
-    saveCollections(collections)
-  }, [collections, network.status])
-
-  const create = useCallback((input: CreateCollectionInput) => {
-    const now = new Date().toISOString()
-    const newCollection: Collection = {
-      id: crypto.randomUUID(),
-      name: input.name,
-      description: input.description,
-      createdAt: now,
-      updatedAt: now,
-    }
-    setCollections((prev) => [newCollection, ...prev])
+  const create = useCallback(async (input: CreateCollectionInput) => {
+    const created = await postCollection(input)
+    setCollections((prev) => [created, ...prev])
   }, [])
-
-  const update = useCallback((id: string, input: UpdateCollectionInput) => {
-    const now = new Date().toISOString()
-    setCollections((prev) =>
-      prev.map((collection) =>
-        collection.id === id
-          ? {
-              ...collection,
-              name: input.name,
-              description: input.description,
-              updatedAt: now,
-            }
-          : collection,
-      ),
-    )
+  
+  const update = useCallback(async (id: string, input: UpdateCollectionInput) => {
+    const updated = await patchCollection(id, input)
+    setCollections((prev) => prev.map((c) => (c.id === id ? updated : c)))
   }, [])
-
-  const remove = useCallback((id: string) => {
-    setCollections((prev) => prev.filter((collection) => collection.id !== id))
+  
+  const remove = useCallback(async (id: string) => {
+    await deleteCollection(id)
+    setCollections((prev) => prev.filter((c) => c.id !== id))
   }, [])
 
   return {

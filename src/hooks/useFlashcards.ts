@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { loadStoredFlashcards, saveFlashcards } from '../lib/storage/flashcardsStorage'
+import {
+  deleteFlashcard,
+  getFlashcards,
+  patchFlashcard,
+  postFlashcard,
+} from '../api/flashcardsApi'
 import type { AsyncState } from '../types/async'
 import type { CreateFlashcardInput, Flashcard, UpdateFlashcardInput } from '../types/domain'
 
@@ -10,17 +15,15 @@ export interface UseFlashcardsResult {
   allFlashcards: Flashcard[]
   network: AsyncState
   refresh: () => Promise<void>
-  create: (input: CreateFlashcardInput) => void
-  /** Crea una tarjeta en la colección indicada (útil con el provider global sin `collectionId` fijo). */
-  createForCollection: (collectionId: string, input: CreateFlashcardInput) => void
-  remove: (id: string) => void
-  /** Borra todas las tarjetas asociadas a una colección (borrado en cascada). */
-  removeByCollection: (collectionId: string) => void
-  update: (id: string, input: UpdateFlashcardInput) => void
+  create: (input: CreateFlashcardInput) => Promise<void>
+  createForCollection: (collectionId: string, input: CreateFlashcardInput) => Promise<void>
+  remove: (id: string) => Promise<void>
+  removeByCollection: (collectionId: string) => Promise<void>
+  update: (id: string, input: UpdateFlashcardInput) => Promise<void>
 }
 
 /**
- * Carga y persiste flashcards en `localStorage`.
+ * Fuente de verdad en API para flashcards.
  * Con `collectionId`, `flashcards` queda filtrado y `create` asocia la tarjeta a esa colección.
  */
 export function useFlashcards(collectionId?: string): UseFlashcardsResult {
@@ -34,14 +37,12 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
   const refresh = useCallback(async () => {
     setNetwork((prev) => {
       const hasData = allFlashcards.length > 0
-      if (hasData) {
-        return { ...prev, isRefreshing: true, error: null }
-      }
+      if (hasData) return { ...prev, isRefreshing: true, error: null }
       return { status: 'loading', error: null, isRefreshing: false }
     })
   
     try {
-      const data = loadStoredFlashcards()
+      const data = await getFlashcards()
       setAllFlashcards(data)
       setNetwork({ status: 'success', error: null, isRefreshing: false })
     } catch (error) {
@@ -57,63 +58,36 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
     void refresh()
   }, [refresh])
 
-  useEffect(() => {
-    if (network.status !== 'success') return
-    saveFlashcards(allFlashcards)
-  }, [allFlashcards, network.status])
-
   const flashcards = useMemo(() => {
     if (!collectionId) return allFlashcards
     return allFlashcards.filter((card) => card.collectionId === collectionId)
   }, [allFlashcards, collectionId])
 
-  const createForCollection = useCallback((targetCollectionId: string, input: CreateFlashcardInput) => {
-    const now = new Date().toISOString()
-    const newFlashcard: Flashcard = {
-      id: crypto.randomUUID(),
-      collectionId: targetCollectionId,
-      question: input.question,
-      answer: input.answer,
-      tags: input.tags,
-      createdAt: now,
-      updatedAt: now,
-    }
-
-    setAllFlashcards((prev) => [newFlashcard, ...prev])
+  const createForCollection = useCallback(async (targetCollectionId: string, input: CreateFlashcardInput) => {
+    const created = await postFlashcard({ collectionId: targetCollectionId, ...input })
+    setAllFlashcards((prev) => [created, ...prev])
   }, [])
-
-  const create = useCallback(
-    (input: CreateFlashcardInput) => {
-      if (!collectionId) return
-      createForCollection(collectionId, input)
-    },
-    [collectionId, createForCollection],
-  )
-
-  const update = useCallback((id: string, input: UpdateFlashcardInput) => {
-    const now = new Date().toISOString()
-    setAllFlashcards((prev) =>
-      prev.map((card) =>
-        card.id === id
-          ? {
-              ...card,
-              question: input.question,
-              answer: input.answer,
-              tags: input.tags,
-              updatedAt: now,
-            }
-          : card,
-      ),
-    )
+  
+  const create = useCallback(async (input: CreateFlashcardInput) => {
+    if (!collectionId) return
+    await createForCollection(collectionId, input)
+  }, [collectionId, createForCollection])
+  
+  const update = useCallback(async (id: string, input: UpdateFlashcardInput) => {
+    const updated = await patchFlashcard(id, input)
+    setAllFlashcards((prev) => prev.map((card) => (card.id === id ? updated : card)))
   }, [])
-
-  const remove = useCallback((id: string) => {
+  
+  const remove = useCallback(async (id: string) => {
+    await deleteFlashcard(id)
     setAllFlashcards((prev) => prev.filter((card) => card.id !== id))
   }, [])
 
-  const removeByCollection = useCallback((targetCollectionId: string) => {
-    setAllFlashcards((prev) => prev.filter((card) => card.collectionId !== targetCollectionId))
-  }, [])
+  const removeByCollection = useCallback(async (targetCollectionId: string) => {
+    const cardsToDelete = allFlashcards.filter((c) => c.collectionId === targetCollectionId)
+    await Promise.all(cardsToDelete.map((card) => deleteFlashcard(card.id)))
+    setAllFlashcards((prev) => prev.filter((c) => c.collectionId !== targetCollectionId))
+  }, [allFlashcards])
 
   return {
     flashcards,

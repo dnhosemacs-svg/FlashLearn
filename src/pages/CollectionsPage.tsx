@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import CollectionListSkeleton from '../components/features/collections/CollectionListSkeleton'
@@ -7,6 +7,7 @@ import EmptyState from '../components/ui/EmptyState'
 import Modal from '../components/ui/Modal'
 import { useCollectionsContext } from '../context/CollectionsContext'
 import { useFlashcardsContext } from '../context/FlashcardsContext'
+import { loadCollectionsSearch, saveCollectionsSearch } from '../lib/storage/uiStateStorage'
 import type { UpdateCollectionInput } from '../types/domain'
 
 export default function CollectionsPage() {
@@ -15,7 +16,7 @@ export default function CollectionsPage() {
   const [editingCollectionId, setEditingCollectionId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState(() => loadCollectionsSearch())
 
   const collectionsStats = useMemo(() => {
     const total = collections.length
@@ -39,9 +40,9 @@ export default function CollectionsPage() {
   }, [])
 
   const handleUpdateCollection = useCallback(
-    (data: UpdateCollectionInput) => {
+    async (data: UpdateCollectionInput) => {
       if (!editingCollectionId) return
-      update(editingCollectionId, data)
+      await update(editingCollectionId, data)
       setEditingCollectionId(null)
     },
     [editingCollectionId, update],
@@ -52,7 +53,7 @@ export default function CollectionsPage() {
     setPendingDeleteCollectionId(null)
   }, [])
 
-  const handleConfirmDeleteCollection = useCallback(() => {
+  const handleConfirmDeleteCollection = useCallback(async () => {
     if (!pendingDeleteCollectionId) return
 
     if (editingCollectionId === pendingDeleteCollectionId) {
@@ -60,8 +61,8 @@ export default function CollectionsPage() {
     }
 
     // Borrado en cascada: elimina flashcards de la colección antes de borrar la colección.
-    removeByCollection(pendingDeleteCollectionId)
-    remove(pendingDeleteCollectionId)
+    await removeByCollection(pendingDeleteCollectionId)
+    await remove(pendingDeleteCollectionId)
 
     setIsDeleteModalOpen(false)
     setPendingDeleteCollectionId(null)
@@ -82,6 +83,10 @@ export default function CollectionsPage() {
       return name.includes(normalizedQuery) || description.includes(normalizedQuery)
     })
   }, [collections, normalizedQuery])
+
+  useEffect(() => {
+    saveCollectionsSearch(searchQuery)
+  }, [searchQuery])
 
   if (network.status === 'loading' && collections.length === 0) {
     return (
@@ -147,14 +152,14 @@ export default function CollectionsPage() {
                 description: editingCollection.description,
               }}
               submitLabel="Guardar cambios"
-              onSubmit={handleUpdateCollection}
+              onSubmit={(data) => void handleUpdateCollection(data)}
               onCancel={handleCancelEdit}
               existingNames={collections.map((c) => c.name)}
               currentName={editingCollection.name}
             />
           ) : (
             <CollectionForm
-              onSubmit={create}
+              onSubmit={(data) => void create(data)}
               existingNames={collections.map((c) => c.name)}
             />
           )}
