@@ -6,6 +6,7 @@ Documentación del contrato backend actual en `server/`.
 - Formato de respuesta actual:
   - éxito: objeto o array JSON directo
   - error: `{ "message": "..." }`
+- Cliente frontend: ver `docs/api-client.md` para diseño de capa de red, tipos, errores y reintentos.
 
 ---
 
