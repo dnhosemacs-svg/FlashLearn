@@ -78,6 +78,10 @@ Durante FASE 10:
 - Colores semánticos: usar estados nativos de Carbon para `success`, `error`, `warning`, `info`.
 - Toggle de tema (`white` / `g10` / `g90`) fuera de alcance en Fase 10; se evaluará en la siguiente fase.
 
+## Validación de layout
+
+- Checklist visual y responsive: `docs/carbon/layout-checklist.md`
+
 ## Pendientes para fase siguiente
 
 - [ ] Registrar aquí cualquier necesidad de cambio lógico detectada durante migración visual.
