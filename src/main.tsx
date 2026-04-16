@@ -12,26 +12,29 @@ import AboutPage from './pages/AboutPage.tsx'
 import SettingsPage from './pages/SettingsPage.tsx'
 import { CollectionsProvider } from './context/CollectionsContext'
 import { FlashcardsProvider } from './context/FlashcardsContext'
+import { Theme } from '@carbon/react'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <CollectionsProvider>
-        <FlashcardsProvider>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route index element={<HomePage />} />
-              <Route path="collections" element={<CollectionsPage />} />
-              <Route path="study" element={<StudyPage />} />
-              <Route path="about" element={<AboutPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="home" element={<Navigate to="/" replace />} />
-              <Route path="*" element={<NotFoundPage />} />
-              <Route path="collections/:collectionRef" element={<CollectionDetailPage />} />
-            </Route>
-          </Routes>
-        </FlashcardsProvider>
-      </CollectionsProvider>
+      <Theme theme="g10">
+        <CollectionsProvider>
+          <FlashcardsProvider>
+            <Routes>
+              <Route path="/" element={<App />}>
+                <Route index element={<HomePage />} />
+                <Route path="collections" element={<CollectionsPage />} />
+                <Route path="study" element={<StudyPage />} />
+                <Route path="about" element={<AboutPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="home" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<NotFoundPage />} />
+                <Route path="collections/:collectionRef" element={<CollectionDetailPage />} />
+              </Route>
+            </Routes>
+          </FlashcardsProvider>
+        </CollectionsProvider>
+      </Theme>
     </BrowserRouter>
   </StrictMode>,
 )

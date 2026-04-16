@@ -55,6 +55,10 @@ Durante FASE 10:
 - [ ] Regla de no tocar hooks/context documentada
 - [ ] Aprobación para pasar a instalación y setup de Carbon
 
+## Setup técnico realizado
+
+- Ver detalle en `docs/carbon-setup.md`
+
 ## Pendientes para fase siguiente
 
 - [ ] Registrar aquí cualquier necesidad de cambio lógico detectada durante migración visual.
