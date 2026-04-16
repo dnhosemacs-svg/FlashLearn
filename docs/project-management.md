@@ -100,3 +100,10 @@ Reglas:
 - **In Progress** → en curso (máx. 2)  
 - **Review** → hecho, pendiente de validar  
 - **Done** → validado, documentado si aplica e integrado  
+
+---
+
+## FASE 10 - IBM Carbon (UI)
+
+Documento de alcance:
+- `docs/phase-10-ibm-carbon.md`
