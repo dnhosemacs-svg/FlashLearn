@@ -106,4 +106,4 @@ Reglas:
 ## FASE 10 - IBM Carbon (UI)
 
 Documento de alcance:
-- `docs/phase-10-ibm-carbon.md`
+- `docs/carbon/phase-10-ibm-carbon.md`

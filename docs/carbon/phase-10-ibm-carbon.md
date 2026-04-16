@@ -57,7 +57,18 @@ Durante FASE 10:
 
 ## Setup técnico realizado
 
-- Ver detalle en `docs/carbon-setup.md`
+- Ver detalle en `docs/carbon/carbon-setup.md`
+
+## Mapeo de componentes a Carbon
+
+- Ver detalle en `docs/carbon/carbon-component-mapping.md`
+
+## Checklist de transición de wrappers
+
+- [ ] Definir wrappers Carbon en `src/components/ui-carbon/`
+- [ ] Mantener `src/components/ui/*` mientras dure la migración
+- [ ] Evitar imports mixtos arbitrarios en una misma pantalla
+- [ ] Plan de retirada legacy al cierre de fase
 
 ## Decisiones de theming de Fase 10
 

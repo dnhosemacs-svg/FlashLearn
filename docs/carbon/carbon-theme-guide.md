@@ -33,6 +33,11 @@ Unificar decisiones visuales de Fase 10 usando IBM Carbon sin romper la estétic
 
 ## Referencias
 
-- `docs/phase-10-ibm-carbon.md`
+- `docs/carbon/phase-10-ibm-carbon.md`
 - `docs/design.md` (sección de theming y tokens)
-- `docs/carbon-setup.md`
+- `docs/carbon/carbon-setup.md`
+
+## Relación con migración de componentes
+
+- Tabla de equivalencias actual -> Carbon en `docs/carbon/carbon-component-mapping.md`.
+- En Fase 10 se prioriza wrapper temporal para mantener coherencia visual y minimizar riesgo.
