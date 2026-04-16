@@ -87,3 +87,17 @@ Wrappers:
 5. `SpinnerCarbon` + `SkeletonCarbon`
 6. `EmptyStateCarbon`
 7. Migración por pantalla (Home → Collections → CollectionDetail → Study)
+
+---
+
+## Criterios para eliminar wrappers (fase futura)
+
+Se podrán retirar los wrappers de `src/components/ui-carbon/*` cuando se cumplan todas estas condiciones:
+
+- Todas las pantallas principales (`Home`, `Collections`, `CollectionDetail`, `Study`) usen Carbon de forma estable.
+- No queden imports activos de componentes legacy en flujo principal (`src/components/ui/*`).
+- La API de props esté alineada a Carbon (sin depender de adaptaciones legacy críticas).
+- `npm run lint` y `npm run build` pasen tras eliminar wrappers.
+- Se complete una revisión visual y de accesibilidad sin regresiones.
+
+Hasta entonces, los wrappers siguen siendo la capa oficial de transición para minimizar riesgo y refactor masivo.
