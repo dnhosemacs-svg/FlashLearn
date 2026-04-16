@@ -59,6 +59,14 @@ Durante FASE 10:
 
 - Ver detalle en `docs/carbon-setup.md`
 
+## Decisiones de theming de Fase 10
+
+- Tema inicial: `g10` para mantener estética clara y cercana al look actual de la app.
+- Tipografía base: IBM Plex (provista por Carbon) para consistencia visual y buena legibilidad.
+- Densidad visual objetivo: media, priorizando lectura cómoda en desktop y laptop.
+- Colores semánticos: usar estados nativos de Carbon para `success`, `error`, `warning`, `info`.
+- Toggle de tema (`white` / `g10` / `g90`) fuera de alcance en Fase 10; se evaluará en la siguiente fase.
+
 ## Pendientes para fase siguiente
 
 - [ ] Registrar aquí cualquier necesidad de cambio lógico detectada durante migración visual.

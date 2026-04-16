@@ -458,3 +458,42 @@ Flujo resumido:
 - Respuesta estandar:
   - exito: `{ ok: true, data: ... }`
   - error: `{ ok: false, error: { code, message } }`
+
+---
+
+## Estrategia de theming y tokens (Fase 10)
+
+### Objetivo visual
+
+Mantener la identidad previa de FlashLearn (interfaz clara, limpia y centrada en lectura) mientras se migra progresivamente a IBM Carbon.
+
+### Tema base
+
+- Tema inicial Carbon: `g10`.
+- Justificación: es el tema que mejor preserva la luminosidad y contraste del diseño anterior.
+
+### Tipografía
+
+- Usar tipografía base de Carbon (IBM Plex) como estándar global.
+- Evitar mezclar nuevas familias tipográficas durante esta fase para mantener consistencia.
+
+### Espaciado y densidad
+
+- Densidad objetivo: media.
+- Priorizar espaciado consistente con tokens de Carbon.
+- Evitar introducir tamaños y paddings ad-hoc cuando exista token equivalente.
+
+### Colores semánticos
+
+- `success`: tokens/estilos de estado success de Carbon.
+- `error`: tokens/estilos de estado error de Carbon.
+- `warning`: tokens/estilos de estado warning de Carbon.
+- `info`: tokens/estilos de estado info de Carbon.
+
+Regla:
+- En componentes migrados, no usar hex hardcodeados para mensajes semánticos si Carbon ya ofrece variante equivalente.
+
+### Toggle de tema
+
+- No se implementa en Fase 10.
+- Se deja para siguiente fase una vez completada la migración visual principal.
