@@ -2,8 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import CollectionListSkeleton from '../components/features/collections/CollectionListSkeleton'
+import Alert from '../components/ui/Alert'
 import Button from '../components/ui/Button'
 import EmptyState from '../components/ui/EmptyState'
+import Input from '../components/ui/Input'
 import Modal from '../components/ui/Modal'
 import { useCollectionsContext } from '../context/useCollectionsContext'
 import { useFlashcardsContext } from '../context/useFlashcardsContext'
@@ -159,38 +161,33 @@ export default function CollectionsPage() {
         </p>
       ) : null}
 
-      <div className="mt-4">
-        <label htmlFor="collections-search" className="mb-1 block text-sm font-medium text-slate-700">
-          Buscar colecciones
-        </label>
-        <input
-          id="collections-search"
-          type="search"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Buscar colecciones por nombre o descripcion..."
-          className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-        />
-      </div>
+      <Input
+        id="collections-search"
+        type="search"
+        label="Buscar colecciones"
+        containerClassName="mt-4"
+        value={searchQuery}
+        onChange={(event) => setSearchQuery(event.target.value)}
+        placeholder="Buscar colecciones por nombre o descripcion..."
+      />
 
       <p className="mt-2 text-sm text-slate-600">
         Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
       </p>
       {actionError ? (
-        <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
-          <p>{actionError}</p>
-          {lastFailedAction ? (
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              className="mt-2"
-              onClick={() => void lastFailedAction()}
-            >
-              Reintentar operación
-            </Button>
-          ) : null}
-        </div>
+        <Alert
+          variant="danger"
+          className="mt-3"
+          action={
+            lastFailedAction ? (
+              <Button type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
+                Reintentar operación
+              </Button>
+            ) : null
+          }
+        >
+          {actionError}
+        </Alert>
       ) : null}
 
       <section className="section-stack">

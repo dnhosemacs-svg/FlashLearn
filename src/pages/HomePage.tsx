@@ -1,4 +1,5 @@
 import FlashcardsSummary from '../components/features/flashcards/FlashcardsSummary'
+import Alert from '../components/ui/Alert'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import { useCollectionsContext } from '../context/useCollectionsContext'
@@ -17,12 +18,16 @@ export default function HomePage() {
         {network.status === 'loading' && collections.length === 0 ? (
           <Spinner label="Cargando resumen" size="sm" />
         ) : network.status === 'error' ? (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
-            <p>{network.error}</p>
-            <Button type="button" className="mt-2" variant="secondary" size="sm" onClick={() => void refresh()}>
-              Reintentar
-            </Button>
-          </div>
+          <Alert
+            variant="danger"
+            action={
+              <Button type="button" variant="secondary" size="sm" onClick={() => void refresh()}>
+                Reintentar
+              </Button>
+            }
+          >
+            {network.error}
+          </Alert>
         ) : (
           <p className="text-muted">
             Tienes <strong className="text-slate-800">{collections.length}</strong>{' '}

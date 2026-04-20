@@ -1,10 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Alert from '../components/ui/Alert'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import EmptyState from '../components/ui/EmptyState'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
+import Input from '../components/ui/Input'
 import Skeleton from '../components/ui/Skeleton'
 import { useCollectionsContext } from '../context/useCollectionsContext'
 import { useFlashcardsContext } from '../context/useFlashcardsContext'
@@ -187,38 +189,33 @@ export default function CollectionDetailPage() {
         </Link>
       </div>
 
-      <div className="mt-4">
-        <label htmlFor="flashcards-search" className="mb-1 block text-sm font-medium text-slate-700">
-          Buscar flashcards
-        </label>
-        <input
-          id="flashcards-search"
-          type="search"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Buscar por pregunta, respuesta o tags..."
-          className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-        />
-      </div>
+      <Input
+        id="flashcards-search"
+        type="search"
+        label="Buscar flashcards"
+        containerClassName="mt-4"
+        value={searchQuery}
+        onChange={(event) => setSearchQuery(event.target.value)}
+        placeholder="Buscar por pregunta, respuesta o tags..."
+      />
 
       <p className="mt-2 text-sm text-slate-600">
         Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
       </p>
       {actionError ? (
-        <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
-          <p>{actionError}</p>
-          {lastFailedAction ? (
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              className="mt-2"
-              onClick={() => void lastFailedAction()}
-            >
-              Reintentar operación
-            </Button>
-          ) : null}
-        </div>
+        <Alert
+          variant="danger"
+          className="mt-3"
+          action={
+            lastFailedAction ? (
+              <Button type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
+                Reintentar operación
+              </Button>
+            ) : null
+          }
+        >
+          {actionError}
+        </Alert>
       ) : null}
 
       <section className="section-stack">

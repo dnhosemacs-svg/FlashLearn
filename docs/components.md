@@ -11,6 +11,7 @@ Este documento describe los componentes actuales del proyecto, sus props princip
 | `Button` | UI | Acciones primarias/secundarias con variantes y tamanos | `src/components/ui/Button.tsx` |
 | `Input` | UI | Campo de texto con label, hint y error | `src/components/ui/Input.tsx` |
 | `Card` | UI | Contenedor visual base para bloques de contenido | `src/components/ui/Card.tsx` |
+| `Alert` | UI | Mensajes de estado/error con accion opcional | `src/components/ui/Alert.tsx` |
 | `EmptyState` | UI | Estado vacio para listas o vistas sin datos | `src/components/ui/EmptyState.tsx` |
 | `Badge` | UI | Etiquetas visuales compactas por estado/tipo | `src/components/ui/Badge.tsx` |
 | `Spinner` | UI | Indicador de carga visual | `src/components/ui/Spinner.tsx` |
@@ -86,6 +87,25 @@ Ejemplo:
 <Card title="Nueva coleccion" description="Crea una coleccion" variant="elevated">
   <CollectionForm onSubmit={handleCreateCollection} />
 </Card>
+```
+
+#### `Alert`
+
+Props clave:
+
+- `variant?: 'info' | 'success' | 'warning' | 'danger'`
+- `action?: ReactNode`
+- `children: ReactNode`
+
+Ejemplo:
+
+```tsx
+<Alert
+  variant="danger"
+  action={<Button variant="secondary" size="sm">Reintentar</Button>}
+>
+  No se pudo guardar la colección.
+</Alert>
 ```
 
 #### `EmptyState`
