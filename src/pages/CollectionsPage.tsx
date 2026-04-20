@@ -17,6 +17,8 @@ export default function CollectionsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [pendingDeleteCollectionId, setPendingDeleteCollectionId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState(() => loadCollectionsSearch())
+  const [actionError, setActionError] = useState<string | null>(null)
+  const [lastFailedAction, setLastFailedAction] = useState<(() => Promise<void>) | null>(null)
 
   const collectionsStats = useMemo(() => {
     const total = collections.length
@@ -42,8 +44,21 @@ export default function CollectionsPage() {
   const handleUpdateCollection = useCallback(
     async (data: UpdateCollectionInput) => {
       if (!editingCollectionId) return
-      await update(editingCollectionId, data)
-      setEditingCollectionId(null)
+      try {
+        await update(editingCollectionId, data)
+        setEditingCollectionId(null)
+        setActionError(null)
+        setLastFailedAction(null)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo actualizar la colección.'
+        setActionError(message)
+        setLastFailedAction(() => async () => {
+          await update(editingCollectionId, data)
+          setEditingCollectionId(null)
+          setActionError(null)
+          setLastFailedAction(null)
+        })
+      }
     },
     [editingCollectionId, update],
   )
@@ -60,12 +75,26 @@ export default function CollectionsPage() {
       setEditingCollectionId(null)
     }
 
-    // Borrado en cascada: elimina flashcards de la colección antes de borrar la colección.
-    await removeByCollection(pendingDeleteCollectionId)
-    await remove(pendingDeleteCollectionId)
-
-    setIsDeleteModalOpen(false)
-    setPendingDeleteCollectionId(null)
+    try {
+      // Borrado en cascada: elimina flashcards de la colección antes de borrar la colección.
+      await removeByCollection(pendingDeleteCollectionId)
+      await remove(pendingDeleteCollectionId)
+      setActionError(null)
+      setLastFailedAction(null)
+      setIsDeleteModalOpen(false)
+      setPendingDeleteCollectionId(null)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo borrar la colección.'
+      setActionError(message)
+      setLastFailedAction(() => async () => {
+        await removeByCollection(pendingDeleteCollectionId)
+        await remove(pendingDeleteCollectionId)
+        setActionError(null)
+        setLastFailedAction(null)
+        setIsDeleteModalOpen(false)
+        setPendingDeleteCollectionId(null)
+      })
+    }
   }, [pendingDeleteCollectionId, editingCollectionId, remove, removeByCollection])
 
   const editingCollection = collections.find(
@@ -125,11 +154,17 @@ export default function CollectionsPage() {
       <h1 className="page-title">Colecciones</h1>
       <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
       {network.isRefreshing ? (
-        <p className="mt-2 text-sm text-indigo-600">Actualizando colecciones...</p>
+        <p className="mt-2 text-sm text-indigo-600" role="status" aria-live="polite">
+          Actualizando colecciones...
+        </p>
       ) : null}
 
       <div className="mt-4">
+        <label htmlFor="collections-search" className="mb-1 block text-sm font-medium text-slate-700">
+          Buscar colecciones
+        </label>
         <input
+          id="collections-search"
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
@@ -141,6 +176,22 @@ export default function CollectionsPage() {
       <p className="mt-2 text-sm text-slate-600">
         Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
       </p>
+      {actionError ? (
+        <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
+          <p>{actionError}</p>
+          {lastFailedAction ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="mt-2"
+              onClick={() => void lastFailedAction()}
+            >
+              Reintentar operación
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
 
       <section className="section-stack">
         <div className="card-grid-2">
@@ -161,7 +212,24 @@ export default function CollectionsPage() {
           ) : (
             <CollectionForm
               key="create-collection"
-              onSubmit={(data) => void create(data)}
+              onSubmit={(data) =>
+                void create(data).then(
+                  () => {
+                    setActionError(null)
+                    setLastFailedAction(null)
+                  },
+                  (error) => {
+                    const message =
+                      error instanceof Error ? error.message : 'No se pudo crear la colección.'
+                    setActionError(message)
+                    setLastFailedAction(() => async () => {
+                      await create(data)
+                      setActionError(null)
+                      setLastFailedAction(null)
+                    })
+                  },
+                )
+              }
               existingNames={collections.map((c) => c.name)}
             />
           )}

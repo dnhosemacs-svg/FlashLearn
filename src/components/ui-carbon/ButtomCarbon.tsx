@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { Button as CarbonButton } from '@carbon/react'
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost'
@@ -54,6 +54,11 @@ export default function ButtonCarbon({
   type = 'button',
   ...rest
 }: ButtonCarbonProps) {
+  const mergedStyle: CSSProperties = {
+    ...(style ?? {}),
+    width: fullWidth ? '100%' : style?.width,
+  }
+
   return (
     <CarbonButton
       kind={mapKind(variant)}
@@ -62,7 +67,7 @@ export default function ButtonCarbon({
       renderIcon={rightIcon ? (() => <>{rightIcon}</>) : undefined}
       {...rest}
       type={type}
-      style={{ ...(style ?? {}), width: fullWidth ? '100%' : (style as any)?.width }}
+      style={mergedStyle}
     >
       {leftIcon ? <span style={{ marginRight: 8, display: 'inline-flex' }}>{leftIcon}</span> : null}
       {isLoading ? 'Cargando...' : children}

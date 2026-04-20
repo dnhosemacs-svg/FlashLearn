@@ -19,6 +19,8 @@ export default function CollectionDetailPage() {
   const { collections } = useCollectionsContext()
   const [editingFlashcardId, setEditingFlashcardId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [actionError, setActionError] = useState<string | null>(null)
+  const [lastFailedAction, setLastFailedAction] = useState<(() => Promise<void>) | null>(null)
   const navigate = useNavigate()
 
   const collectionId = useMemo(() => {
@@ -70,8 +72,21 @@ export default function CollectionDetailPage() {
   const handleUpdateFlashcard = useCallback(
     async (data: CreateFlashcardInput) => {
       if (!editingFlashcardId) return
-      await update(editingFlashcardId, data)
-      setEditingFlashcardId(null)
+      try {
+        await update(editingFlashcardId, data)
+        setEditingFlashcardId(null)
+        setActionError(null)
+        setLastFailedAction(null)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo actualizar la flashcard.'
+        setActionError(message)
+        setLastFailedAction(() => async () => {
+          await update(editingFlashcardId, data)
+          setEditingFlashcardId(null)
+          setActionError(null)
+          setLastFailedAction(null)
+        })
+      }
     },
     [editingFlashcardId, update],
   )
@@ -83,7 +98,19 @@ export default function CollectionDetailPage() {
   const handleCreateFlashcard = useCallback(
     async (data: CreateFlashcardInput) => {
       if (!collectionId) return
-      await createForCollection(collectionId, data)
+      try {
+        await createForCollection(collectionId, data)
+        setActionError(null)
+        setLastFailedAction(null)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo crear la flashcard.'
+        setActionError(message)
+        setLastFailedAction(() => async () => {
+          await createForCollection(collectionId, data)
+          setActionError(null)
+          setLastFailedAction(null)
+        })
+      }
     },
     [collectionId, createForCollection],
   )
@@ -150,7 +177,9 @@ export default function CollectionDetailPage() {
           <h1 className="page-title">Detalle de colección</h1>
           <p className="page-subtitle">Colección: {collectionName}</p>
           {network.isRefreshing ? (
-            <p className="mt-1 text-sm text-indigo-600">Actualizando tarjetas...</p>
+            <p className="mt-1 text-sm text-indigo-600" role="status" aria-live="polite">
+              Actualizando tarjetas...
+            </p>
           ) : null}
         </div>
         <Link to="/collections">
@@ -159,7 +188,11 @@ export default function CollectionDetailPage() {
       </div>
 
       <div className="mt-4">
+        <label htmlFor="flashcards-search" className="mb-1 block text-sm font-medium text-slate-700">
+          Buscar flashcards
+        </label>
         <input
+          id="flashcards-search"
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
@@ -171,6 +204,22 @@ export default function CollectionDetailPage() {
       <p className="mt-2 text-sm text-slate-600">
         Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
       </p>
+      {actionError ? (
+        <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800" role="alert">
+          <p>{actionError}</p>
+          {lastFailedAction ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="mt-2"
+              onClick={() => void lastFailedAction()}
+            >
+              Reintentar operación
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
 
       <section className="section-stack">
         <div className="card-grid-2">
@@ -201,7 +250,24 @@ export default function CollectionDetailPage() {
             <FlashcardList
               flashcards={filteredFlashcards}
               onEditFlashcard={handleEditFlashcard}
-              onDeleteFlashcard={(id) => void remove(id)}
+              onDeleteFlashcard={(id) =>
+                void remove(id).then(
+                  () => {
+                    setActionError(null)
+                    setLastFailedAction(null)
+                  },
+                  (error) => {
+                    const message =
+                      error instanceof Error ? error.message : 'No se pudo borrar la flashcard.'
+                    setActionError(message)
+                    setLastFailedAction(() => async () => {
+                      await remove(id)
+                      setActionError(null)
+                      setLastFailedAction(null)
+                    })
+                  },
+                )
+              }
             />
           </Card>
         </div>

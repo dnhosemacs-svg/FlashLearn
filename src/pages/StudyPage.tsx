@@ -149,10 +149,11 @@ export default function StudyPage() {
         </p>
 
         <div className="mt-4 lg:mx-auto lg:max-w-3xl">
-          <label className="block text-sm font-medium text-slate-700">
+          <label htmlFor="study-collection-filter" className="block text-sm font-medium text-slate-700">
             Colección
           </label>
           <select
+            id="study-collection-filter"
             value={selectedCollectionId}
             onChange={(e) => {
               setSelectedCollectionId(e.target.value)

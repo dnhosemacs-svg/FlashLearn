@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { cn } from '../../lib/cn'
 import Button from './Button'
 
@@ -23,8 +23,16 @@ export default function Modal({
   closeOnBackdrop = true,
   className,
 }: ModalProps) {
+  const titleId = useId()
+  const descriptionId = useId()
+  const dialogRef = useRef<HTMLElement | null>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
+
   useEffect(() => {
     if (!open) return
+
+    triggerRef.current = document.activeElement as HTMLElement | null
+    dialogRef.current?.focus()
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
@@ -33,6 +41,11 @@ export default function Modal({
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [open, onClose])
+
+  useEffect(() => {
+    if (open) return
+    triggerRef.current?.focus()
+  }, [open])
 
   if (!open) return null
 
@@ -48,9 +61,13 @@ export default function Modal({
       />
 
       <section
+        ref={dialogRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={title ?? 'Dialogo'}
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descriptionId : undefined}
+        aria-label={title ? undefined : 'Dialogo'}
         className={cn(
           'relative z-10 w-full max-w-lg rounded-xl border border-indigo-300 bg-indigo-50 p-5 shadow-xl shadow-indigo-200/40',
           className,
@@ -58,8 +75,16 @@ export default function Modal({
       >
         {(title || description) && (
           <header className="mb-4">
-            {title && <h3 className="text-lg font-semibold text-indigo-900">{title}</h3>}
-            {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
+            {title && (
+              <h3 id={titleId} className="text-lg font-semibold text-indigo-900">
+                {title}
+              </h3>
+            )}
+            {description && (
+              <p id={descriptionId} className="mt-1 text-sm text-slate-600">
+                {description}
+              </p>
+            )}
           </header>
         )}
 

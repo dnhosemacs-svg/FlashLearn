@@ -17,7 +17,7 @@ export default function HomePage() {
         {network.status === 'loading' && collections.length === 0 ? (
           <Spinner label="Cargando resumen" size="sm" />
         ) : network.status === 'error' ? (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
             <p>{network.error}</p>
             <Button type="button" className="mt-2" variant="secondary" size="sm" onClick={() => void refresh()}>
               Reintentar
