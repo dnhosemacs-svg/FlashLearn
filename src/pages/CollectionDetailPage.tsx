@@ -7,6 +7,7 @@ import EmptyState from '../components/ui/EmptyState'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
 import Input from '../components/ui/Input'
+import Modal from '../components/ui/Modal'
 import Skeleton from '../components/ui/Skeleton'
 import { useCollectionsContext } from '../context/useCollectionsContext'
 import { useFlashcardsContext } from '../context/useFlashcardsContext'
@@ -20,6 +21,8 @@ export default function CollectionDetailPage() {
   const { allFlashcards, network, refresh, createForCollection, update, remove } = useFlashcardsContext()
   const { collections } = useCollectionsContext()
   const [editingFlashcardId, setEditingFlashcardId] = useState<string | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [pendingDeleteFlashcardId, setPendingDeleteFlashcardId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [actionError, setActionError] = useState<string | null>(null)
   const [lastFailedAction, setLastFailedAction] = useState<(() => Promise<void>) | null>(null)
@@ -96,6 +99,39 @@ export default function CollectionDetailPage() {
   const handleCancelEditFlashcard = useCallback(() => {
     setEditingFlashcardId(null)
   }, [])
+
+  const handleDeleteFlashcard = useCallback((flashcardId: string) => {
+    setPendingDeleteFlashcardId(flashcardId)
+    setIsDeleteModalOpen(true)
+  }, [])
+
+  const handleCloseDeleteModal = useCallback(() => {
+    setIsDeleteModalOpen(false)
+    setPendingDeleteFlashcardId(null)
+  }, [])
+
+  const handleConfirmDeleteFlashcard = useCallback(async () => {
+    if (!pendingDeleteFlashcardId) return
+
+    try {
+      await remove(pendingDeleteFlashcardId)
+      setActionError(null)
+      setLastFailedAction(null)
+      setIsDeleteModalOpen(false)
+      setPendingDeleteFlashcardId(null)
+    } catch (error) {
+      const failedId = pendingDeleteFlashcardId
+      const message = error instanceof Error ? error.message : 'No se pudo borrar la flashcard.'
+      setActionError(message)
+      setLastFailedAction(() => async () => {
+        await remove(failedId)
+        setActionError(null)
+        setLastFailedAction(null)
+      })
+      setIsDeleteModalOpen(false)
+      setPendingDeleteFlashcardId(null)
+    }
+  }, [pendingDeleteFlashcardId, remove])
 
   const handleCreateFlashcard = useCallback(
     async (data: CreateFlashcardInput) => {
@@ -247,28 +283,30 @@ export default function CollectionDetailPage() {
             <FlashcardList
               flashcards={filteredFlashcards}
               onEditFlashcard={handleEditFlashcard}
-              onDeleteFlashcard={(id) =>
-                void remove(id).then(
-                  () => {
-                    setActionError(null)
-                    setLastFailedAction(null)
-                  },
-                  (error) => {
-                    const message =
-                      error instanceof Error ? error.message : 'No se pudo borrar la flashcard.'
-                    setActionError(message)
-                    setLastFailedAction(() => async () => {
-                      await remove(id)
-                      setActionError(null)
-                      setLastFailedAction(null)
-                    })
-                  },
-                )
-              }
+              onDeleteFlashcard={handleDeleteFlashcard}
             />
           </Card>
         </div>
       </section>
+
+      <Modal
+        open={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        title="Borrar flashcard"
+        description="Esta acción no se puede deshacer."
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={handleCloseDeleteModal}>
+              Cancelar
+            </Button>
+            <Button type="button" variant="danger" onClick={handleConfirmDeleteFlashcard}>
+              Borrar
+            </Button>
+          </>
+        }
+      >
+        <p>¿Seguro que quieres borrar esta flashcard?</p>
+      </Modal>
     </main>
   )
 }
