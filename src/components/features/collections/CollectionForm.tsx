@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import Button from '../../ui/Button'
-import Card from '../../ui/Card'
-import Input from '../../ui/Input'
+import ButtonCarbon from '../../ui-carbon/ButtonCarbon'
+import CardCarbon from '../../ui-carbon/CardCarbon'
+import InputCarbon from '../../ui-carbon/InputCarbon'
 import type { CreateCollectionInput } from '../../../types/domain'
 
 interface CollectionFormProps {
@@ -77,7 +77,7 @@ export default function CollectionForm({
   }
 
   return (
-    <Card
+    <CardCarbon
       title={mode === 'edit' ? 'Editar coleccion' : 'Nueva coleccion'}
       description={
         mode === 'edit'
@@ -87,7 +87,7 @@ export default function CollectionForm({
       variant="elevated"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
+        <InputCarbon
           id="collection-name"
           label="Nombre"
           value={name}
@@ -99,7 +99,7 @@ export default function CollectionForm({
           }}
         />
 
-        <Input
+        <InputCarbon
           id="collection-description"
           label="Descripcion (opcional)"
           value={description}
@@ -110,16 +110,16 @@ export default function CollectionForm({
         {successMessage ? <p className="text-sm text-green-700">{successMessage}</p> : null}
 
         <div className="flex flex-wrap gap-2">
-          <Button type="submit" isLoading={isSubmitting}>
+          <ButtonCarbon type="submit" isLoading={isSubmitting}>
             {submitLabel ?? (mode === 'edit' ? 'Guardar cambios' : 'Guardar coleccion')}
-          </Button>
+          </ButtonCarbon>
           {mode === 'edit' && onCancel ? (
-            <Button type="button" variant="ghost" onClick={onCancel}>
+            <ButtonCarbon type="button" variant="ghost" onClick={onCancel}>
               Cancelar edicion
-            </Button>
+            </ButtonCarbon>
           ) : null}
         </div>
       </form>
-    </Card>
+    </CardCarbon>
   )
 }

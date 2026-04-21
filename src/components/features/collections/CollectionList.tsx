@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import EmptyState from '../../ui/EmptyState'
+import EmptyStateCarbon from '../../ui-carbon/EmptyStateCarbon'
 import type { Collection } from '../../../types/domain'
 import CollectionItem from './CollectionItem'
 
@@ -16,7 +16,7 @@ function CollectionList({
 }: CollectionListProps) {
   if (collections.length === 0) {
     return (
-      <EmptyState
+      <EmptyStateCarbon
         title="No hay colecciones"
         description="Crea tu primera coleccion para empezar a organizar tarjetas."
       />

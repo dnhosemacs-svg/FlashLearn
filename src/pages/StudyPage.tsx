@@ -2,9 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import FlashcardsSummary from '../components/features/flashcards/FlashcardsSummary'
 import StudyCard from '../components/features/study/StudyCard'
 import StudyControls from '../components/features/study/StudyControls'
-import Button from '../components/ui/Button'
-import EmptyState from '../components/ui/EmptyState'
-import Spinner from '../components/ui/Spinner'
+import ButtonCarbon from '../components/ui-carbon/ButtonCarbon'
+import EmptyStateCarbon from '../components/ui-carbon/EmptyStateCarbon'
+import SelectCarbon from '../components/ui-carbon/SelectCarbon'
+import SpinnerCarbon from '../components/ui-carbon/SpinnerCarbon'
 import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import type { Flashcard } from '../types/domain'
 import { useCollectionsContext } from '../context/useCollectionsContext'
@@ -92,7 +93,7 @@ export default function StudyPage() {
         <h1 className="page-title">Estudio</h1>
         <p className="page-subtitle">Modo estudio</p>
         <div className="mt-8 flex justify-center">
-          <Spinner label="Cargando tarjetas" />
+          <SpinnerCarbon label="Cargando tarjetas" />
         </div>
       </main>
     )
@@ -104,13 +105,13 @@ export default function StudyPage() {
         <h1 className="page-title">Estudio</h1>
         <p className="page-subtitle">Modo estudio</p>
         <section className="section-stack">
-          <EmptyState
+          <EmptyStateCarbon
             title="No se pudieron cargar las tarjetas"
             description={network.error ?? 'Error desconocido'}
             action={
-              <Button type="button" onClick={() => void refresh()}>
+              <ButtonCarbon type="button" onClick={() => void refresh()}>
                 Reintentar
-              </Button>
+              </ButtonCarbon>
             }
           />
         </section>
@@ -124,7 +125,7 @@ export default function StudyPage() {
         <h1 className="page-title">Estudio</h1>
         <p className="page-subtitle">Modo estudio</p>
         <section className="section-stack">
-          <EmptyState
+          <EmptyStateCarbon
             title="No hay tarjetas para estudiar"
             description="Crea tarjetas en una colección para empezar."
           />
@@ -149,27 +150,21 @@ export default function StudyPage() {
         </p>
 
         <div className="mt-4 lg:mx-auto lg:max-w-3xl">
-          <label htmlFor="study-collection-filter" className="block text-sm font-medium text-slate-700">
-            Colección
-          </label>
-          <select
+          <SelectCarbon
             id="study-collection-filter"
+            label="Colección"
             value={selectedCollectionId}
-            onChange={(e) => {
-              setSelectedCollectionId(e.target.value)
+            onChange={(value) => {
+              setSelectedCollectionId(value)
               setSessionOrder(null)
               setCurrentIndex(0)
               setIsRevealed(false)
             }}
-            className="mt-2 w-full rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-          >
-            <option value="all">Todas las colecciones</option>
-            {collections.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: 'all', label: 'Todas las colecciones' },
+              ...collections.map((c) => ({ value: c.id, label: c.name })),
+            ]}
+          />
         </div>
 
         {currentFlashcard && (

@@ -3,10 +3,10 @@ import CollectionForm from '../components/features/collections/CollectionForm'
 import CollectionList from '../components/features/collections/CollectionList'
 import CollectionListSkeleton from '../components/features/collections/CollectionListSkeleton'
 import Alert from '../components/ui/Alert'
-import Button from '../components/ui/Button'
-import EmptyState from '../components/ui/EmptyState'
-import Input from '../components/ui/Input'
-import Modal from '../components/ui/Modal'
+import ButtonCarbon from '../components/ui-carbon/ButtonCarbon'
+import EmptyStateCarbon from '../components/ui-carbon/EmptyStateCarbon'
+import ModalCarbon from '../components/ui-carbon/ModalCarbon'
+import SearchCarbon from '../components/ui-carbon/SearchCarbon'
 import { useCollectionsContext } from '../context/useCollectionsContext'
 import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import { loadCollectionsSearch, saveCollectionsSearch } from '../lib/storage/uiStateStorage'
@@ -137,13 +137,13 @@ export default function CollectionsPage() {
         <h1 className="page-title">Colecciones</h1>
         <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
         <section className="section-stack">
-          <EmptyState
+          <EmptyStateCarbon
             title="No se pudieron cargar las colecciones"
             description={network.error ?? 'Error desconocido'}
             action={
-              <Button type="button" onClick={() => void refresh()}>
+              <ButtonCarbon type="button" onClick={() => void refresh()}>
                 Reintentar
-              </Button>
+              </ButtonCarbon>
             }
           />
         </section>
@@ -161,15 +161,15 @@ export default function CollectionsPage() {
         </p>
       ) : null}
 
-      <Input
-        id="collections-search"
-        type="search"
-        label="Buscar colecciones"
-        containerClassName="mt-4"
-        value={searchQuery}
-        onChange={(event) => setSearchQuery(event.target.value)}
-        placeholder="Buscar colecciones por nombre o descripcion..."
-      />
+      <div className="mt-4">
+        <SearchCarbon
+          id="collections-search"
+          label="Buscar colecciones"
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Buscar colecciones por nombre o descripcion..."
+        />
+      </div>
 
       <p className="mt-2 text-sm text-slate-600">
         Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
@@ -180,9 +180,9 @@ export default function CollectionsPage() {
           className="mt-3"
           action={
             lastFailedAction ? (
-              <Button type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
+              <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
                 Reintentar operación
-              </Button>
+              </ButtonCarbon>
             ) : null
           }
         >
@@ -238,24 +238,24 @@ export default function CollectionsPage() {
         </div>
       </section>
 
-      <Modal
+      <ModalCarbon
         open={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         title="Borrar colección"
         description="Esta acción no se puede deshacer."
         footer={
           <>
-            <Button type="button" variant="ghost" onClick={handleCloseDeleteModal}>
+            <ButtonCarbon type="button" variant="ghost" onClick={handleCloseDeleteModal}>
               Cancelar
-            </Button>
-            <Button type="button" variant="danger" onClick={handleConfirmDeleteCollection}>
+            </ButtonCarbon>
+            <ButtonCarbon type="button" variant="danger" onClick={handleConfirmDeleteCollection}>
               Borrar
-            </Button>
+            </ButtonCarbon>
           </>
         }
       >
         <p>¿Seguro que quieres borrar esta colección?</p>
-      </Modal>
+      </ModalCarbon>
     </main>
   )
 }

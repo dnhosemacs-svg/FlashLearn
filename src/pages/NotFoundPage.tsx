@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import Button from '../components/ui/Button'
+import ButtonCarbon from '../components/ui-carbon/ButtonCarbon'
 
 export default function NotFoundPage() {
   const navigate = useNavigate()
@@ -15,9 +15,9 @@ export default function NotFoundPage() {
         </p>
 
         <div>
-          <Button type="button" onClick={() => navigate('/')}>
+          <ButtonCarbon type="button" onClick={() => navigate('/')}>
             Volver al inicio
-          </Button>
+          </ButtonCarbon>
         </div>
       </section>
     </main>

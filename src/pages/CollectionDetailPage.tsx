@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Alert from '../components/ui/Alert'
-import Button from '../components/ui/Button'
-import Card from '../components/ui/Card'
-import EmptyState from '../components/ui/EmptyState'
+import ButtonCarbon from '../components/ui-carbon/ButtonCarbon'
+import CardCarbon from '../components/ui-carbon/CardCarbon'
+import EmptyStateCarbon from '../components/ui-carbon/EmptyStateCarbon'
 import FlashcardForm from '../components/features/flashcards/FlashcardForm'
 import FlashcardList from '../components/features/flashcards/FlashcardList'
-import Input from '../components/ui/Input'
-import Modal from '../components/ui/Modal'
-import Skeleton from '../components/ui/Skeleton'
+import ModalCarbon from '../components/ui-carbon/ModalCarbon'
+import SearchCarbon from '../components/ui-carbon/SearchCarbon'
+import SkeletonCarbon from '../components/ui-carbon/SkeletonCarbon'
 import { useCollectionsContext } from '../context/useCollectionsContext'
 import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import type { CreateFlashcardInput } from '../types/domain'
@@ -156,12 +156,12 @@ export default function CollectionDetailPage() {
   if (!collectionId) {
     return (
       <main className="page-shell">
-        <EmptyState
+        <EmptyStateCarbon
           title="Colección no válida"
           description="No se encontró un identificador de colección en la URL."
         />
         <div className="mt-4">
-            <Button variant="ghost" onClick={() => navigate('/collections')}>Volver a colecciones</Button>
+            <ButtonCarbon variant="ghost" onClick={() => navigate('/collections')}>Volver a colecciones</ButtonCarbon>
         </div>
       </main>
     )
@@ -173,14 +173,14 @@ export default function CollectionDetailPage() {
         <div className="page-header">
           <h1 className="page-title">Detalle de colección</h1>
           <Link to="/collections">
-            <Button variant="ghost">Volver</Button>
+            <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
         </div>
         <div className="mt-6 space-y-3">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
+          <SkeletonCarbon className="h-10 w-full" />
+          <SkeletonCarbon className="h-24 w-full" />
+          <SkeletonCarbon className="h-24 w-full" />
+          <SkeletonCarbon className="h-24 w-full" />
         </div>
       </main>
     )
@@ -192,16 +192,16 @@ export default function CollectionDetailPage() {
         <div className="page-header">
           <h1 className="page-title">Detalle de colección</h1>
           <Link to="/collections">
-            <Button variant="ghost">Volver</Button>
+            <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
         </div>
-        <EmptyState
+        <EmptyStateCarbon
           title="No se pudieron cargar las tarjetas"
           description={network.error ?? 'Error desconocido'}
           action={
-            <Button type="button" onClick={() => void refresh()}>
+            <ButtonCarbon type="button" onClick={() => void refresh()}>
               Reintentar
-            </Button>
+            </ButtonCarbon>
           }
         />
       </main>
@@ -221,19 +221,19 @@ export default function CollectionDetailPage() {
           ) : null}
         </div>
         <Link to="/collections">
-          <Button variant="ghost">Volver</Button>
+          <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
         </Link>
       </div>
 
-      <Input
-        id="flashcards-search"
-        type="search"
-        label="Buscar flashcards"
-        containerClassName="mt-4"
-        value={searchQuery}
-        onChange={(event) => setSearchQuery(event.target.value)}
-        placeholder="Buscar por pregunta, respuesta o tags..."
-      />
+      <div className="mt-4">
+        <SearchCarbon
+          id="flashcards-search"
+          label="Buscar flashcards"
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Buscar por pregunta, respuesta o tags..."
+        />
+      </div>
 
       <p className="mt-2 text-sm text-slate-600">
         Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
@@ -244,9 +244,9 @@ export default function CollectionDetailPage() {
           className="mt-3"
           action={
             lastFailedAction ? (
-              <Button type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
+              <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
                 Reintentar operación
-              </Button>
+              </ButtonCarbon>
             ) : null
           }
         >
@@ -276,7 +276,7 @@ export default function CollectionDetailPage() {
   />
 )}
 
-          <Card
+          <CardCarbon
             title="Tarjetas de la colección"
             description="Listado de flashcards creadas en esta colección."
           >
@@ -285,28 +285,28 @@ export default function CollectionDetailPage() {
               onEditFlashcard={handleEditFlashcard}
               onDeleteFlashcard={handleDeleteFlashcard}
             />
-          </Card>
+          </CardCarbon>
         </div>
       </section>
 
-      <Modal
+      <ModalCarbon
         open={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         title="Borrar flashcard"
         description="Esta acción no se puede deshacer."
         footer={
           <>
-            <Button type="button" variant="ghost" onClick={handleCloseDeleteModal}>
+            <ButtonCarbon type="button" variant="ghost" onClick={handleCloseDeleteModal}>
               Cancelar
-            </Button>
-            <Button type="button" variant="danger" onClick={handleConfirmDeleteFlashcard}>
+            </ButtonCarbon>
+            <ButtonCarbon type="button" variant="danger" onClick={handleConfirmDeleteFlashcard}>
               Borrar
-            </Button>
+            </ButtonCarbon>
           </>
         }
       >
         <p>¿Seguro que quieres borrar esta flashcard?</p>
-      </Modal>
+      </ModalCarbon>
     </main>
   )
 }

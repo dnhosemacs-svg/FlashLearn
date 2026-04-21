@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import Button from '../../ui/Button'
-import Card from '../../ui/Card'
-import Input from '../../ui/Input'
+import ButtonCarbon from '../../ui-carbon/ButtonCarbon'
+import CardCarbon from '../../ui-carbon/CardCarbon'
+import InputCarbon from '../../ui-carbon/InputCarbon'
 import type { CreateFlashcardInput } from '../../../types/domain'
 
 interface FlashcardFormProps {
@@ -65,12 +65,12 @@ export default function FlashcardForm({
   }
 
   return (
-    <Card
+    <CardCarbon
       title={mode === 'edit' ? 'Editar flashcard' : 'Nueva flashcard'}
       description={mode === 'edit' ? 'Actualiza la tarjeta seleccionada' : 'Crea una tarjeta de estudio'}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
+        <InputCarbon
           id="flashcard-question"
           label="Pregunta"
           value={question}
@@ -80,7 +80,7 @@ export default function FlashcardForm({
             if (questionError) setQuestionError('')
           }}
         />
-        <Input
+        <InputCarbon
           id="flashcard-answer"
           label="Respuesta"
           value={answer}
@@ -90,7 +90,7 @@ export default function FlashcardForm({
             if (answerError) setAnswerError('')
           }}
         />
-        <Input
+        <InputCarbon
           id="flashcard-tags"
           label="Tags (opcional)"
           hint="Separados por coma"
@@ -103,16 +103,16 @@ export default function FlashcardForm({
         ) : null}
 
         <div className="flex flex-wrap gap-2">
-          <Button type="submit">
+          <ButtonCarbon type="submit">
             {submitLabel ?? (mode === 'edit' ? 'Guardar cambios' : 'Guardar flashcard')}
-          </Button>
+          </ButtonCarbon>
           {mode === 'edit' && onCancel ? (
-            <Button type="button" variant="ghost" onClick={onCancel}>
+            <ButtonCarbon type="button" variant="ghost" onClick={onCancel}>
               Cancelar edición
-            </Button>
+            </ButtonCarbon>
           ) : null}
         </div>
       </form>
-    </Card>
+    </CardCarbon>
   )
 }

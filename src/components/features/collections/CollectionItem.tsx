@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
-import Button from '../../ui/Button'
-import Card from '../../ui/Card'
+import ButtonCarbon from '../../ui-carbon/ButtonCarbon'
+import CardCarbon from '../../ui-carbon/CardCarbon'
 import type { Collection } from '../../../types/domain'
 
 interface CollectionItemProps {
@@ -22,39 +22,39 @@ function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
   const collectionRef = `${toSlug(collection.name) || 'coleccion'}-${collection.id}`
 
   return (
-    <Card
+    <CardCarbon
       title={collection.name}
       description={collection.description || 'Sin descripcion'}
       actions={
         <div className="flex flex-wrap justify-end gap-2">
           <Link to={`/collections/${collectionRef}`} className="w-full sm:w-auto">
-            <Button variant="secondary" size="sm" className="w-full sm:w-auto">
+            <ButtonCarbon variant="secondary" size="sm" className="w-full sm:w-auto">
               Abrir
-            </Button>
+            </ButtonCarbon>
           </Link>
 
-          <Button
+          <ButtonCarbon
             variant="ghost"
             size="sm"
             className="w-full sm:w-auto"
             onClick={() => onEdit(collection.id)}
           >
             Editar
-          </Button>
-          <Button
+          </ButtonCarbon>
+          <ButtonCarbon
             variant="danger"
             size="sm"
             className="w-full sm:w-auto"
             onClick={() => onDelete(collection.id)}
           >
             Borrar
-          </Button>
+          </ButtonCarbon>
         </div>
       }
       className="h-full"
     >
       <p className="text-xs text-slate-500">Actualizada: {collection.updatedAt}</p>
-    </Card>
+    </CardCarbon>
   )
 }
 

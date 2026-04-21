@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import EmptyState from '../../ui/EmptyState'
+import EmptyStateCarbon from '../../ui-carbon/EmptyStateCarbon'
 import type { Flashcard } from '../../../types/domain'
 import FlashcardItem from './FlashcardItem'
 
@@ -11,7 +11,7 @@ interface FlashcardListProps {
 
 function FlashcardList({ flashcards, onEditFlashcard, onDeleteFlashcard }: FlashcardListProps) {
   if (!flashcards.length) {
-    return <EmptyState title="No hay flashcards" description="Crea la primera tarjeta de esta colección." />
+    return <EmptyStateCarbon title="No hay flashcards" description="Crea la primera tarjeta de esta colección." />
   }
 
   return (

@@ -1,4 +1,4 @@
-import Card from '../../ui/Card'
+import CardCarbon from '../../ui-carbon/CardCarbon'
 import type { Flashcard } from '../../../types/domain'
 
 interface StudyCardProps {
@@ -8,10 +8,9 @@ interface StudyCardProps {
 
 export default function StudyCard({ flashcard, isRevealed }: StudyCardProps) {
   return (
-    <Card
+    <CardCarbon
       title="Modo estudio"
       description="Lee la pregunta e intenta responder antes de revelar."
-      variant="elevated"
     >
       <div className="space-y-4">
         <div>
@@ -28,6 +27,6 @@ export default function StudyCard({ flashcard, isRevealed }: StudyCardProps) {
           )}
         </div>
       </div>
-    </Card>
+    </CardCarbon>
   )
 }

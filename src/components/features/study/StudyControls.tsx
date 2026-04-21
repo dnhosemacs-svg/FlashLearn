@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import Button from '../../ui/Button'
+import ButtonCarbon from '../../ui-carbon/ButtonCarbon'
 
 interface StudyControlsProps {
   onPrev: () => void
@@ -22,10 +22,10 @@ function StudyControls({
 }: StudyControlsProps) {
   return (
     <div className="flex flex-wrap gap-2">
-      <Button variant="secondary" onClick={onPrev} disabled={!canPrev}>Anterior</Button>
-      <Button onClick={onReveal}>{isRevealed ? 'Ocultar respuesta' : 'Revelar respuesta'}</Button>
-      <Button variant="secondary" onClick={onNext} disabled={!canNext}>Siguiente</Button>
-      <Button variant="ghost" onClick={onShuffle}>Barajar</Button>
+      <ButtonCarbon variant="secondary" onClick={onPrev} disabled={!canPrev}>Anterior</ButtonCarbon>
+      <ButtonCarbon onClick={onReveal}>{isRevealed ? 'Ocultar respuesta' : 'Revelar respuesta'}</ButtonCarbon>
+      <ButtonCarbon variant="secondary" onClick={onNext} disabled={!canNext}>Siguiente</ButtonCarbon>
+      <ButtonCarbon variant="ghost" onClick={onShuffle}>Barajar</ButtonCarbon>
     </div>
   )
 }
