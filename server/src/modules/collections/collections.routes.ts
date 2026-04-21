@@ -9,6 +9,7 @@ import {
 
 const collectionsRouter = Router()
 
+// Rutas REST del recurso colección.
 collectionsRouter.get('/collections', getCollections)
 collectionsRouter.get('/collections/:id', getCollection)
 collectionsRouter.post('/collections', postCollection)

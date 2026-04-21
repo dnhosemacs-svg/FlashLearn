@@ -28,6 +28,7 @@ function FlashcardItem({ flashcard, onEdit, onDelete }: FlashcardItemProps) {
     >
       <p className="text-sm text-slate-700">{flashcard.answer}</p>
 
+      {/* Se renderizan tags solo cuando existen para evitar ruido visual. */}
       {flashcard.tags?.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
           {flashcard.tags.map((tag) => (

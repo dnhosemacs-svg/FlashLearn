@@ -25,6 +25,7 @@ export default function SearchCarbon({
   }
 
   return (
+    // Wrapper para aplicar estilos globales de búsqueda sin repetir clases.
     <div className="fl-search-carbon">
       <Search
         id={id}

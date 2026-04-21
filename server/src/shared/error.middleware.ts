@@ -5,6 +5,7 @@ export function errorHandler(
   _req: Request,
   res: Response,
 ) {
+  // Fallback centralizado para errores no controlados en controladores/servicios.
   console.error('[API_ERROR]', err)
 
   return res.status(500).json({

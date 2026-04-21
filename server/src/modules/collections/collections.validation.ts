@@ -1,6 +1,7 @@
 import type { CreateCollectionInput, UpdateCollectionInput } from './collections.types.js'
 
 export function validateCreateCollection(body: unknown): { ok: true; data: CreateCollectionInput } | { ok: false; error: string } {
+  // Validación defensiva de payload entrante para proteger capa de servicio.
   if (typeof body !== 'object' || body === null) return { ok: false, error: 'Body inválido' }
 
   const raw = body as Record<string, unknown>

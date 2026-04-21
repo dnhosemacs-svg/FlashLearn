@@ -1,12 +1,14 @@
 import type { CreateFlashcardInput, UpdateFlashcardInput } from './flashcards.types.js'
 
 function normalizeTags(raw: unknown): string[] | undefined {
+  // Limpia tags inválidos/vacíos para mantener shape estable.
   if (!Array.isArray(raw)) return undefined
   const tags = raw.filter((v): v is string => typeof v === 'string').map((t) => t.trim()).filter(Boolean)
   return tags.length ? tags : undefined
 }
 
 export function validateCreateFlashcard(body: unknown): { ok: true; data: CreateFlashcardInput } | { ok: false; error: string } {
+  // Valida requeridos de creación y normaliza texto entrante.
   if (typeof body !== 'object' || body === null) return { ok: false, error: 'Body inválido' }
   const raw = body as Record<string, unknown>
 

@@ -7,6 +7,7 @@ interface CollectionListSkeletonProps {
 export default function CollectionListSkeleton({ count = 4 }: CollectionListSkeletonProps) {
   return (
     <section className="grid gap-4 md:grid-cols-2" aria-hidden="true">
+      {/* Placeholder repetido para simular la densidad visual de la lista real. */}
       {Array.from({ length: count }).map((_, idx) => (
         <div key={idx} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <SkeletonCarbon className="mb-3 h-5 w-2/3" />

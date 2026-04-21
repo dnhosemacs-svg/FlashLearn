@@ -29,6 +29,7 @@ export default function InputCarbon({
         labelText={label ?? ''}
         invalid={Boolean(error)}
         invalidText={error ?? ''}
+        // Si hay error, se prioriza el mensaje de validación sobre la ayuda contextual.
         helperText={error ? undefined : hint}
         size="sm"
         className={className}

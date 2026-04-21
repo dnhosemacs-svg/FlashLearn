@@ -46,6 +46,7 @@ export default function CollectionDetailPage() {
   )
 
   const collectionId = useMemo(() => {
+    // Acepta refs amigables tipo "nombre-uuid" extrayendo el UUID final.
     if (!collectionRef) return undefined
     const match = collectionRef.match(UUID_AT_END_REGEX)
     return match?.[1] ?? collectionRef
@@ -64,6 +65,7 @@ export default function CollectionDetailPage() {
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
   const filteredFlashcards = useMemo(() => {
+    // B?squeda full-text simple sobre pregunta, respuesta y tags.
     if (!normalizedQuery) return flashcards
 
     return flashcards.filter((card) => {
@@ -80,6 +82,7 @@ export default function CollectionDetailPage() {
   }, [flashcards, normalizedQuery])
 
   const flashcardsStats = useMemo(() => {
+    // Resumen m?nimo para dar contexto del set actual.
     const total = flashcards.length
     const withTags = flashcards.filter((card) => (card.tags?.length ?? 0) > 0).length
     const withoutTags = total - withTags

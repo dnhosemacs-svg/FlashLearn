@@ -17,6 +17,7 @@ export default function EmptyStateCarbon({
   className = '',
 }: EmptyStateCarbonProps) {
   return (
+    // Estado vacío reutilizable: mensaje principal + contenido opcional (icono/acción).
     <section className={className}>
       <InlineNotification
         kind="info"

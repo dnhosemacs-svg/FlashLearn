@@ -35,6 +35,7 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
   })
 
   const refresh = useCallback(async () => {
+    // Estrategia de carga equivalente a colecciones: full load inicial, refresh luego.
     setNetwork((prev) => {
       const hasData = allFlashcards.length > 0
       if (hasData) return { ...prev, isRefreshing: true, error: null }
@@ -63,6 +64,7 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
   }
 
   const flashcards = useMemo(() => {
+    // Vista derivada para soportar tanto contexto global como por colección.
     if (!collectionId) return allFlashcards
     return allFlashcards.filter((card) => card.collectionId === collectionId)
   }, [allFlashcards, collectionId])
@@ -88,6 +90,7 @@ export function useFlashcards(collectionId?: string): UseFlashcardsResult {
   }, [])
 
   const removeByCollection = useCallback(async (targetCollectionId: string) => {
+    // Borrado en lote para mantener consistencia cuando se elimina una colección.
     const cardsToDelete = allFlashcards.filter((c) => c.collectionId === targetCollectionId)
     await Promise.all(cardsToDelete.map((card) => deleteFlashcard(card.id)))
     setAllFlashcards((prev) => prev.filter((c) => c.collectionId !== targetCollectionId))

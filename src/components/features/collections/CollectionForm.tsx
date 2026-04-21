@@ -36,6 +36,7 @@ export default function CollectionForm({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    // Se sanea input para validar y persistir datos consistentes.
     const trimmedName = name.trim()
     const trimmedDescription = description.trim()
 
@@ -48,6 +49,7 @@ export default function CollectionForm({
     const normalizedName = trimmedName.toLowerCase()
     const normalizedCurrent = (currentName ?? '').trim().toLowerCase()
 
+    // Evita colisiones por nombre ignorando mayúsculas/minúsculas y espacios.
     const isDuplicate =
       normalizedName !== normalizedCurrent &&
       existingNames.some((n) => n.trim().toLowerCase() === normalizedName)
@@ -70,6 +72,7 @@ export default function CollectionForm({
         : 'Colección creada correctamente.',
     )
 
+    // En modo creación se limpia el formulario para carga rápida de más elementos.
     if (mode === 'create') {
       setName('')
       setDescription('')

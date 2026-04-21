@@ -33,6 +33,7 @@ export default function FlashcardForm({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    // Trim previene valores con solo espacios y homogeniza el payload.
     const q = question.trim()
     const a = answer.trim()
 
@@ -44,6 +45,7 @@ export default function FlashcardForm({
       return
     }
 
+    // Convierte el texto de tags en una lista limpia sin entradas vacías.
     const tags = tagsText
       .split(',')
       .map((tag) => tag.trim())
@@ -57,6 +59,7 @@ export default function FlashcardForm({
 
     setSuccessMessage(mode === 'edit' ? 'Flashcard actualizada correctamente.' : 'Flashcard creada correctamente.')
 
+    // Solo se resetea en creación para no perder contexto durante edición.
     if (mode === 'create') {
       setQuestion('')
       setAnswer('')

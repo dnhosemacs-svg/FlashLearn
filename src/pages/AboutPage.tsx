@@ -1,6 +1,7 @@
 export default function AboutPage() {
   return (
     <main className="page-shell">
+      {/* Página informativa estática sobre propósito y arquitectura del proyecto. */}
       <h1 className="page-title">Acerca de FlashLearn</h1>
       <p className="page-subtitle">Micro-app para crear colecciones y estudiar con flashcards.</p>
 

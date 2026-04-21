@@ -1,3 +1,4 @@
+// Barrel de API para centralizar imports en el resto de módulos.
 export { apiClient, HttpError } from './client'
 
 export {

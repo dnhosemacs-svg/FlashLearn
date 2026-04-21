@@ -24,6 +24,7 @@ interface AlertProps extends VariantProps<typeof alertVariants> {
 
 export default function Alert({ variant = 'info', children, action, className = '' }: AlertProps) {
   return (
+    // role cambia según severidad para mejorar accesibilidad con lectores de pantalla.
     <div className={cn(alertVariants({ variant }), className)} role={variant === 'danger' ? 'alert' : 'status'}>
       <p>{children}</p>
       {action ? <div className="mt-2">{action}</div> : null}

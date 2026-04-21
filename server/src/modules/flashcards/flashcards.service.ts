@@ -4,6 +4,7 @@ import type { CreateFlashcardInput, Flashcard, UpdateFlashcardInput } from './fl
 const flashcards: Flashcard[] = []
 
 export function listFlashcards(collectionId?: string): Flashcard[] {
+  // Soporta listado global o filtrado por colección.
   if (!collectionId) return flashcards
   return flashcards.filter((f) => f.collectionId === collectionId)
 }
@@ -13,6 +14,7 @@ export function getFlashcardById(id: string): Flashcard | undefined {
 }
 
 export function createFlashcard(input: CreateFlashcardInput): { ok: true; data: Flashcard } | { ok: false; error: string } {
+  // Garantiza referencia válida a colección antes de crear.
   const existsCollection = getCollectionById(input.collectionId)
   if (!existsCollection) return { ok: false, error: 'collectionId no existe' }
 
@@ -56,6 +58,7 @@ export function deleteFlashcard(id: string): boolean {
 }
 
 export function deleteFlashcardsByCollectionId(collectionId: string): void {
+  // Recorre en reversa para eliminar en sitio sin perder índices.
   let i = flashcards.length - 1
   while (i >= 0) {
     if (flashcards[i].collectionId === collectionId) {

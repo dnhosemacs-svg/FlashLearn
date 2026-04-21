@@ -7,9 +7,11 @@ import errorHandler from '../shared/error.middleware.js'
 export function createApp() {
   const app = express()
 
+  // Middlewares globales del servidor.
   app.use(cors())
   app.use(express.json())
 
+  // Se monta la API versionada y luego el manejador de errores.
   app.use(env.apiPrefix, apiRouter)
   app.use(errorHandler)
 

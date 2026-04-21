@@ -9,6 +9,7 @@ import {
 
 const flashcardsRouter = Router()
 
+// Rutas REST del recurso flashcard.
 flashcardsRouter.get('/flashcards', getFlashcards)
 flashcardsRouter.get('/flashcards/:id', getFlashcard)
 flashcardsRouter.post('/flashcards', postFlashcard)

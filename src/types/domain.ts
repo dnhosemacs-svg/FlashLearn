@@ -1,3 +1,4 @@
+// Entidades y payloads de dominio compartidos entre UI, hooks y API client.
 export interface Collection {
   id: string
   name: string

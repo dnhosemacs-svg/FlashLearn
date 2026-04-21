@@ -30,6 +30,7 @@ export default function SelectCarbon({
   }
 
   return (
+    // Wrapper para reutilizar estilos de select Carbon en toda la app.
     <div className="fl-select-carbon">
       <Select
         id={id}

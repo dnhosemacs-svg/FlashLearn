@@ -7,6 +7,7 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   return (
+    // Shell principal: navegación persistente + área de contenido por ruta.
     <div className="app-shell">
       <MainNav />
       <div className="app-shell__body">

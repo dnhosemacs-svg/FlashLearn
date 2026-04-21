@@ -9,6 +9,7 @@ import type {
   PostFlashcardResponse,
 } from '../types/api'
 
+// Capa de acceso a API de flashcards y su parametrización por colección.
 export function getFlashcards(collectionId?: string, signal?: AbortSignal): Promise<GetFlashcardsResponse> {
   const query = collectionId ? `?collectionId=${encodeURIComponent(collectionId)}` : ''
   return apiClient.get<GetFlashcardsResponse>(`/flashcards${query}`, signal)

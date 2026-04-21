@@ -5,6 +5,7 @@ import { deleteFlashcardsByCollectionId } from '../flashcards/flashcards.service
 const collections: Collection[] = []
 
 function normalizeName(name: string) {
+  // Normalización para comparaciones de unicidad más robustas.
   return name.trim().toLowerCase()
 }
 
@@ -58,6 +59,7 @@ export function deleteCollection(id: string): boolean {
   const index = collections.findIndex((c) => c.id === id)
   if (index === -1) return false
   collections.splice(index, 1)
+  // Cascada manual para mantener integridad en store en memoria.
   deleteFlashcardsByCollectionId(id)
   return true
 }

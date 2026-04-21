@@ -21,6 +21,7 @@ function StudyControls({
   isRevealed,
 }: StudyControlsProps) {
   return (
+    // Controles de navegación del mazo y visibilidad de respuesta.
     <div className="flex flex-wrap gap-2">
       <ButtonCarbon variant="secondary" onClick={onPrev} disabled={!canPrev}>Anterior</ButtonCarbon>
       <ButtonCarbon onClick={onReveal}>{isRevealed ? 'Ocultar respuesta' : 'Revelar respuesta'}</ButtonCarbon>

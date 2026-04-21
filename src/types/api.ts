@@ -5,7 +5,8 @@ import type {
     UpdateCollectionInput,
     UpdateFlashcardInput,
   } from './domain'
-  
+
+  // Contratos HTTP entre frontend y backend.
   /** Error estándar que responde el backend: { message: string } */
   export interface ApiErrorResponse {
     message: string

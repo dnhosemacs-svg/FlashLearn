@@ -25,5 +25,6 @@ interface BadgeProps extends VariantProps<typeof badgeVariants> {
 }
 
 export default function Badge({ label, variant, className }: BadgeProps) {
+  // Badge simple para etiquetar estado/categoría sin comportamiento interactivo.
   return <span className={cn(badgeVariants({ variant }), className)}>{label}</span>
 }

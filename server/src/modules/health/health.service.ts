@@ -5,6 +5,7 @@ export interface HealthPayload {
 }
 
 export function getHealthStatus(): HealthPayload {
+  // Respuesta autocontenida para comprobar disponibilidad del servicio.
   return {
     ok: true,
     service: 'flashlearn-api',

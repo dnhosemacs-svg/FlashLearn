@@ -6,6 +6,7 @@ interface SpinnerCarbonProps {
 
 export default function SpinnerCarbon({ label = 'Cargando' }: SpinnerCarbonProps) {
   return (
+    // InlineLoading evita saltos de layout al mostrarse dentro de tarjetas o listas.
     <InlineLoading
       status="active"
       description={`${label}...`}

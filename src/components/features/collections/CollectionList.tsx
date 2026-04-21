@@ -14,6 +14,7 @@ function CollectionList({
   onEditCollection,
   onDeleteCollection,
 }: CollectionListProps) {
+  // Estado vacío explícito para guiar al usuario en el siguiente paso.
   if (collections.length === 0) {
     return (
       <EmptyStateCarbon
@@ -25,6 +26,7 @@ function CollectionList({
 
   return (
     <section className="grid gap-4 md:grid-cols-2">
+      {/* Render de cada colección con callbacks delegados desde la página. */}
       {collections.map((collection) => (
         <CollectionItem
           key={collection.id}

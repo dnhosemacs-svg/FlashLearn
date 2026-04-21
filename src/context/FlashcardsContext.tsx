@@ -7,6 +7,7 @@ import { FlashcardsContext } from './flashcardsContextObject'
  * Las páginas filtran por `collectionId` o usan `flashcards` (todas) en estudio.
  */
 export function FlashcardsProvider({ children }: { children: ReactNode }) {
+  // Proveedor único para compartir flashcards entre páginas de detalle y estudio.
   const value = useFlashcards()
 
   return <FlashcardsContext.Provider value={value}>{children}</FlashcardsContext.Provider>

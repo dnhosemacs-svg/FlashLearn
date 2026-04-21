@@ -1,3 +1,4 @@
+// Contratos de dominio del módulo de colecciones en backend.
 export interface Collection {
     id: string
     name: string

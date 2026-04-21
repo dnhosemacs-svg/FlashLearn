@@ -15,6 +15,7 @@ export default function HomePage() {
       <p className="page-subtitle">Repasa con flashcards organizadas en colecciones.</p>
 
       <section className="section-stack mt-6 max-w-xl">
+        {/* Estados de carga/error/éxito para resumen rápido de colecciones. */}
         {network.status === 'loading' && collections.length === 0 ? (
           <SpinnerCarbon label="Cargando resumen" />
         ) : network.status === 'error' ? (
@@ -38,8 +39,13 @@ export default function HomePage() {
         <FlashcardsSummary />
 
         <div className="flex flex-wrap gap-3">
-            <ButtonCarbon variant="primary" onClick={() => navigate('/collections')}>Ir a colecciones</ButtonCarbon>
-            <ButtonCarbon variant="secondary" onClick={() => navigate('/study')}>Modo estudio</ButtonCarbon>
+          {/* Acciones primarias para entrar al flujo de trabajo principal. */}
+          <ButtonCarbon variant="primary" onClick={() => navigate('/collections')}>
+            Ir a colecciones
+          </ButtonCarbon>
+          <ButtonCarbon variant="secondary" onClick={() => navigate('/study')}>
+            Modo estudio
+          </ButtonCarbon>
         </div>
       </section>
     </main>

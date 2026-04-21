@@ -11,6 +11,7 @@ import type { Flashcard } from '../types/domain'
 import { useCollectionsContext } from '../context/useCollectionsContext'
 
 function shuffleArray<T>(items: T[]) {
+  // Fisher-Yates para barajar sin sesgo estadístico.
   const copy = [...items]
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -29,11 +30,13 @@ export default function StudyPage() {
   const [isRevealed, setIsRevealed] = useState(false)
   
   const filteredFlashcards = useMemo(() => {
+    // Permite estudiar todo o solo la colección seleccionada.
     if (selectedCollectionId === 'all') return loadedFlashcards
     return loadedFlashcards.filter((c) => c.collectionId === selectedCollectionId)
   }, [loadedFlashcards, selectedCollectionId])
   
   const deck = useMemo(() => {
+    // Mantiene el orden barajado solo para tarjetas aún disponibles tras filtrar.
     if (!sessionOrder) return filteredFlashcards
     const availableIds = new Set(filteredFlashcards.map((card) => card.id))
     return sessionOrder.filter((card) => availableIds.has(card.id))
@@ -59,6 +62,7 @@ export default function StudyPage() {
   }, [deck.length, effectiveIndex, isRevealed])
 
   useEffect(() => {
+    // Sincroniza datos cuando el usuario vuelve a enfocar la pestaña.
     const handleFocus = () => {
       void refresh()
     }
@@ -155,6 +159,7 @@ export default function StudyPage() {
             label="Colección"
             value={selectedCollectionId}
             onChange={(value) => {
+              // Cambiar colección reinicia avance y estado de revelado de la sesión.
               setSelectedCollectionId(value)
               setSessionOrder(null)
               setCurrentIndex(0)

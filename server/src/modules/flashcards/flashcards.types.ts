@@ -1,3 +1,4 @@
+// Contratos de dominio del módulo de flashcards en backend.
 export interface Flashcard {
     id: string
     collectionId: string

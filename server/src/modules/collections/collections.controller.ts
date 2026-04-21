@@ -10,6 +10,7 @@ import { validateCreateCollection, validateUpdateCollection } from './collection
 
 function getCollections(_req: Request, res: Response, next: NextFunction) {
   try {
+    // Controller fino: delega lógica de negocio al servicio.
     return res.status(200).json(listCollections())
   } catch (error) {
     return next(error)
@@ -49,6 +50,7 @@ function patchCollection(req: Request, res: Response, next: NextFunction) {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
     const updated = updateCollection(id, parsed.data)
     if (!updated.ok) {
+      // 404 para no encontrado, 409 para conflicto de nombre duplicado.
       const code = updated.error.includes('no encontrada') ? 404 : 409
       return res.status(code).json({ message: updated.error })
     }

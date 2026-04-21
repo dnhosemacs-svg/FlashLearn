@@ -49,6 +49,7 @@ export default function ButtonCarbon({
 
   return (
     <CarbonButton
+      // Se mapean variantes de dominio a props nativas de Carbon.
       kind={KIND_BY_VARIANT[variant] ?? 'primary'}
       size={SIZE_BY_VARIANT[size] ?? 'md'}
       disabled={disabled || isLoading}

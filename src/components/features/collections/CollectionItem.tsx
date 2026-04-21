@@ -19,6 +19,7 @@ function toSlug(value: string): string {
 }
 
 function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
+  // URL legible con fallback para nombres vacíos.
   const collectionRef = `${toSlug(collection.name) || 'coleccion'}-${collection.id}`
 
   return (
@@ -26,6 +27,7 @@ function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
       title={collection.name}
       description={collection.description || 'Sin descripcion'}
       actions={
+        // Acciones de la tarjeta separadas por responsabilidad: abrir/editar/borrar.
         <div className="flex flex-wrap justify-end gap-2">
           <Link to={`/collections/${collectionRef}`} className="w-full sm:w-auto">
             <ButtonCarbon variant="secondary" size="sm" className="w-full sm:w-auto">

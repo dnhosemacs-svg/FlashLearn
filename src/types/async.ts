@@ -1,3 +1,4 @@
+// Contratos genéricos para representar estado de operaciones asíncronas en UI.
 export type AsyncStatus = 'idle' | 'loading' | 'success' | 'error'
 
 export interface AsyncState {

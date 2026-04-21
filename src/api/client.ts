@@ -31,6 +31,7 @@ function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
 }
 
 async function parseResponseBody(response: Response): Promise<unknown> {
+  // Parsing flexible para endpoints JSON y respuestas vacías (204).
   const contentType = response.headers.get('content-type') ?? ''
 
   if (contentType.includes('application/json')) {
@@ -58,6 +59,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const parsedBody = await parseResponseBody(response)
 
   if (!response.ok) {
+    // Se transforma cualquier fallo HTTP en error tipado consumible por UI.
     const message = isApiErrorResponse(parsedBody) ? parsedBody.message : `HTTP ${response.status}`
     throw new HttpError(message, response.status, parsedBody)
   }

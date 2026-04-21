@@ -14,6 +14,7 @@ export default function FlashcardsSummary({
 }: FlashcardsSummaryProps) {
   const { allFlashcards, network } = useFlashcardsContext()
 
+  // Estadísticas derivadas memorizadas para evitar recálculos en cada render.
   const stats = useMemo(() => {
     const total = allFlashcards.length
     const withTags = allFlashcards.filter((card) => (card.tags?.length ?? 0) > 0).length
@@ -22,6 +23,7 @@ export default function FlashcardsSummary({
     return { total, withTags, withoutTags }
   }, [allFlashcards])
 
+  // Skeleton/loader solo cuando aún no hay datos iniciales.
   if (network.status === 'loading' && allFlashcards.length === 0) {
     return (
       <CardCarbon title={title} description={description} variant="elevated">
@@ -30,6 +32,7 @@ export default function FlashcardsSummary({
     )
   }
 
+  // Vista de error local para no romper el resto de la pantalla.
   if (network.status === 'error') {
     return (
       <CardCarbon title={title} description={description} variant="elevated">

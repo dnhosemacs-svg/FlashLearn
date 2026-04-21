@@ -6,6 +6,7 @@ export default function NotFoundPage() {
 
   return (
     <main className="page-shell">
+      {/* Pantalla de fallback para rutas inexistentes. */}
       <h1 className="page-title">404</h1>
       <p className="page-subtitle">La página que buscas no existe.</p>
 

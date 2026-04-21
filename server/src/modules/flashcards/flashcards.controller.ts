@@ -10,6 +10,7 @@ import { validateCreateFlashcard, validateUpdateFlashcard } from './flashcards.v
 
 export function getFlashcards(req: Request, res: Response, next: NextFunction) {
   try {
+    // `collectionId` es opcional para listar subconjunto o dataset completo.
     const collectionId = typeof req.query.collectionId === 'string' ? req.query.collectionId : undefined
     return res.status(200).json(listFlashcards(collectionId))
   } catch (error) {

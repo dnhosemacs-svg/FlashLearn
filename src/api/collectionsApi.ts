@@ -9,6 +9,7 @@ import type {
   PostCollectionResponse,
 } from '../types/api'
 
+// Capa de acceso a API de colecciones (mantiene detalle HTTP fuera de hooks/UI).
 export function getCollections(signal?: AbortSignal): Promise<GetCollectionsResponse> {
   return apiClient.get<GetCollectionsResponse>('/collections', signal)
 }

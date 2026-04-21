@@ -26,6 +26,7 @@ export function useCollections(): UseCollectionsResult {
   })
 
   const refresh = useCallback(async () => {
+    // Si ya hay datos, la recarga se marca como background para no bloquear UI.
     setNetwork((prev) => {
       const hasData = collections.length > 0
       if (hasData) return { ...prev, isRefreshing: true, error: null }
@@ -47,6 +48,7 @@ export function useCollections(): UseCollectionsResult {
 
   const didInitRef = useRef<true | null>(null)
   if (didInitRef.current == null) {
+    // Primer fetch diferido para evitar side-effects durante render.
     didInitRef.current = true
     queueMicrotask(() => {
       void refresh()

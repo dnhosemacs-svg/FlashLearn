@@ -22,6 +22,7 @@ export default function ModalCarbon({
   closeOnBackdrop = true,
 }: ModalCarbonProps) {
   useEffect(() => {
+    // Cierre por teclado para mantener paridad con comportamiento esperado de diálogos.
     if (!open) return
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()

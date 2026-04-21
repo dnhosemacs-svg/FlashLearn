@@ -16,6 +16,7 @@ import { Theme } from '@carbon/react'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    {/* BrowserRouter + providers globales inicializan contexto y rutas de toda la app. */}
     <BrowserRouter>
       <Theme theme="g10">
         <CollectionsProvider>

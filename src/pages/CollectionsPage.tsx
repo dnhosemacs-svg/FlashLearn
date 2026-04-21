@@ -43,6 +43,7 @@ export default function CollectionsPage() {
   )
 
   const collectionsStats = useMemo(() => {
+    // Métricas rápidas para resumen de calidad de datos.
     const total = collections.length
     const withDescription = collections.filter((c) => !!c.description?.trim()).length
     const withoutDescription = total - withDescription
@@ -110,6 +111,7 @@ export default function CollectionsPage() {
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
   const filteredCollections = useMemo(() => {
+    // Filtro case-insensitive por nombre y descripción.
     if (!normalizedQuery) return collections
 
     return collections.filter((collection) => {

@@ -32,6 +32,7 @@ export default function CardCarbon({
 
   return (
     <Tile className={cn(variantClassByType[variant], className)}>
+      {/* Encabezado opcional para título + acciones contextuales. */}
       {(title || actions) && (
         <header className="mb-3 flex items-start justify-between gap-3">
           <div>
@@ -42,6 +43,7 @@ export default function CardCarbon({
         </header>
       )}
       {children ? <section className={cn('text-slate-700', contentClassName)}>{children}</section> : null}
+      {/* Footer aislado en Layer para respetar jerarquía visual de Carbon. */}
       {footer ? (
         <Layer className="mt-4 border-t border-indigo-200 pt-3">
           <footer>{footer}</footer>

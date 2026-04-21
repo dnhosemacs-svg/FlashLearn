@@ -1,6 +1,7 @@
 export default function SettingsPage() {
   return (
     <main className="page-shell">
+      {/* Ruta preparada para futuras preferencias globales de experiencia de estudio. */}
       <h1 className="page-title">Configuración</h1>
       <p className="page-subtitle">Preferencias de uso y ajustes de estudio.</p>
 

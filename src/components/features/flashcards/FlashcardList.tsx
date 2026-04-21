@@ -10,12 +10,14 @@ interface FlashcardListProps {
 }
 
 function FlashcardList({ flashcards, onEditFlashcard, onDeleteFlashcard }: FlashcardListProps) {
+  // Estado vacío específico de la colección activa.
   if (!flashcards.length) {
     return <EmptyStateCarbon title="No hay flashcards" description="Crea la primera tarjeta de esta colección." />
   }
 
   return (
     <section className="grid gap-4">
+      {/* Cada tarjeta recibe handlers ya vinculados al caso de uso de la página. */}
       {flashcards.map((flashcard) => (
         <FlashcardItem
           key={flashcard.id}
