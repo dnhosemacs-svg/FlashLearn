@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react'
 import { Search } from '@carbon/react'
 import { cn } from '../../lib/cn'
 
@@ -18,6 +19,11 @@ export default function SearchCarbon({
   onChange,
   className,
 }: SearchCarbonProps) {
+  // Normaliza el valor emitido para que los consumidores no dependan del evento DOM.
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value)
+  }
+
   return (
     <div className="fl-search-carbon">
       <Search
@@ -27,7 +33,7 @@ export default function SearchCarbon({
         size="sm"
         className={cn(className)}
         placeholder={placeholder}
-        onChange={(e) => onChange((e.target as HTMLInputElement).value)}
+        onChange={handleChange}
       />
     </div>
   )

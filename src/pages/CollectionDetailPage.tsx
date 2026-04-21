@@ -15,6 +15,7 @@ import type { CreateFlashcardInput } from '../types/domain'
 
 const UUID_AT_END_REGEX =
   /([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
+const PAGE_TITLE = 'Detalle de coleccion'
 
 export default function CollectionDetailPage() {
   const { collectionRef } = useParams<{ collectionRef: string }>()
@@ -27,6 +28,22 @@ export default function CollectionDetailPage() {
   const [actionError, setActionError] = useState<string | null>(null)
   const [lastFailedAction, setLastFailedAction] = useState<(() => Promise<void>) | null>(null)
   const navigate = useNavigate()
+
+  // Reutiliza patr?n de ejecuci?n con fallback + acci?n de reintento.
+  const runWithRetry = useCallback(
+    async (action: () => Promise<void>, fallbackMessage: string) => {
+      try {
+        await action()
+        setActionError(null)
+        setLastFailedAction(null)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : fallbackMessage
+        setActionError(message)
+        setLastFailedAction(() => action)
+      }
+    },
+    [],
+  )
 
   const collectionId = useMemo(() => {
     if (!collectionRef) return undefined
@@ -77,23 +94,16 @@ export default function CollectionDetailPage() {
   const handleUpdateFlashcard = useCallback(
     async (data: CreateFlashcardInput) => {
       if (!editingFlashcardId) return
-      try {
-        await update(editingFlashcardId, data)
-        setEditingFlashcardId(null)
-        setActionError(null)
-        setLastFailedAction(null)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'No se pudo actualizar la flashcard.'
-        setActionError(message)
-        setLastFailedAction(() => async () => {
-          await update(editingFlashcardId, data)
+      const targetFlashcardId = editingFlashcardId
+      await runWithRetry(
+        async () => {
+          await update(targetFlashcardId, data)
           setEditingFlashcardId(null)
-          setActionError(null)
-          setLastFailedAction(null)
-        })
-      }
+        },
+        'No se pudo actualizar la flashcard.',
+      )
     },
-    [editingFlashcardId, update],
+    [editingFlashcardId, runWithRetry, update],
   )
 
   const handleCancelEditFlashcard = useCallback(() => {
@@ -112,45 +122,30 @@ export default function CollectionDetailPage() {
 
   const handleConfirmDeleteFlashcard = useCallback(async () => {
     if (!pendingDeleteFlashcardId) return
+    const targetFlashcardId = pendingDeleteFlashcardId
 
-    try {
-      await remove(pendingDeleteFlashcardId)
-      setActionError(null)
-      setLastFailedAction(null)
-      setIsDeleteModalOpen(false)
-      setPendingDeleteFlashcardId(null)
-    } catch (error) {
-      const failedId = pendingDeleteFlashcardId
-      const message = error instanceof Error ? error.message : 'No se pudo borrar la flashcard.'
-      setActionError(message)
-      setLastFailedAction(() => async () => {
-        await remove(failedId)
-        setActionError(null)
-        setLastFailedAction(null)
-      })
-      setIsDeleteModalOpen(false)
-      setPendingDeleteFlashcardId(null)
-    }
-  }, [pendingDeleteFlashcardId, remove])
+    await runWithRetry(
+      async () => {
+        await remove(targetFlashcardId)
+      },
+      'No se pudo borrar la flashcard.',
+    )
+
+    setIsDeleteModalOpen(false)
+    setPendingDeleteFlashcardId(null)
+  }, [pendingDeleteFlashcardId, remove, runWithRetry])
 
   const handleCreateFlashcard = useCallback(
     async (data: CreateFlashcardInput) => {
       if (!collectionId) return
-      try {
-        await createForCollection(collectionId, data)
-        setActionError(null)
-        setLastFailedAction(null)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'No se pudo crear la flashcard.'
-        setActionError(message)
-        setLastFailedAction(() => async () => {
+      await runWithRetry(
+        async () => {
           await createForCollection(collectionId, data)
-          setActionError(null)
-          setLastFailedAction(null)
-        })
-      }
+        },
+        'No se pudo crear la flashcard.',
+      )
     },
-    [collectionId, createForCollection],
+    [collectionId, createForCollection, runWithRetry],
   )
 
   if (!collectionId) {
@@ -161,7 +156,9 @@ export default function CollectionDetailPage() {
           description="No se encontro un identificador de coleccion en la URL."
         />
         <div className="mt-4">
-            <ButtonCarbon variant="ghost" onClick={() => navigate('/collections')}>Volver a colecciones</ButtonCarbon>
+          <ButtonCarbon variant="ghost" onClick={() => navigate('/collections')}>
+            Volver a colecciones
+          </ButtonCarbon>
         </div>
       </main>
     )
@@ -171,7 +168,7 @@ export default function CollectionDetailPage() {
     return (
       <main className="page-shell">
         <div className="page-header">
-          <h1 className="page-title">Detalle de coleccion</h1>
+          <h1 className="page-title">{PAGE_TITLE}</h1>
           <Link to="/collections">
             <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
@@ -190,7 +187,7 @@ export default function CollectionDetailPage() {
     return (
       <main className="page-shell">
         <div className="page-header">
-          <h1 className="page-title">Detalle de coleccion</h1>
+          <h1 className="page-title">{PAGE_TITLE}</h1>
           <Link to="/collections">
             <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
@@ -212,7 +209,7 @@ export default function CollectionDetailPage() {
     <main className="page-shell">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Detalle de coleccion</h1>
+          <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">Coleccion: {collectionName}</p>
           {network.isRefreshing ? (
             <p className="mt-1 text-sm text-slate-600" role="status" aria-live="polite">
@@ -256,25 +253,25 @@ export default function CollectionDetailPage() {
 
       <section className="section-stack">
         <div className="card-grid-2">
-        {editingFlashcard ? (
-  <FlashcardForm
-    key={`edit-${editingFlashcard.id}`}
-    mode="edit"
-    initialValues={{
-      question: editingFlashcard.question,
-      answer: editingFlashcard.answer,
-      tags: editingFlashcard.tags,
-    }}
-    submitLabel="Guardar cambios"
-    onSubmit={(data) => void handleUpdateFlashcard(data)}
-    onCancel={handleCancelEditFlashcard}
-  />
-) : (
-  <FlashcardForm
-    key={`create-${collectionId}`}
-    onSubmit={(data) => void handleCreateFlashcard(data)}
-  />
-)}
+          {editingFlashcard ? (
+            <FlashcardForm
+              key={`edit-${editingFlashcard.id}`}
+              mode="edit"
+              initialValues={{
+                question: editingFlashcard.question,
+                answer: editingFlashcard.answer,
+                tags: editingFlashcard.tags,
+              }}
+              submitLabel="Guardar cambios"
+              onSubmit={(data) => void handleUpdateFlashcard(data)}
+              onCancel={handleCancelEditFlashcard}
+            />
+          ) : (
+            <FlashcardForm
+              key={`create-${collectionId}`}
+              onSubmit={(data) => void handleCreateFlashcard(data)}
+            />
+          )}
 
           <CardCarbon
             title="Tarjetas de la coleccion"

@@ -14,32 +14,17 @@ interface ButtonCarbonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   fullWidth?: boolean
 }
 
-function mapKind(variant: Variant): React.ComponentProps<typeof CarbonButton>['kind'] {
-  switch (variant) {
-    case 'primary':
-      return 'primary'
-    case 'secondary':
-      return 'secondary'
-    case 'danger':
-      return 'danger'
-    case 'ghost':
-      return 'ghost'
-    default:
-      return 'primary'
-  }
+const KIND_BY_VARIANT: Record<Variant, React.ComponentProps<typeof CarbonButton>['kind']> = {
+  primary: 'primary',
+  secondary: 'secondary',
+  danger: 'danger',
+  ghost: 'ghost',
 }
 
-function mapSize(size: Size): React.ComponentProps<typeof CarbonButton>['size'] {
-  switch (size) {
-    case 'sm':
-      return 'sm'
-    case 'md':
-      return 'md'
-    case 'lg':
-      return 'lg'
-    default:
-      return 'md'
-  }
+const SIZE_BY_VARIANT: Record<Size, React.ComponentProps<typeof CarbonButton>['size']> = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
 }
 
 export default function ButtonCarbon({
@@ -56,6 +41,7 @@ export default function ButtonCarbon({
   type = 'button',
   ...rest
 }: ButtonCarbonProps) {
+  // Mantiene un único punto de composición de estilos inline.
   const mergedStyle: CSSProperties = {
     ...(style ?? {}),
     width: fullWidth ? '100%' : style?.width,
@@ -63,8 +49,8 @@ export default function ButtonCarbon({
 
   return (
     <CarbonButton
-      kind={mapKind(variant)}
-      size={mapSize(size)}
+      kind={KIND_BY_VARIANT[variant] ?? 'primary'}
+      size={SIZE_BY_VARIANT[size] ?? 'md'}
       disabled={disabled || isLoading}
       renderIcon={rightIcon ? (() => <>{rightIcon}</>) : undefined}
       {...rest}

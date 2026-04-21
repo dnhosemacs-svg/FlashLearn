@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react'
 import { Select, SelectItem } from '@carbon/react'
 import { cn } from '../../lib/cn'
 
@@ -23,6 +24,11 @@ export default function SelectCarbon({
   onChange,
   className,
 }: SelectCarbonProps) {
+  // Expone una API simple por valor para mantener este wrapper desacoplado del DOM.
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    onChange(event.target.value)
+  }
+
   return (
     <div className="fl-select-carbon">
       <Select
@@ -31,7 +37,7 @@ export default function SelectCarbon({
         size="sm"
         value={value}
         className={cn(className)}
-        onChange={(event) => onChange((event.target as HTMLSelectElement).value)}
+        onChange={handleChange}
       >
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value} text={option.label} />

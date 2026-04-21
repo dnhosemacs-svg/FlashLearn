@@ -12,6 +12,9 @@ import { useFlashcardsContext } from '../context/useFlashcardsContext'
 import { loadCollectionsSearch, saveCollectionsSearch } from '../lib/storage/uiStateStorage'
 import type { UpdateCollectionInput } from '../types/domain'
 
+const PAGE_TITLE = 'Colecciones'
+const PAGE_SUBTITLE = 'Crea y administra tus colecciones de estudio'
+
 export default function CollectionsPage() {
   const { collections, network, refresh, create, update, remove } = useCollectionsContext()
   const { removeByCollection } = useFlashcardsContext()
@@ -21,6 +24,23 @@ export default function CollectionsPage() {
   const [searchQuery, setSearchQuery] = useState(() => loadCollectionsSearch())
   const [actionError, setActionError] = useState<string | null>(null)
   const [lastFailedAction, setLastFailedAction] = useState<(() => Promise<void>) | null>(null)
+  const existingCollectionNames = useMemo(() => collections.map((collection) => collection.name), [collections])
+
+  // Centraliza el manejo de errores/reintentos para acciones async de la vista.
+  const runWithRetry = useCallback(
+    async (action: () => Promise<void>, fallbackMessage: string) => {
+      try {
+        await action()
+        setActionError(null)
+        setLastFailedAction(null)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : fallbackMessage
+        setActionError(message)
+        setLastFailedAction(() => action)
+      }
+    },
+    [],
+  )
 
   const collectionsStats = useMemo(() => {
     const total = collections.length
@@ -46,23 +66,16 @@ export default function CollectionsPage() {
   const handleUpdateCollection = useCallback(
     async (data: UpdateCollectionInput) => {
       if (!editingCollectionId) return
-      try {
-        await update(editingCollectionId, data)
-        setEditingCollectionId(null)
-        setActionError(null)
-        setLastFailedAction(null)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'No se pudo actualizar la colección.'
-        setActionError(message)
-        setLastFailedAction(() => async () => {
-          await update(editingCollectionId, data)
+      const targetCollectionId = editingCollectionId
+      await runWithRetry(
+        async () => {
+          await update(targetCollectionId, data)
           setEditingCollectionId(null)
-          setActionError(null)
-          setLastFailedAction(null)
-        })
-      }
+        },
+        'No se pudo actualizar la colección.',
+      )
     },
-    [editingCollectionId, update],
+    [editingCollectionId, runWithRetry, update],
   )
 
   const handleCloseDeleteModal = useCallback(() => {
@@ -72,32 +85,23 @@ export default function CollectionsPage() {
 
   const handleConfirmDeleteCollection = useCallback(async () => {
     if (!pendingDeleteCollectionId) return
+    const targetCollectionId = pendingDeleteCollectionId
 
     if (editingCollectionId === pendingDeleteCollectionId) {
       setEditingCollectionId(null)
     }
 
-    try {
-      // Borrado en cascada: elimina flashcards de la colección antes de borrar la colección.
-      await removeByCollection(pendingDeleteCollectionId)
-      await remove(pendingDeleteCollectionId)
-      setActionError(null)
-      setLastFailedAction(null)
-      setIsDeleteModalOpen(false)
-      setPendingDeleteCollectionId(null)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'No se pudo borrar la colección.'
-      setActionError(message)
-      setLastFailedAction(() => async () => {
-        await removeByCollection(pendingDeleteCollectionId)
-        await remove(pendingDeleteCollectionId)
-        setActionError(null)
-        setLastFailedAction(null)
+    await runWithRetry(
+      async () => {
+        // Borrado en cascada: elimina flashcards de la colección antes de borrar la colección.
+        await removeByCollection(targetCollectionId)
+        await remove(targetCollectionId)
         setIsDeleteModalOpen(false)
         setPendingDeleteCollectionId(null)
-      })
-    }
-  }, [pendingDeleteCollectionId, editingCollectionId, remove, removeByCollection])
+      },
+      'No se pudo borrar la colección.',
+    )
+  }, [pendingDeleteCollectionId, editingCollectionId, remove, removeByCollection, runWithRetry])
 
   const editingCollection = collections.find(
     (collection) => collection.id === editingCollectionId,
@@ -122,8 +126,8 @@ export default function CollectionsPage() {
   if (network.status === 'loading' && collections.length === 0) {
     return (
       <main className="page-shell">
-        <h1 className="page-title">Colecciones</h1>
-        <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
+        <h1 className="page-title">{PAGE_TITLE}</h1>
+        <p className="page-subtitle">{PAGE_SUBTITLE}</p>
         <section className="section-stack mt-6">
           <CollectionListSkeleton count={4} />
         </section>
@@ -134,8 +138,8 @@ export default function CollectionsPage() {
   if (network.status === 'error') {
     return (
       <main className="page-shell">
-        <h1 className="page-title">Colecciones</h1>
-        <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
+        <h1 className="page-title">{PAGE_TITLE}</h1>
+        <p className="page-subtitle">{PAGE_SUBTITLE}</p>
         <section className="section-stack">
           <EmptyStateCarbon
             title="No se pudieron cargar las colecciones"
@@ -153,8 +157,8 @@ export default function CollectionsPage() {
 
   return (
     <main className="page-shell">
-      <h1 className="page-title">Colecciones</h1>
-      <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
+      <h1 className="page-title">{PAGE_TITLE}</h1>
+      <p className="page-subtitle">{PAGE_SUBTITLE}</p>
       {network.isRefreshing ? (
         <p className="mt-2 text-sm text-slate-600" role="status" aria-live="polite">
           Actualizando colecciones...
@@ -203,31 +207,21 @@ export default function CollectionsPage() {
               submitLabel="Guardar cambios"
               onSubmit={(data) => void handleUpdateCollection(data)}
               onCancel={handleCancelEdit}
-              existingNames={collections.map((c) => c.name)}
+              existingNames={existingCollectionNames}
               currentName={editingCollection.name}
             />
           ) : (
             <CollectionForm
               key="create-collection"
               onSubmit={(data) =>
-                void create(data).then(
-                  () => {
-                    setActionError(null)
-                    setLastFailedAction(null)
+                void runWithRetry(
+                  async () => {
+                    await create(data)
                   },
-                  (error) => {
-                    const message =
-                      error instanceof Error ? error.message : 'No se pudo crear la colección.'
-                    setActionError(message)
-                    setLastFailedAction(() => async () => {
-                      await create(data)
-                      setActionError(null)
-                      setLastFailedAction(null)
-                    })
-                  },
+                  'No se pudo crear la colección.',
                 )
               }
-              existingNames={collections.map((c) => c.name)}
+              existingNames={existingCollectionNames}
             />
           )}
           <CollectionList

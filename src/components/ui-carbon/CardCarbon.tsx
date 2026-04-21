@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Layer, Tile } from '@carbon/react'
+import { cn } from '../../lib/cn'
 
 interface CardCarbonProps {
   title?: string
@@ -22,15 +23,15 @@ export default function CardCarbon({
   contentClassName = '',
   variant = 'default',
 }: CardCarbonProps) {
-  const variantClass =
-    variant === 'elevated'
-      ? 'border border-indigo-300 bg-indigo-100 shadow-sm shadow-indigo-200/40'
-      : variant === 'bordered'
-        ? 'border-2 border-indigo-200 bg-indigo-50'
-        : 'border border-indigo-100 bg-indigo-50'
+  // Variantes visuales concentradas para evitar condicionales anidados.
+  const variantClassByType: Record<NonNullable<CardCarbonProps['variant']>, string> = {
+    default: 'border border-indigo-100 bg-indigo-50',
+    elevated: 'border border-indigo-300 bg-indigo-100 shadow-sm shadow-indigo-200/40',
+    bordered: 'border-2 border-indigo-200 bg-indigo-50',
+  }
 
   return (
-    <Tile className={`${variantClass} ${className}`.trim()}>
+    <Tile className={cn(variantClassByType[variant], className)}>
       {(title || actions) && (
         <header className="mb-3 flex items-start justify-between gap-3">
           <div>
@@ -40,7 +41,7 @@ export default function CardCarbon({
           {actions}
         </header>
       )}
-      {children ? <section className={`text-slate-700 ${contentClassName}`.trim()}>{children}</section> : null}
+      {children ? <section className={cn('text-slate-700', contentClassName)}>{children}</section> : null}
       {footer ? (
         <Layer className="mt-4 border-t border-indigo-200 pt-3">
           <footer>{footer}</footer>
