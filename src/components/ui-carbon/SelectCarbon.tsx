@@ -1,4 +1,5 @@
 import { Select, SelectItem } from '@carbon/react'
+import { cn } from '../../lib/cn'
 
 interface SelectOption {
   value: string
@@ -11,6 +12,7 @@ interface SelectCarbonProps {
   value: string
   options: SelectOption[]
   onChange: (value: string) => void
+  className?: string
 }
 
 export default function SelectCarbon({
@@ -19,17 +21,22 @@ export default function SelectCarbon({
   value,
   options,
   onChange,
+  className,
 }: SelectCarbonProps) {
   return (
-    <Select
-      id={id}
-      labelText={label}
-      value={value}
-      onChange={(event) => onChange((event.target as HTMLSelectElement).value)}
-    >
-      {options.map((option) => (
-        <SelectItem key={option.value} value={option.value} text={option.label} />
-      ))}
-    </Select>
+    <div className="fl-select-carbon">
+      <Select
+        id={id}
+        labelText={label}
+        size="sm"
+        value={value}
+        className={cn(className)}
+        onChange={(event) => onChange((event.target as HTMLSelectElement).value)}
+      >
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value} text={option.label} />
+        ))}
+      </Select>
+    </div>
   )
 }

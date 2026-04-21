@@ -30,12 +30,15 @@ export default function ModalCarbon({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [open, onClose])
 
+  if (!open) return null
+
   return (
     <ComposedModal
       open={open}
       onClose={onClose}
       preventCloseOnClickOutside={!closeOnBackdrop}
       size="sm"
+      className="fl-modal-carbon"
     >
       <ModalHeader title={title ?? 'Dialogo'} label={description ?? ''} />
       <ModalBody>{children}</ModalBody>

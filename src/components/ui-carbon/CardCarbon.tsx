@@ -24,25 +24,25 @@ export default function CardCarbon({
 }: CardCarbonProps) {
   const variantClass =
     variant === 'elevated'
-      ? 'shadow-sm'
+      ? 'border border-indigo-300 bg-indigo-100 shadow-sm shadow-indigo-200/40'
       : variant === 'bordered'
-        ? 'border-2 border-[#c6c6c6]'
-        : ''
+        ? 'border-2 border-indigo-200 bg-indigo-50'
+        : 'border border-indigo-100 bg-indigo-50'
 
   return (
     <Tile className={`${variantClass} ${className}`.trim()}>
       {(title || actions) && (
         <header className="mb-3 flex items-start justify-between gap-3">
           <div>
-            {title ? <h3 className="text-lg font-semibold text-[#161616]">{title}</h3> : null}
-            {description ? <p className="mt-1 text-sm text-[#525252]">{description}</p> : null}
+            {title ? <h3 className="text-lg font-semibold text-indigo-900">{title}</h3> : null}
+            {description ? <p className="mt-1 text-sm text-slate-600">{description}</p> : null}
           </div>
           {actions}
         </header>
       )}
-      {children ? <section className={contentClassName}>{children}</section> : null}
+      {children ? <section className={`text-slate-700 ${contentClassName}`.trim()}>{children}</section> : null}
       {footer ? (
-        <Layer className="mt-4 border-t border-[#e0e0e0] pt-3">
+        <Layer className="mt-4 border-t border-indigo-200 pt-3">
           <footer>{footer}</footer>
         </Layer>
       ) : null}

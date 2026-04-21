@@ -156,7 +156,7 @@ export default function CollectionsPage() {
       <h1 className="page-title">Colecciones</h1>
       <p className="page-subtitle">Crea y administra tus colecciones de estudio</p>
       {network.isRefreshing ? (
-        <p className="mt-2 text-sm text-indigo-600" role="status" aria-live="polite">
+        <p className="mt-2 text-sm text-slate-600" role="status" aria-live="polite">
           Actualizando colecciones...
         </p>
       ) : null}
@@ -172,7 +172,7 @@ export default function CollectionsPage() {
       </div>
 
       <p className="mt-2 text-sm text-slate-600">
-        Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
+        Total: {collectionsStats.total} | Con descripcion: {collectionsStats.withDescription} | Sin descripcion: {collectionsStats.withoutDescription}.
       </p>
       {actionError ? (
         <Alert

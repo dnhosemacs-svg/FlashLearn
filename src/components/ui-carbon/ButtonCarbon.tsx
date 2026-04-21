@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { Button as CarbonButton } from '@carbon/react'
+import { cn } from '../../lib/cn'
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost'
 type Size = 'sm' | 'md' | 'lg'
@@ -49,6 +50,7 @@ export default function ButtonCarbon({
   rightIcon,
   fullWidth = false,
   children,
+  className,
   style,
   disabled,
   type = 'button',
@@ -67,6 +69,7 @@ export default function ButtonCarbon({
       renderIcon={rightIcon ? (() => <>{rightIcon}</>) : undefined}
       {...rest}
       type={type}
+      className={cn('fl-button-carbon', className)}
       style={mergedStyle}
     >
       {leftIcon ? <span style={{ marginRight: 8, display: 'inline-flex' }}>{leftIcon}</span> : null}

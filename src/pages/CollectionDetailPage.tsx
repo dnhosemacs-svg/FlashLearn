@@ -157,8 +157,8 @@ export default function CollectionDetailPage() {
     return (
       <main className="page-shell">
         <EmptyStateCarbon
-          title="Colección no válida"
-          description="No se encontró un identificador de colección en la URL."
+          title="Coleccion no valida"
+          description="No se encontro un identificador de coleccion en la URL."
         />
         <div className="mt-4">
             <ButtonCarbon variant="ghost" onClick={() => navigate('/collections')}>Volver a colecciones</ButtonCarbon>
@@ -171,7 +171,7 @@ export default function CollectionDetailPage() {
     return (
       <main className="page-shell">
         <div className="page-header">
-          <h1 className="page-title">Detalle de colección</h1>
+          <h1 className="page-title">Detalle de coleccion</h1>
           <Link to="/collections">
             <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
@@ -190,7 +190,7 @@ export default function CollectionDetailPage() {
     return (
       <main className="page-shell">
         <div className="page-header">
-          <h1 className="page-title">Detalle de colección</h1>
+          <h1 className="page-title">Detalle de coleccion</h1>
           <Link to="/collections">
             <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
@@ -212,10 +212,10 @@ export default function CollectionDetailPage() {
     <main className="page-shell">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Detalle de colección</h1>
-          <p className="page-subtitle">Colección: {collectionName}</p>
+          <h1 className="page-title">Detalle de coleccion</h1>
+          <p className="page-subtitle">Coleccion: {collectionName}</p>
           {network.isRefreshing ? (
-            <p className="mt-1 text-sm text-indigo-600" role="status" aria-live="polite">
+            <p className="mt-1 text-sm text-slate-600" role="status" aria-live="polite">
               Actualizando tarjetas...
             </p>
           ) : null}
@@ -245,7 +245,7 @@ export default function CollectionDetailPage() {
           action={
             lastFailedAction ? (
               <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
-                Reintentar operación
+                Reintentar operacion
               </ButtonCarbon>
             ) : null
           }
@@ -277,8 +277,8 @@ export default function CollectionDetailPage() {
 )}
 
           <CardCarbon
-            title="Tarjetas de la colección"
-            description="Listado de flashcards creadas en esta colección."
+            title="Tarjetas de la coleccion"
+            description="Listado de flashcards creadas en esta coleccion."
           >
             <FlashcardList
               flashcards={filteredFlashcards}
@@ -293,7 +293,7 @@ export default function CollectionDetailPage() {
         open={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         title="Borrar flashcard"
-        description="Esta acción no se puede deshacer."
+        description="Esta accion no se puede deshacer."
         footer={
           <>
             <ButtonCarbon type="button" variant="ghost" onClick={handleCloseDeleteModal}>
@@ -305,7 +305,7 @@ export default function CollectionDetailPage() {
           </>
         }
       >
-        <p>¿Seguro que quieres borrar esta flashcard?</p>
+        <p>Seguro que quieres borrar esta flashcard?</p>
       </ModalCarbon>
     </main>
   )

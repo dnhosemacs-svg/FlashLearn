@@ -1,10 +1,4 @@
-import {
-  Header,
-  HeaderContainer,
-  HeaderMenuItem,
-  HeaderName,
-  HeaderNavigation,
-} from '@carbon/react'
+import { Theme } from '@carbon/react'
 import { NavLink } from 'react-router-dom'
 
 const links = [
@@ -17,26 +11,26 @@ const links = [
 
 export default function MainNav() {
   return (
-    <HeaderContainer
-      render={() => (
-        <Header aria-label="FlashLearn">
-          <HeaderName href="/" prefix="">
+    <Theme theme="g10">
+      <header className="app-shell__nav" aria-label="FlashLearn">
+        <nav className="app-shell__nav-content">
+          <NavLink to="/" end className="app-shell__brand">
             FlashLearn
-          </HeaderName>
-
-          <HeaderNavigation aria-label="FlashLearn navegación">
-            {links.map((link) => (
-              <NavLink key={link.to} to={link.to} end={link.end}>
-                {({ isActive }) => (
-                  <HeaderMenuItem isCurrentPage={isActive}>
-                    {link.label}
-                  </HeaderMenuItem>
-                )}
-              </NavLink>
-            ))}
-          </HeaderNavigation>
-        </Header>
-      )}
-    />
+          </NavLink>
+          {links.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) =>
+                `app-shell__link ${isActive ? 'app-shell__link--active' : ''}`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
+      </header>
+    </Theme>
   )
 }

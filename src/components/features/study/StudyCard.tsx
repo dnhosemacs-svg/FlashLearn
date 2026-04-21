@@ -18,7 +18,7 @@ export default function StudyCard({ flashcard, isRevealed }: StudyCardProps) {
           <p className="mt-1 text-base font-medium text-slate-800">{flashcard.question}</p>
         </div>
 
-        <div className="rounded-lg border border-indigo-200 bg-white p-4">
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">Respuesta</p>
           {isRevealed ? (
             <p className="mt-1 text-base text-slate-700">{flashcard.answer}</p>

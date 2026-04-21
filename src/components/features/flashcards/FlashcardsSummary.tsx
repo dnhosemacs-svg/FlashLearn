@@ -33,7 +33,7 @@ export default function FlashcardsSummary({
   if (network.status === 'error') {
     return (
       <CardCarbon title={title} description={description} variant="elevated">
-        <p className="text-sm text-red-800">{network.error ?? 'Error desconocido'}</p>
+        <p className="text-sm text-red-700">{network.error ?? 'Error desconocido'}</p>
       </CardCarbon>
     )
   }
@@ -41,15 +41,15 @@ export default function FlashcardsSummary({
   return (
     <CardCarbon title={title} description={description} variant="elevated">
       <dl className="grid gap-2 text-sm text-slate-700 sm:grid-cols-3">
-        <div className="rounded-lg border border-indigo-200 bg-white/70 p-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
           <dt className="text-slate-600">Total</dt>
           <dd className="mt-1 text-lg font-semibold text-slate-900">{stats.total}</dd>
         </div>
-        <div className="rounded-lg border border-indigo-200 bg-white/70 p-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
           <dt className="text-slate-600">Con tags</dt>
           <dd className="mt-1 text-lg font-semibold text-slate-900">{stats.withTags}</dd>
         </div>
-        <div className="rounded-lg border border-indigo-200 bg-white/70 p-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
           <dt className="text-slate-600">Sin tags</dt>
           <dd className="mt-1 text-lg font-semibold text-slate-900">{stats.withoutTags}</dd>
         </div>

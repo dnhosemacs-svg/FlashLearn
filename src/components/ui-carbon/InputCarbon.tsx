@@ -1,4 +1,5 @@
 import { TextInput } from '@carbon/react'
+import { cn } from '../../lib/cn'
 
 interface InputCarbonProps
   extends Omit<
@@ -18,16 +19,19 @@ export default function InputCarbon({
   hint,
   id,
   containerClassName,
+  className,
   ...rest
 }: InputCarbonProps) {
   return (
-    <div className={containerClassName}>
+    <div className={cn('fl-input-carbon', containerClassName)}>
       <TextInput
         id={id}
         labelText={label ?? ''}
         invalid={Boolean(error)}
         invalidText={error ?? ''}
         helperText={error ? undefined : hint}
+        size="sm"
+        className={className}
         {...rest}
       />
     </div>
