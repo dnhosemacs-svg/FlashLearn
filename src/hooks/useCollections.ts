@@ -4,7 +4,7 @@ import {
   getCollections,
   patchCollection,
   postCollection,
-} from '../api/collectionsApi'
+} from '../data/dataSource'
 import type { AsyncState } from '../types/async'
 import type { Collection, CreateCollectionInput, UpdateCollectionInput } from '../types/domain'
 

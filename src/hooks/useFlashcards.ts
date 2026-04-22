@@ -4,7 +4,7 @@ import {
   getFlashcards,
   patchFlashcard,
   postFlashcard,
-} from '../api/flashcardsApi'
+} from '../data/dataSource'
 import type { AsyncState } from '../types/async'
 import type { CreateFlashcardInput, Flashcard, UpdateFlashcardInput } from '../types/domain'
 
