@@ -7,11 +7,13 @@
 :root {
   --fl-bg: #f1f5f9;
   --fl-text: #1e293b;
-  --fl-heading: #312e81;
+  --fl-heading: #3730a3;
+  --fl-link: #818cf8;
+  --fl-link-hover: #a5b4fc;
   --fl-primary: #6366f1;
-  --fl-primary-hover: #4f46e5;
+  --fl-primary-hover: #818cf8;
   --fl-secondary: #8b5cf6;
-  --fl-secondary-hover: #7c3aed;
+  --fl-secondary-hover: #a78bfa;
   --fl-border: #c7d2fe;
   --fl-border-strong: #a5b4fc;
   --fl-surface: #eef2ff;
@@ -42,12 +44,12 @@ body {
 }
 
 a {
-  color: var(--fl-primary);
+  color: var(--fl-link);
   transition: color 150ms ease-in-out;
 }
 
 a:hover {
-  color: var(--fl-primary-hover);
+  color: var(--fl-link-hover);
 }
 
 a:focus-visible,
@@ -111,7 +113,7 @@ h4 {
   }
 
   .page-title {
-    @apply text-3xl font-bold text-indigo-900;
+    @apply text-3xl font-bold;
   }
 
   .page-subtitle {
@@ -148,6 +150,7 @@ h4 {
 
 .fl-button-carbon.cds--btn--primary {
   background-color: var(--fl-primary);
+  color: #ffffff;
 }
 
 .fl-button-carbon.cds--btn--primary:hover {
@@ -156,6 +159,7 @@ h4 {
 
 .fl-button-carbon.cds--btn--secondary {
   background-color: var(--fl-secondary);
+  color: #ffffff;
 }
 
 .fl-button-carbon.cds--btn--secondary:hover {
@@ -163,11 +167,20 @@ h4 {
 }
 
 .fl-button-carbon.cds--btn--ghost {
-  color: var(--fl-muted);
+  color: #3730a3;
+}
+
+.fl-button-carbon.cds--btn--ghost:hover {
+  background-color: #e0e7ff;
 }
 
 .fl-button-carbon.cds--btn--danger {
   background-color: var(--fl-danger);
+  color: #ffffff;
+}
+
+.fl-button-carbon.cds--btn--danger:hover {
+  background-color: #f43f5e;
 }
 
 .fl-input-carbon .cds--label,
