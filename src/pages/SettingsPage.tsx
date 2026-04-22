@@ -6,7 +6,7 @@ export default function SettingsPage() {
       <p className="page-subtitle">Preferencias de uso y ajustes de estudio.</p>
 
       <section className="section-stack max-w-2xl">
-        <p className="text-slate-700">
+        <p className="text-muted">
           Aquí puedes centralizar opciones como barajar por defecto, mostrar respuesta automáticamente o preferencias de
           interfaz. En esta fase se deja la ruta lista para integrar esos ajustes en los próximos pasos.
         </p>

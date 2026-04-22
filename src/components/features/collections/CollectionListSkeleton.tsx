@@ -9,7 +9,7 @@ export default function CollectionListSkeleton({ count = 4 }: CollectionListSkel
     <section className="grid gap-4 md:grid-cols-2" aria-hidden="true">
       {/* Placeholder repetido para simular la densidad visual de la lista real. */}
       {Array.from({ length: count }).map((_, idx) => (
-        <div key={idx} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div key={idx} className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 shadow-sm shadow-indigo-200/40">
           <SkeletonCarbon className="mb-3 h-5 w-2/3" />
           <SkeletonCarbon className="mb-2 h-4 w-full" />
           <SkeletonCarbon className="mb-4 h-4 w-5/6" />

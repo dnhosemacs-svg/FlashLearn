@@ -11,7 +11,7 @@ export default function NotFoundPage() {
       <p className="page-subtitle">La página que buscas no existe.</p>
 
       <section className="section-stack mt-6 max-w-xl">
-        <p className="text-slate-700">
+        <p className="text-muted">
           Puede que la URL esté mal escrita o que la página haya cambiado de ruta.
         </p>
 

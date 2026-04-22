@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { InlineNotification } from '@carbon/react'
+import { cn } from '../../lib/cn'
 
 interface EmptyStateCarbonProps {
   title?: string
@@ -17,16 +17,10 @@ export default function EmptyStateCarbon({
   className = '',
 }: EmptyStateCarbonProps) {
   return (
-    // Estado vacío reutilizable: mensaje principal + contenido opcional (icono/acción).
-    <section className={className}>
-      <InlineNotification
-        kind="info"
-        lowContrast
-        hideCloseButton
-        title={title ?? 'Sin datos'}
-        subtitle={description}
-      />
-      {icon ? <div className="mt-3 flex justify-center">{icon}</div> : null}
+    <section className={cn('fl-empty-state text-center', className)}>
+      {icon ? <div className="mb-3 flex justify-center text-indigo-700">{icon}</div> : null}
+      <h2 className="text-xl font-semibold text-indigo-900">{title ?? 'Sin datos'}</h2>
+      {description ? <p className="mt-2 text-sm text-slate-600">{description}</p> : null}
       {action ? <div className="mt-4">{action}</div> : null}
     </section>
   )

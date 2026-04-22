@@ -244,7 +244,7 @@ export default function CollectionDetailPage() {
         />
       </div>
 
-      <p className="mt-2 text-sm text-slate-600">
+      <p className="mt-2 text-muted">
         Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
       </p>
       {actionError ? (

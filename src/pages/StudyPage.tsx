@@ -148,7 +148,7 @@ export default function StudyPage() {
       </div>
 
       <section className="section-stack lg:mx-auto lg:max-w-3xl">
-        <p className="text-sm text-slate-600">
+        <p className="text-muted">
           Progreso: {studyStats.current} / {studyStats.total} ({studyStats.progressPercent}%) ·{' '}
           {studyStats.revealedLabel}
         </p>

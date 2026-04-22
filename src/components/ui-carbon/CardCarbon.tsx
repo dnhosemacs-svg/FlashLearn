@@ -25,9 +25,9 @@ export default function CardCarbon({
 }: CardCarbonProps) {
   // Variantes visuales concentradas para evitar condicionales anidados.
   const variantClassByType: Record<NonNullable<CardCarbonProps['variant']>, string> = {
-    default: 'border border-indigo-100 bg-indigo-50',
-    elevated: 'border border-indigo-300 bg-indigo-100 shadow-sm shadow-indigo-200/40',
-    bordered: 'border-2 border-indigo-200 bg-indigo-50',
+    default: 'rounded-xl border border-indigo-200 bg-indigo-100 p-4',
+    elevated: 'rounded-xl border border-indigo-300 bg-indigo-100 p-4 shadow-sm shadow-indigo-200/40',
+    bordered: 'rounded-xl border-2 border-indigo-300 bg-indigo-50 p-4',
   }
 
   return (

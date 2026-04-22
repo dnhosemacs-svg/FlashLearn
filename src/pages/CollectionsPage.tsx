@@ -177,7 +177,7 @@ export default function CollectionsPage() {
         />
       </div>
 
-      <p className="mt-2 text-sm text-slate-600">
+      <p className="mt-2 text-muted">
         Total: {collectionsStats.total} | Con descripcion: {collectionsStats.withDescription} | Sin descripcion: {collectionsStats.withoutDescription}.
       </p>
       {actionError ? (
