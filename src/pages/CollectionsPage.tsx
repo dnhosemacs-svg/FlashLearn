@@ -239,6 +239,7 @@ export default function CollectionsPage() {
         onClose={handleCloseDeleteModal}
         title="Borrar colección"
         description="Esta acción no se puede deshacer."
+        size="sm"
         footer={
           <>
             <ButtonCarbon type="button" variant="ghost" onClick={handleCloseDeleteModal}>

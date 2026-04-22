@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { ComposedModal, ModalBody, ModalFooter, ModalHeader } from '@carbon/react'
+import { cn } from '../../lib/cn'
 import ButtonCarbon from './ButtonCarbon'
 
 interface ModalCarbonProps {
@@ -10,6 +11,8 @@ interface ModalCarbonProps {
   onClose: () => void
   footer?: ReactNode
   closeOnBackdrop?: boolean
+  className?: string
+  size?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 export default function ModalCarbon({
@@ -20,6 +23,8 @@ export default function ModalCarbon({
   onClose,
   footer,
   closeOnBackdrop = true,
+  className,
+  size = 'sm',
 }: ModalCarbonProps) {
   useEffect(() => {
     // Cierre por teclado para mantener paridad con comportamiento esperado de diálogos.
@@ -38,8 +43,8 @@ export default function ModalCarbon({
       open={open}
       onClose={onClose}
       preventCloseOnClickOutside={!closeOnBackdrop}
-      size="sm"
-      className="fl-modal-carbon"
+      size={size}
+      className={cn('fl-modal-carbon', className)}
     >
       <ModalHeader title={title ?? 'Dialogo'} label={description ?? ''} />
       <ModalBody>{children}</ModalBody>

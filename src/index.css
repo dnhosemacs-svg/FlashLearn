@@ -223,7 +223,7 @@ h4 {
   border: 1px solid var(--fl-border-strong);
   border-radius: 0.75rem;
   background: var(--fl-surface);
-  box-shadow: 0 24px 48px rgba(30, 41, 59, 0.18);
+  box-shadow: 0 20px 40px rgba(30, 41, 59, 0.16);
 }
 
 .cds--modal-overlay {
@@ -246,6 +246,7 @@ h4 {
 .fl-modal-carbon .cds--modal-content {
   color: #334155;
   font-size: 0.875rem;
+  padding-top: 0.25rem;
 }
 
 .fl-modal-carbon .cds--modal-footer {
@@ -254,6 +255,7 @@ h4 {
   justify-content: flex-end;
   gap: 0.5rem;
   padding-top: 0.75rem;
+  padding-bottom: 1rem;
 }
 
 .fl-empty-state {

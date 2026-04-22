@@ -302,7 +302,8 @@ export default function CollectionDetailPage() {
         open={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         title="Borrar flashcard"
-        description="Esta accion no se puede deshacer."
+        description="Esta acción no se puede deshacer."
+        size="sm"
         footer={
           <>
             <ButtonCarbon type="button" variant="ghost" onClick={handleCloseDeleteModal}>
@@ -314,7 +315,7 @@ export default function CollectionDetailPage() {
           </>
         }
       >
-        <p>Seguro que quieres borrar esta flashcard?</p>
+        <p>¿Seguro que quieres borrar esta flashcard?</p>
       </ModalCarbon>
     </main>
   )
