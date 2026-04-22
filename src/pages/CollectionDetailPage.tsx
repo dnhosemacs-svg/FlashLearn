@@ -46,11 +46,20 @@ export default function CollectionDetailPage() {
   )
 
   const collectionId = useMemo(() => {
-    // Acepta refs amigables tipo "nombre-uuid" extrayendo el UUID final.
+    // Acepta refs amigables tipo "nombre-id", con soporte para UUID y ids no UUID (mock/local).
     if (!collectionRef) return undefined
-    const match = collectionRef.match(UUID_AT_END_REGEX)
-    return match?.[1] ?? collectionRef
-  }, [collectionRef])
+
+    const uuidMatch = collectionRef.match(UUID_AT_END_REGEX)
+    if (uuidMatch?.[1]) return uuidMatch[1]
+
+    const exactCollection = collections.find((collection) => collection.id === collectionRef)
+    if (exactCollection) return exactCollection.id
+
+    const collectionFromSuffix = collections.find(
+      (collection) => collectionRef === `${collection.name}-${collection.id}` || collectionRef.endsWith(`-${collection.id}`),
+    )
+    return collectionFromSuffix?.id
+  }, [collectionRef, collections])
 
   const flashcards = useMemo(
     () => (collectionId ? allFlashcards.filter((card) => card.collectionId === collectionId) : []),
