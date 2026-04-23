@@ -264,7 +264,7 @@ export default function CollectionDetailPage() {
       ) : null}
 
       <section className="section-stack">
-        <div className="card-grid-2">
+        <div className="card-stack-1">
           {editingFlashcard ? (
             <FlashcardForm
               key={`edit-${editingFlashcard.id}`}

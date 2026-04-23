@@ -97,16 +97,16 @@ h4 {
   }
 
   .app-shell__nav-content {
-    @apply mx-auto flex max-w-5xl flex-wrap items-center gap-6 p-4;
+    @apply mx-auto flex w-full max-w-6xl flex-wrap items-center gap-8 px-5 py-5 md:px-8;
   }
 
   .app-shell__brand {
-    @apply mr-2 text-base font-semibold;
+    @apply mr-3 text-lg font-semibold;
     color: var(--fl-heading);
   }
 
   .app-shell__link {
-    @apply rounded-md px-2.5 py-1.5 text-sm transition-colors;
+    @apply rounded-md px-3 py-2 text-sm transition-colors;
     color: var(--fl-text-soft);
   }
 
@@ -122,11 +122,11 @@ h4 {
   }
 
   .app-shell__body {
-    @apply p-4 md:p-8;
+    @apply p-5 md:p-8;
   }
 
   .app-shell__content {
-    @apply mx-auto w-full max-w-5xl;
+    @apply mx-auto w-full max-w-6xl;
   }
 
   .page-shell {
@@ -152,6 +152,10 @@ h4 {
 
   .card-grid-2 {
     @apply grid items-start gap-4 lg:grid-cols-2 lg:gap-6;
+  }
+
+  .card-stack-1 {
+    @apply grid items-start gap-6;
   }
 
   .text-muted {

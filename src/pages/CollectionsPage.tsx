@@ -197,7 +197,7 @@ export default function CollectionsPage() {
       ) : null}
 
       <section className="section-stack">
-        <div className="card-grid-2">
+        <div className="card-stack-1">
           {editingCollection ? (
             <CollectionForm
               key={`edit-${editingCollection.id}`}
