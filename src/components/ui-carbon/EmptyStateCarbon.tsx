@@ -18,9 +18,9 @@ export default function EmptyStateCarbon({
 }: EmptyStateCarbonProps) {
   return (
     <section className={cn('fl-empty-state text-center', className)}>
-      {icon ? <div className="mb-3 flex justify-center text-indigo-700">{icon}</div> : null}
-      <h2 className="text-xl font-semibold text-indigo-900">{title ?? 'Sin datos'}</h2>
-      {description ? <p className="mt-2 text-sm text-slate-600">{description}</p> : null}
+      {icon ? <div className="mb-3 flex justify-center text-[var(--fl-heading)]">{icon}</div> : null}
+      <h2 className="text-xl font-semibold text-[var(--fl-heading)]">{title ?? 'Sin datos'}</h2>
+      {description ? <p className="mt-2 text-sm text-[var(--fl-text-muted)]">{description}</p> : null}
       {action ? <div className="mt-4">{action}</div> : null}
     </section>
   )
