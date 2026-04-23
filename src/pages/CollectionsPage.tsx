@@ -173,12 +173,12 @@ export default function CollectionsPage() {
           label="Buscar colecciones"
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Buscar colecciones por nombre o descripcion..."
+          placeholder="Buscar colecciones por nombre o descripción..."
         />
       </div>
 
       <p className="mt-2 text-muted">
-        Total: {collectionsStats.total} | Con descripcion: {collectionsStats.withDescription} | Sin descripcion: {collectionsStats.withoutDescription}.
+        Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
       </p>
       {actionError ? (
         <Alert

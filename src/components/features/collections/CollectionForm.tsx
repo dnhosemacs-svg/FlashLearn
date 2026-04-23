@@ -81,11 +81,11 @@ export default function CollectionForm({
 
   return (
     <CardCarbon
-      title={mode === 'edit' ? 'Editar coleccion' : 'Nueva coleccion'}
+      title={mode === 'edit' ? 'Editar colección' : 'Nueva colección'}
       description={
         mode === 'edit'
-          ? 'Actualiza los datos de la coleccion seleccionada.'
-          : 'Crea una coleccion para agrupar tarjetas de estudio.'
+          ? 'Actualiza los datos de la colección seleccionada.'
+          : 'Crea una colección para agrupar tarjetas de estudio.'
       }
       variant="elevated"
     >
@@ -114,7 +114,7 @@ export default function CollectionForm({
 
         <div className="flex flex-wrap gap-2">
           <ButtonCarbon type="submit" isLoading={isSubmitting}>
-            {submitLabel ?? (mode === 'edit' ? 'Guardar cambios' : 'Guardar coleccion')}
+            {submitLabel ?? (mode === 'edit' ? 'Guardar cambios' : 'Guardar colección')}
           </ButtonCarbon>
           {mode === 'edit' && onCancel ? (
             <ButtonCarbon type="button" variant="ghost" onClick={onCancel}>
