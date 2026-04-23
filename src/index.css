@@ -106,13 +106,19 @@ h4 {
   }
 
   .app-shell__link {
-    @apply text-sm transition-colors;
+    @apply rounded-md px-2.5 py-1.5 text-sm transition-colors;
     color: var(--fl-text-soft);
+  }
+
+  .app-shell__link:hover {
+    color: var(--fl-heading);
+    background-color: color-mix(in oklab, var(--fl-surface-accent) 55%, white);
   }
 
   .app-shell__link--active {
     @apply underline underline-offset-4;
     color: var(--fl-heading);
+    background-color: color-mix(in oklab, var(--fl-surface-accent) 70%, white);
   }
 
   .app-shell__body {
