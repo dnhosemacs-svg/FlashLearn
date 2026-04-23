@@ -26,7 +26,7 @@ export default function MainNav() {
             aria-controls="main-nav-links"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           >
-            Menu
+            Menú
             <img
               src="/arrow-down-s-fill.svg"
               alt=""
