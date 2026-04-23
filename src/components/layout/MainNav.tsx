@@ -14,14 +14,19 @@ export default function MainNav() {
 
   return (
     <header className="app-shell__nav" aria-label="FlashLearn">
-      <nav className="app-shell__nav-content">
-        <div className="app-shell__nav-top">
-          <NavLink to="/" end className="app-shell__brand" onClick={() => setIsMobileMenuOpen(false)}>
+      <nav className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-5 py-6 md:flex-row md:items-center md:justify-start md:gap-8 md:px-8">
+        <div className="flex items-center justify-between gap-3 md:flex-none">
+          <NavLink
+            to="/"
+            end
+            className="text-xl font-bold text-[var(--fl-heading)]"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
             FlashLearn
           </NavLink>
           <button
             type="button"
-            className="app-shell__menu-toggle md:hidden"
+            className="inline-flex items-center gap-1 rounded-md border border-[var(--fl-border)] bg-[color-mix(in_oklab,var(--fl-surface-1)_82%,transparent)] px-2 py-1 text-sm font-medium text-[var(--fl-text-soft)] transition-colors hover:bg-[color-mix(in_oklab,var(--fl-surface-accent)_55%,white)] hover:text-[var(--fl-heading)] md:hidden"
             aria-expanded={isMobileMenuOpen}
             aria-controls="main-nav-links"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
@@ -31,13 +36,15 @@ export default function MainNav() {
               src="/arrow-down-s-fill.svg"
               alt=""
               aria-hidden="true"
-              className={`app-shell__menu-icon ${isMobileMenuOpen ? 'app-shell__menu-icon--open' : ''}`}
+              className={`h-[1.1rem] w-[1.1rem] text-[var(--fl-heading)] transition-transform ${
+                isMobileMenuOpen ? 'rotate-180' : ''
+              }`}
             />
           </button>
         </div>
         <div
           id="main-nav-links"
-          className={`app-shell__links ${isMobileMenuOpen ? 'app-shell__links--open' : ''}`}
+          className={`${isMobileMenuOpen ? 'flex' : 'hidden'} flex-col gap-2 md:flex md:flex-row md:items-center md:gap-2`}
         >
           {/* Renderizado declarativo de rutas de navegación. */}
           {links.map((link) => (
