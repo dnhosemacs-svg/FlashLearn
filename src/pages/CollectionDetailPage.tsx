@@ -287,7 +287,7 @@ export default function CollectionDetailPage() {
 
           <CardCarbon
             title="Tarjetas de la coleccion"
-            description="Listado de flashcards creadas en esta coleccion."
+            description="Listado de flashcards creadas en esta colección."
           >
             <FlashcardList
               flashcards={filteredFlashcards}
