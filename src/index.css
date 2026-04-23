@@ -97,16 +97,51 @@ h4 {
   }
 
   .app-shell__nav-content {
-    @apply mx-auto flex w-full max-w-6xl flex-wrap items-center gap-8 px-5 py-5 md:px-8;
+    @apply mx-auto flex w-full max-w-5xl flex-col gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-8 md:px-8;
+  }
+
+  .app-shell__nav-top {
+    @apply flex items-center justify-between gap-3;
   }
 
   .app-shell__brand {
-    @apply mr-3 text-lg font-semibold;
+    @apply text-xl font-semibold;
     color: var(--fl-heading);
   }
 
+  .app-shell__menu-toggle {
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors;
+    color: var(--fl-text-soft);
+    border: 1px solid var(--fl-border);
+    background: color-mix(in oklab, var(--fl-surface-1) 82%, transparent);
+  }
+
+  .app-shell__menu-toggle:hover {
+    color: var(--fl-heading);
+    background-color: color-mix(in oklab, var(--fl-surface-accent) 55%, white);
+  }
+
+  .app-shell__menu-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: transform 160ms ease-in-out;
+    color: var(--fl-heading);
+  }
+
+  .app-shell__menu-icon--open {
+    transform: rotate(180deg);
+  }
+
+  .app-shell__links {
+    @apply hidden flex-col gap-2 md:flex md:flex-row md:items-center md:gap-2;
+  }
+
+  .app-shell__links--open {
+    @apply flex;
+  }
+
   .app-shell__link {
-    @apply rounded-md px-3 py-2 text-sm transition-colors;
+    @apply rounded-md px-3 py-2.5 text-sm transition-colors;
     color: var(--fl-text-soft);
   }
 
@@ -126,7 +161,7 @@ h4 {
   }
 
   .app-shell__content {
-    @apply mx-auto w-full max-w-6xl;
+    @apply mx-auto w-full max-w-5xl;
   }
 
   .page-shell {
