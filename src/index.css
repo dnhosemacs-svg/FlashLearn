@@ -2,7 +2,10 @@
 
 :root {
   --fl-bg: #f1f5f9;
+  --fl-surface-1: #ffffff;
   --fl-text: #1e293b;
+  --fl-text-soft: #334155;
+  --fl-text-muted: #475569;
   --fl-heading: #3730a3;
   --fl-link: #818cf8;
   --fl-link-hover: #a5b4fc;
@@ -14,10 +17,21 @@
   --fl-border-strong: #a5b4fc;
   --fl-surface: #eef2ff;
   --fl-surface-strong: #e0e7ff;
+  --fl-surface-accent: #c7d2fe;
   --fl-focus: #818cf8;
   --fl-radius: 0.4rem;
   --fl-muted: #475569;
   --fl-danger: #e11d48;
+  --fl-danger-hover: #f43f5e;
+  --fl-danger-bg: #ffe4e6;
+  --fl-danger-border: #fda4af;
+  --fl-danger-text: #9f1239;
+  --fl-success-bg: #dcfce7;
+  --fl-success-border: #86efac;
+  --fl-success-text: #166534;
+  --fl-warning-bg: #fef3c7;
+  --fl-warning-border: #fcd34d;
+  --fl-warning-text: #92400e;
 }
 
 * {
@@ -42,10 +56,13 @@ body {
 a {
   color: var(--fl-link);
   transition: color 150ms ease-in-out;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.15rem;
 }
 
 a:hover {
   color: var(--fl-link-hover);
+  text-decoration-color: currentColor;
 }
 
 a:focus-visible,
@@ -69,11 +86,14 @@ h4 {
 
 @layer components {
   .app-shell {
-    @apply min-h-screen bg-slate-100;
+    @apply min-h-screen;
+    background-color: var(--fl-bg);
   }
 
   .app-shell__nav {
-    @apply border-b border-slate-800 bg-transparent;
+    border-bottom: 1px solid var(--fl-border);
+    background: color-mix(in oklab, var(--fl-surface-1) 70%, transparent);
+    backdrop-filter: blur(4px);
   }
 
   .app-shell__nav-content {
@@ -81,15 +101,18 @@ h4 {
   }
 
   .app-shell__brand {
-    @apply mr-2 text-base font-semibold text-indigo-900;
+    @apply mr-2 text-base font-semibold;
+    color: var(--fl-heading);
   }
 
   .app-shell__link {
-    @apply text-sm text-slate-700 transition-colors hover:text-indigo-700;
+    @apply text-sm transition-colors;
+    color: var(--fl-text-soft);
   }
 
   .app-shell__link--active {
-    @apply text-indigo-700 underline underline-offset-4;
+    @apply underline underline-offset-4;
+    color: var(--fl-heading);
   }
 
   .app-shell__body {
@@ -113,7 +136,8 @@ h4 {
   }
 
   .page-subtitle {
-    @apply mt-2 text-slate-600;
+    @apply mt-2;
+    color: var(--fl-text-muted);
   }
 
   .section-stack {
@@ -125,7 +149,32 @@ h4 {
   }
 
   .text-muted {
-    @apply text-sm text-slate-600;
+    @apply text-sm;
+    color: var(--fl-text-muted);
+  }
+
+  .text-success {
+    color: var(--fl-success-text);
+  }
+
+  .text-danger {
+    color: var(--fl-danger-text);
+  }
+
+  .text-warning {
+    color: var(--fl-warning-text);
+  }
+
+  .surface-card {
+    background: var(--fl-surface-strong);
+    border: 1px solid var(--fl-border-strong);
+    border-radius: 0.75rem;
+  }
+
+  .surface-item {
+    background: var(--fl-surface-accent);
+    border: 1px solid var(--fl-border);
+    border-radius: 0.5rem;
   }
 }
 
@@ -176,7 +225,13 @@ h4 {
 }
 
 .fl-button-carbon.cds--btn--danger:hover {
-  background-color: #f43f5e;
+  background-color: var(--fl-danger-hover);
+}
+
+.fl-button-carbon.cds--btn:disabled,
+.fl-button-carbon.cds--btn[aria-disabled='true'] {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .fl-input-carbon .cds--label,
@@ -240,7 +295,7 @@ h4 {
 }
 
 .fl-modal-carbon .cds--modal-content {
-  color: #334155;
+  color: var(--fl-text-soft);
   font-size: 0.875rem;
   padding-top: 0.25rem;
 }
