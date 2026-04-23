@@ -31,7 +31,7 @@ export default function HomePage() {
           </Alert>
         ) : (
           <p className="text-muted">
-            Tienes <strong className="text-slate-800">{collections.length}</strong>{' '}
+            Tienes <strong className="text-[var(--fl-text)]">{collections.length}</strong>{' '}
             {collections.length === 1 ? 'colección' : 'colecciones'} en local.
           </p>
         )}

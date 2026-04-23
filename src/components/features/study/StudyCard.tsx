@@ -14,17 +14,17 @@ export default function StudyCard({ flashcard, isRevealed }: StudyCardProps) {
     >
       <div className="space-y-4">
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-500">Pregunta</p>
-          <p className="mt-1 text-base font-medium text-slate-800">{flashcard.question}</p>
+          <p className="text-xs uppercase tracking-wide text-[var(--fl-text-muted)]">Pregunta</p>
+          <p className="mt-1 text-base font-medium text-[var(--fl-text)]">{flashcard.question}</p>
         </div>
 
-        <div className="rounded-lg border border-indigo-200 bg-white p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-500">Respuesta</p>
+        <div className="surface-item p-4">
+          <p className="text-xs uppercase tracking-wide text-[var(--fl-text-muted)]">Respuesta</p>
           {/* La respuesta se protege hasta que el usuario decide revelarla. */}
           {isRevealed ? (
-            <p className="mt-1 text-base text-slate-700">{flashcard.answer}</p>
+            <p className="mt-1 text-base text-[var(--fl-text-soft)]">{flashcard.answer}</p>
           ) : (
-            <p className="mt-1 text-sm text-slate-400">Pulsa "Revelar respuesta" para verla.</p>
+            <p className="mt-1 text-sm text-[var(--fl-text-muted)]">Pulsa "Revelar respuesta" para verla.</p>
           )}
         </div>
       </div>

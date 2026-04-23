@@ -55,7 +55,7 @@ function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
       }
       className="h-full"
     >
-      <p className="text-xs text-slate-500">Actualizada: {collection.updatedAt}</p>
+      <p className="text-xs text-[var(--fl-text-muted)]">Actualizada: {collection.updatedAt}</p>
     </CardCarbon>
   )
 }

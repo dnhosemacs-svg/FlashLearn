@@ -110,7 +110,7 @@ export default function CollectionForm({
           onChange={(event) => setDescription(event.target.value)}
         />
 
-        {successMessage ? <p className="text-sm text-green-700">{successMessage}</p> : null}
+        {successMessage ? <p className="text-success text-sm">{successMessage}</p> : null}
 
         <div className="flex flex-wrap gap-2">
           <ButtonCarbon type="submit" isLoading={isSubmitting}>

@@ -162,7 +162,7 @@ export default function CollectionsPage() {
       <h1 className="page-title">{PAGE_TITLE}</h1>
       <p className="page-subtitle">{PAGE_SUBTITLE}</p>
       {network.isRefreshing ? (
-        <p className="mt-2 text-sm text-slate-600" role="status" aria-live="polite">
+        <p className="text-muted mt-2" role="status" aria-live="polite">
           Actualizando colecciones...
         </p>
       ) : null}

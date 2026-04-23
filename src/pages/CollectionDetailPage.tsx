@@ -224,7 +224,7 @@ export default function CollectionDetailPage() {
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">Coleccion: {collectionName}</p>
           {network.isRefreshing ? (
-            <p className="mt-1 text-sm text-slate-600" role="status" aria-live="polite">
+            <p className="text-muted mt-1" role="status" aria-live="polite">
               Actualizando tarjetas...
             </p>
           ) : null}

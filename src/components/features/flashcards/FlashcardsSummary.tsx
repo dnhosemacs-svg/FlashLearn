@@ -36,25 +36,25 @@ export default function FlashcardsSummary({
   if (network.status === 'error') {
     return (
       <CardCarbon title={title} description={description} variant="elevated">
-        <p className="text-sm text-red-700">{network.error ?? 'Error desconocido'}</p>
+        <p className="text-danger text-sm">{network.error ?? 'Error desconocido'}</p>
       </CardCarbon>
     )
   }
 
   return (
     <CardCarbon title={title} description={description} variant="elevated">
-      <dl className="grid gap-2 text-sm text-slate-700 sm:grid-cols-3">
-        <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-          <dt className="text-slate-600">Total</dt>
-          <dd className="mt-1 text-lg font-semibold text-slate-900">{stats.total}</dd>
+      <dl className="grid gap-2 text-sm text-[var(--fl-text-soft)] sm:grid-cols-3">
+        <div className="surface-item p-3">
+          <dt className="text-[var(--fl-text-muted)]">Total</dt>
+          <dd className="mt-1 text-lg font-semibold text-[var(--fl-text)]">{stats.total}</dd>
         </div>
-        <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-          <dt className="text-slate-600">Con tags</dt>
-          <dd className="mt-1 text-lg font-semibold text-slate-900">{stats.withTags}</dd>
+        <div className="surface-item p-3">
+          <dt className="text-[var(--fl-text-muted)]">Con tags</dt>
+          <dd className="mt-1 text-lg font-semibold text-[var(--fl-text)]">{stats.withTags}</dd>
         </div>
-        <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3">
-          <dt className="text-slate-600">Sin tags</dt>
-          <dd className="mt-1 text-lg font-semibold text-slate-900">{stats.withoutTags}</dd>
+        <div className="surface-item p-3">
+          <dt className="text-[var(--fl-text-muted)]">Sin tags</dt>
+          <dd className="mt-1 text-lg font-semibold text-[var(--fl-text)]">{stats.withoutTags}</dd>
         </div>
       </dl>
     </CardCarbon>

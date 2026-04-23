@@ -26,7 +26,7 @@ function FlashcardItem({ flashcard, onEdit, onDelete }: FlashcardItemProps) {
         </div>
       }
     >
-      <p className="text-sm text-slate-700">{flashcard.answer}</p>
+      <p className="text-sm text-[var(--fl-text-soft)]">{flashcard.answer}</p>
 
       {/* Se renderizan tags solo cuando existen para evitar ruido visual. */}
       {flashcard.tags?.length ? (

@@ -102,7 +102,7 @@ export default function FlashcardForm({
         />
 
         {successMessage ? (
-          <p className="text-sm text-green-700">{successMessage}</p>
+          <p className="text-success text-sm">{successMessage}</p>
         ) : null}
 
         <div className="flex flex-wrap gap-2">
