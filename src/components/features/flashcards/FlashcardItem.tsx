@@ -15,9 +15,10 @@ function FlashcardItem({ flashcard, onEdit, onDelete }: FlashcardItemProps) {
     <CardCarbon
       title={flashcard.question}
       description="Tarjeta de estudio"
+      variant="elevated"
       actions={
         <div className="flex gap-2">
-          <ButtonCarbon variant="ghost" size="sm" onClick={() => onEdit(flashcard.id)}>
+          <ButtonCarbon variant="secondary" size="sm" onClick={() => onEdit(flashcard.id)}>
             Editar
           </ButtonCarbon>
           <ButtonCarbon variant="danger" size="sm" onClick={() => onDelete(flashcard.id)}>

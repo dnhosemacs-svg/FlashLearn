@@ -16,7 +16,9 @@ function FlashcardList({ flashcards, onEditFlashcard, onDeleteFlashcard }: Flash
   }
 
   return (
-    <section className="grid gap-4">
+    <section
+      className="fl-list-stack fl-list-surface"
+    >
       {/* Cada tarjeta recibe handlers ya vinculados al caso de uso de la página. */}
       {flashcards.map((flashcard) => (
         <FlashcardItem

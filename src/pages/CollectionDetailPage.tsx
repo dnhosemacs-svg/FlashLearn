@@ -234,34 +234,35 @@ export default function CollectionDetailPage() {
         </Link>
       </div>
 
-      <div>
-        <SearchCarbon
-          id="flashcards-search"
-          label="Buscar flashcards"
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Buscar por pregunta, respuesta o tags..."
-        />
-      </div>
+      <div className="space-y-3 md:space-y-4">
+        <div>
+          <SearchCarbon
+            id="flashcards-search"
+            label="Buscar flashcards"
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Buscar por pregunta, respuesta o tags..."
+          />
+        </div>
 
-      <p className="text-muted">
-        Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
-      </p>
-      {actionError ? (
-        <Alert
-          variant="danger"
-          className="mt-1"
-          action={
-            lastFailedAction ? (
-              <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
-                Reintentar operacion
-              </ButtonCarbon>
-            ) : null
-          }
-        >
-          {actionError}
-        </Alert>
-      ) : null}
+        <p className="text-muted">
+          Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
+        </p>
+        {actionError ? (
+          <Alert
+            variant="danger"
+            action={
+              lastFailedAction ? (
+                <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
+                  Reintentar operacion
+                </ButtonCarbon>
+              ) : null
+            }
+          >
+            {actionError}
+          </Alert>
+        ) : null}
+      </div>
 
       <section className="section-stack mt-0">
         <div className="card-stack-1">
@@ -288,6 +289,7 @@ export default function CollectionDetailPage() {
           <CardCarbon
             title="Tarjetas de la coleccion"
             description="Listado de flashcards creadas en esta colección."
+            variant="bordered"
           >
             <FlashcardList
               flashcards={filteredFlashcards}

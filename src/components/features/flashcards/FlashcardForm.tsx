@@ -106,7 +106,10 @@ export default function FlashcardForm({
         ) : null}
 
         <div className="flex flex-wrap gap-2">
-          <ButtonCarbon type="submit">
+          <ButtonCarbon
+            type="submit"
+            className="fl-button-center-text"
+          >
             {submitLabel ?? (mode === 'edit' ? 'Guardar cambios' : 'Guardar flashcard')}
           </ButtonCarbon>
           {mode === 'edit' && onCancel ? (

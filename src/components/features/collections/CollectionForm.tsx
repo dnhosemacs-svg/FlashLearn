@@ -112,8 +112,12 @@ export default function CollectionForm({
 
         {successMessage ? <p className="text-success text-sm">{successMessage}</p> : null}
 
-        <div className="flex flex-wrap gap-2" style={{ paddingTop: '0.75rem' }}>
-          <ButtonCarbon type="submit" isLoading={isSubmitting}>
+        <div className="fl-form-actions-spaced flex flex-wrap gap-2">
+          <ButtonCarbon
+            type="submit"
+            isLoading={isSubmitting}
+            className="fl-button-center-text"
+          >
             {submitLabel ?? (mode === 'edit' ? 'Guardar cambios' : 'Guardar colección')}
           </ButtonCarbon>
           {mode === 'edit' && onCancel ? (
