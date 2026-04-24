@@ -116,7 +116,7 @@ h4 {
   .app-shell__brand {
     font-size: 1.25rem;
     line-height: 1.75rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--fl-heading);
   }
 
@@ -159,32 +159,6 @@ h4 {
     font-size: 0.875rem;
     transition: color 150ms ease-in-out, background-color 150ms ease-in-out;
     color: var(--fl-text-soft);
-  }
-
-  @media (min-width: 768px) {
-    .app-shell__nav-content {
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 2rem;
-      padding: 1.5rem 2rem;
-    }
-
-    .app-shell__nav-top {
-      justify-content: flex-start;
-      flex: none;
-    }
-
-    .app-shell__menu-toggle {
-      display: none;
-    }
-
-    .app-shell__links {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-    }
   }
 
   .app-shell__link:hover {
