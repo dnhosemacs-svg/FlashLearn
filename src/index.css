@@ -323,7 +323,8 @@ h4 {
 
 .fl-search-carbon .cds--search-close,
 .fl-search-carbon .cds--search-magnifier-icon {
-  top: 0.72rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .fl-input-carbon .cds--form-requirement {
