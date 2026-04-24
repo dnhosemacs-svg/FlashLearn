@@ -161,40 +161,41 @@ export default function CollectionsPage() {
     <main className="page-shell space-y-5 md:space-y-6">
       <h1 className="page-title">{PAGE_TITLE}</h1>
       <p className="page-subtitle">{PAGE_SUBTITLE}</p>
-      {network.isRefreshing ? (
-        <p className="text-muted" role="status" aria-live="polite">
-          Actualizando colecciones...
+      <div className="space-y-3 md:space-y-4">
+        {network.isRefreshing ? (
+          <p className="text-muted" role="status" aria-live="polite">
+            Actualizando colecciones...
+          </p>
+        ) : null}
+
+        <div>
+          <SearchCarbon
+            id="collections-search"
+            label="Buscar colecciones"
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Buscar colecciones por nombre o descripción..."
+          />
+        </div>
+
+        <p className="text-muted">
+          Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
         </p>
-      ) : null}
-
-      <div>
-        <SearchCarbon
-          id="collections-search"
-          label="Buscar colecciones"
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Buscar colecciones por nombre o descripción..."
-        />
+        {actionError ? (
+          <Alert
+            variant="danger"
+            action={
+              lastFailedAction ? (
+                <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
+                  Reintentar operación
+                </ButtonCarbon>
+              ) : null
+            }
+          >
+            {actionError}
+          </Alert>
+        ) : null}
       </div>
-
-      <p className="text-muted">
-        Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
-      </p>
-      {actionError ? (
-        <Alert
-          variant="danger"
-          className="mt-1"
-          action={
-            lastFailedAction ? (
-              <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
-                Reintentar operación
-              </ButtonCarbon>
-            ) : null
-          }
-        >
-          {actionError}
-        </Alert>
-      ) : null}
 
       <section className="section-stack mt-0">
         <div className="card-stack-1">
