@@ -44,15 +44,15 @@ export default function FlashcardsSummary({
   return (
     <CardCarbon title={title} description={description} variant="elevated">
       <dl className="grid gap-2 text-sm text-[var(--fl-text-soft)] sm:grid-cols-3">
-        <div className="surface-item p-3">
+        <div className="surface-item" style={{ padding: '0.5rem 0.75rem' }}>
           <dt className="text-[var(--fl-text-muted)]">Total</dt>
           <dd className="mt-1 text-lg font-semibold text-[var(--fl-text)]">{stats.total}</dd>
         </div>
-        <div className="surface-item p-3">
+        <div className="surface-item" style={{ padding: '0.5rem 0.75rem' }}>
           <dt className="text-[var(--fl-text-muted)]">Con tags</dt>
           <dd className="mt-1 text-lg font-semibold text-[var(--fl-text)]">{stats.withTags}</dd>
         </div>
-        <div className="surface-item p-3">
+        <div className="surface-item" style={{ padding: '0.5rem 0.75rem' }}>
           <dt className="text-[var(--fl-text-muted)]">Sin tags</dt>
           <dd className="mt-1 text-lg font-semibold text-[var(--fl-text)]">{stats.withoutTags}</dd>
         </div>
