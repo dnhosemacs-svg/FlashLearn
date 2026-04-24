@@ -25,7 +25,7 @@ function CollectionItem({ collection, onEdit, onDelete }: CollectionItemProps) {
   return (
     <CardCarbon
       title={collection.name}
-      description={collection.description || 'Sin descripcion'}
+      description={collection.description || 'Sin descripción'}
       actions={
         // Acciones de la tarjeta separadas por responsabilidad: abrir/editar/borrar.
         <div className="flex flex-wrap justify-end gap-2">

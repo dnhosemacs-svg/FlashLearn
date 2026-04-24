@@ -122,7 +122,7 @@ export default function CollectionForm({
           </ButtonCarbon>
           {mode === 'edit' && onCancel ? (
             <ButtonCarbon type="button" variant="ghost" onClick={onCancel}>
-              Cancelar edicion
+              Cancelar edición
             </ButtonCarbon>
           ) : null}
         </div>

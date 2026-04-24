@@ -15,7 +15,7 @@ import type { CreateFlashcardInput } from '../types/domain'
 
 const UUID_AT_END_REGEX =
   /([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
-const PAGE_TITLE = 'Detalle de coleccion'
+const PAGE_TITLE = 'Detalle de colección'
 
 export default function CollectionDetailPage() {
   const { collectionRef } = useParams<{ collectionRef: string }>()
@@ -29,7 +29,7 @@ export default function CollectionDetailPage() {
   const [lastFailedAction, setLastFailedAction] = useState<(() => Promise<void>) | null>(null)
   const navigate = useNavigate()
 
-  // Reutiliza patr?n de ejecuci?n con fallback + acci?n de reintento.
+  // Reutiliza patrón de ejecución con fallback + acción de reintento.
   const runWithRetry = useCallback(
     async (action: () => Promise<void>, fallbackMessage: string) => {
       try {
@@ -74,7 +74,7 @@ export default function CollectionDetailPage() {
   const normalizedQuery = searchQuery.trim().toLowerCase()
 
   const filteredFlashcards = useMemo(() => {
-    // B?squeda full-text simple sobre pregunta, respuesta y tags.
+    // Búsqueda full-text simple sobre pregunta, respuesta y tags.
     if (!normalizedQuery) return flashcards
 
     return flashcards.filter((card) => {
@@ -91,7 +91,7 @@ export default function CollectionDetailPage() {
   }, [flashcards, normalizedQuery])
 
   const flashcardsStats = useMemo(() => {
-    // Resumen m?nimo para dar contexto del set actual.
+    // Resumen mínimo para dar contexto del set actual.
     const total = flashcards.length
     const withTags = flashcards.filter((card) => (card.tags?.length ?? 0) > 0).length
     const withoutTags = total - withTags
@@ -164,8 +164,8 @@ export default function CollectionDetailPage() {
     return (
       <main className="page-shell space-y-5 md:space-y-6">
         <EmptyStateCarbon
-          title="Coleccion no valida"
-          description="No se encontro un identificador de coleccion en la URL."
+          title="Colección no válida"
+          description="No se encontró un identificador de colección en la URL."
         />
         <div className="mt-4">
           <ButtonCarbon variant="ghost" onClick={() => navigate('/collections')}>
@@ -254,7 +254,7 @@ export default function CollectionDetailPage() {
             action={
               lastFailedAction ? (
                 <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
-                  Reintentar operacion
+                  Reintentar operación
                 </ButtonCarbon>
               ) : null
             }
@@ -287,7 +287,7 @@ export default function CollectionDetailPage() {
           )}
 
           <CardCarbon
-            title="Tarjetas de la coleccion"
+            title="Tarjetas de la colección"
             description="Listado de flashcards creadas en esta colección."
             variant="bordered"
           >

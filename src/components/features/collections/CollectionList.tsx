@@ -19,7 +19,7 @@ function CollectionList({
     return (
       <EmptyStateCarbon
         title="No hay colecciones"
-        description="Crea tu primera coleccion para empezar a organizar tarjetas."
+        description="Crea tu primera colección para empezar a organizar tarjetas."
       />
     )
   }
