@@ -23,10 +23,10 @@ function StudyControls({
   return (
     // Controles de navegación del mazo y visibilidad de respuesta.
     <div className="flex flex-wrap gap-2">
-      <ButtonCarbon variant="secondary" onClick={onPrev} disabled={!canPrev}>Anterior</ButtonCarbon>
-      <ButtonCarbon onClick={onReveal}>{isRevealed ? 'Ocultar respuesta' : 'Revelar respuesta'}</ButtonCarbon>
-      <ButtonCarbon variant="secondary" onClick={onNext} disabled={!canNext}>Siguiente</ButtonCarbon>
-      <ButtonCarbon variant="ghost" onClick={onShuffle}>Barajar</ButtonCarbon>
+      <ButtonCarbon className="fl-button-center-text" variant="secondary" onClick={onPrev} disabled={!canPrev}>Anterior</ButtonCarbon>
+      <ButtonCarbon className="fl-button-center-text" onClick={onReveal}>{isRevealed ? 'Ocultar respuesta' : 'Revelar respuesta'}</ButtonCarbon>
+      <ButtonCarbon className="fl-button-center-text" variant="secondary" onClick={onNext} disabled={!canNext}>Siguiente</ButtonCarbon>
+      <ButtonCarbon className="fl-button-center-text" variant="ghost" onClick={onShuffle}>Barajar</ButtonCarbon>
     </div>
   )
 }

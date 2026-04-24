@@ -93,11 +93,15 @@ export default function StudyPage() {
 
   if (network.status === 'loading' && loadedFlashcards.length === 0) {
     return (
-      <main className="page-shell">
-        <h1 className="page-title">Estudio</h1>
-        <p className="page-subtitle">Modo estudio</p>
-        <div className="mt-8 flex justify-center">
-          <SpinnerCarbon label="Cargando tarjetas" />
+      <main className="page-shell space-y-5 md:space-y-6">
+        <div style={{ width: '100%', maxWidth: '48rem', marginInline: 'auto' }}>
+          <h1 className="page-title">Estudio</h1>
+          <p className="page-subtitle">Modo estudio</p>
+          <div className="section-stack mt-0">
+            <div className="flex justify-center">
+              <SpinnerCarbon label="Cargando tarjetas" />
+            </div>
+          </div>
         </div>
       </main>
     )
@@ -105,87 +109,95 @@ export default function StudyPage() {
 
   if (network.status === 'error') {
     return (
-      <main className="page-shell">
-        <h1 className="page-title">Estudio</h1>
-        <p className="page-subtitle">Modo estudio</p>
-        <section className="section-stack">
-          <EmptyStateCarbon
-            title="No se pudieron cargar las tarjetas"
-            description={network.error ?? 'Error desconocido'}
-            action={
-              <ButtonCarbon type="button" onClick={() => void refresh()}>
-                Reintentar
-              </ButtonCarbon>
-            }
-          />
-        </section>
+      <main className="page-shell space-y-5 md:space-y-6">
+        <div style={{ width: '100%', maxWidth: '48rem', marginInline: 'auto' }}>
+          <h1 className="page-title">Estudio</h1>
+          <p className="page-subtitle">Modo estudio</p>
+          <section className="section-stack mt-0">
+            <EmptyStateCarbon
+              title="No se pudieron cargar las tarjetas"
+              description={network.error ?? 'Error desconocido'}
+              action={
+                <ButtonCarbon type="button" onClick={() => void refresh()}>
+                  Reintentar
+                </ButtonCarbon>
+              }
+            />
+          </section>
+        </div>
       </main>
     )
   }
 
   if (deck.length === 0) {
     return (
-      <main className="page-shell">
-        <h1 className="page-title">Estudio</h1>
-        <p className="page-subtitle">Modo estudio</p>
-        <section className="section-stack">
-          <EmptyStateCarbon
-            title="No hay tarjetas para estudiar"
-            description="Crea tarjetas en una colección para empezar."
-          />
-        </section>
+      <main className="page-shell space-y-5 md:space-y-6">
+        <div style={{ width: '100%', maxWidth: '48rem', marginInline: 'auto' }}>
+          <h1 className="page-title">Estudio</h1>
+          <p className="page-subtitle">Modo estudio</p>
+          <section className="section-stack mt-0">
+            <EmptyStateCarbon
+              title="No hay tarjetas para estudiar"
+              description="Crea tarjetas en una colección para empezar."
+            />
+          </section>
+        </div>
       </main>
     )
   }
 
   return (
-    <main className="page-shell">
-      <h1 className="page-title">Estudio</h1>
-      <p className="page-subtitle">Practica con tus flashcards</p>
+    <main className="page-shell space-y-5 md:space-y-6">
+      <div style={{ width: '100%', maxWidth: '48rem', marginInline: 'auto' }}>
+        <h1 className="page-title">Estudio</h1>
+        <p className="page-subtitle">Practica con tus flashcards</p>
 
-      <div className="mt-4 lg:mx-auto lg:max-w-3xl">
-        <FlashcardsSummary title="Resumen del mazo" description="Estadísticas globales de tus tarjetas." />
+        <section className="section-stack mt-0">
+          <FlashcardsSummary title="Resumen del mazo" description="Estadísticas globales de tus tarjetas." />
+
+          <p className="text-muted">
+            Progreso: {studyStats.current} / {studyStats.total} ({studyStats.progressPercent}%) ·{' '}
+            {studyStats.revealedLabel}
+          </p>
+
+          <div style={{ marginTop: '0.5rem' }}>
+            <SelectCarbon
+              id="study-collection-filter"
+              label="Colección"
+              value={selectedCollectionId}
+              onChange={(value) => {
+                // Cambiar colección reinicia avance y estado de revelado de la sesión.
+                setSelectedCollectionId(value)
+                setSessionOrder(null)
+                setCurrentIndex(0)
+                setIsRevealed(false)
+              }}
+              options={[
+                { value: 'all', label: 'Todas las colecciones' },
+                ...collections.map((c) => ({ value: c.id, label: c.name })),
+              ]}
+            />
+          </div>
+
+          {currentFlashcard && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <StudyCard flashcard={currentFlashcard} isRevealed={isRevealed} />
+            </div>
+          )}
+
+          <div style={{ marginTop: '0.5rem' }}>
+            <StudyControls
+              onPrev={handlePrev}
+              onNext={handleNext}
+              onReveal={handleReveal}
+              onShuffle={handleShuffle}
+              canPrev={effectiveIndex > 0}
+              canNext={effectiveIndex < deck.length - 1}
+              isRevealed={isRevealed}
+            />
+          </div>
+        </section>
       </div>
-
-      <section className="section-stack lg:mx-auto lg:max-w-3xl">
-        <p className="text-muted">
-          Progreso: {studyStats.current} / {studyStats.total} ({studyStats.progressPercent}%) ·{' '}
-          {studyStats.revealedLabel}
-        </p>
-
-        <div className="mt-4 lg:mx-auto lg:max-w-3xl">
-          <SelectCarbon
-            id="study-collection-filter"
-            label="Colección"
-            value={selectedCollectionId}
-            onChange={(value) => {
-              // Cambiar colección reinicia avance y estado de revelado de la sesión.
-              setSelectedCollectionId(value)
-              setSessionOrder(null)
-              setCurrentIndex(0)
-              setIsRevealed(false)
-            }}
-            options={[
-              { value: 'all', label: 'Todas las colecciones' },
-              ...collections.map((c) => ({ value: c.id, label: c.name })),
-            ]}
-          />
-        </div>
-
-        {currentFlashcard && (
-          <StudyCard flashcard={currentFlashcard} isRevealed={isRevealed} />
-        )}
-
-        <StudyControls
-          onPrev={handlePrev}
-          onNext={handleNext}
-          onReveal={handleReveal}
-          onShuffle={handleShuffle}
-          canPrev={effectiveIndex > 0}
-          canNext={effectiveIndex < deck.length - 1}
-          isRevealed={isRevealed}
-        />
-      </section>
     </main>
   )
 }

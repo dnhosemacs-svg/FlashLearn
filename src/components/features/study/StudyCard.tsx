@@ -18,7 +18,7 @@ export default function StudyCard({ flashcard, isRevealed }: StudyCardProps) {
           <p className="mt-1 text-base font-medium text-[var(--fl-text)]">{flashcard.question}</p>
         </div>
 
-        <div className="surface-item p-4">
+        <div className="surface-item" style={{ padding: '0.5rem 0.75rem' }}>
           <p className="text-xs uppercase tracking-wide text-[var(--fl-text-muted)]">Respuesta</p>
           {/* La respuesta se protege hasta que el usuario decide revelarla. */}
           {isRevealed ? (
