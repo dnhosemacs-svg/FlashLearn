@@ -25,7 +25,7 @@ function CollectionList({
   }
 
   return (
-    <section className="grid gap-4 md:grid-cols-2">
+    <section className="flex flex-col" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
       {/* Render de cada colección con callbacks delegados desde la página. */}
       {collections.map((collection) => (
         <CollectionItem

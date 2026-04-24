@@ -11,7 +11,12 @@ export default function AppShell({ children }: AppShellProps) {
     <div className="app-shell">
       <MainNav />
       <div className="app-shell__body">
-        <div className="app-shell__content">{children}</div>
+        <div
+          className="app-shell__content"
+          style={{ width: '100%', maxWidth: '64rem', marginInline: 'auto' }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   )

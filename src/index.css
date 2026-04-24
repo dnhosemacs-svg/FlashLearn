@@ -103,7 +103,7 @@ h4 {
     max-width: 64rem;
     flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem 1.25rem;
   }
 
   .app-shell__nav-top {
@@ -193,12 +193,12 @@ h4 {
   }
 
   .page-subtitle {
-    @apply mt-2;
+    @apply mt-1;
     color: var(--fl-text-muted);
   }
 
   .section-stack {
-    @apply mt-8 space-y-6;
+    @apply mt-7 space-y-5 md:space-y-6;
   }
 
   .card-grid-2 {
@@ -206,7 +206,7 @@ h4 {
   }
 
   .card-stack-1 {
-    @apply grid items-start gap-6;
+    @apply grid items-start gap-5 md:gap-6;
   }
 
   .text-muted {

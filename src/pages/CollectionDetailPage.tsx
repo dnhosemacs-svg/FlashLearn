@@ -162,7 +162,7 @@ export default function CollectionDetailPage() {
 
   if (!collectionId) {
     return (
-      <main className="page-shell">
+      <main className="page-shell space-y-5 md:space-y-6">
         <EmptyStateCarbon
           title="Coleccion no valida"
           description="No se encontro un identificador de coleccion en la URL."
@@ -178,14 +178,14 @@ export default function CollectionDetailPage() {
 
   if (network.status === 'loading' && flashcards.length === 0) {
     return (
-      <main className="page-shell">
+      <main className="page-shell space-y-5 md:space-y-6">
         <div className="page-header">
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <Link to="/collections">
             <ButtonCarbon variant="ghost">Volver</ButtonCarbon>
           </Link>
         </div>
-        <div className="mt-6 space-y-3">
+        <div className="space-y-3">
           <SkeletonCarbon className="h-10 w-full" />
           <SkeletonCarbon className="h-24 w-full" />
           <SkeletonCarbon className="h-24 w-full" />
@@ -197,7 +197,7 @@ export default function CollectionDetailPage() {
 
   if (network.status === 'error') {
     return (
-      <main className="page-shell">
+      <main className="page-shell space-y-5 md:space-y-6">
         <div className="page-header">
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <Link to="/collections">
@@ -218,13 +218,13 @@ export default function CollectionDetailPage() {
   }
 
   return (
-    <main className="page-shell">
+    <main className="page-shell space-y-5 md:space-y-6">
       <div className="page-header">
         <div>
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">Coleccion: {collectionName}</p>
           {network.isRefreshing ? (
-            <p className="text-muted mt-1" role="status" aria-live="polite">
+            <p className="text-muted" role="status" aria-live="polite">
               Actualizando tarjetas...
             </p>
           ) : null}
@@ -234,7 +234,7 @@ export default function CollectionDetailPage() {
         </Link>
       </div>
 
-      <div className="mt-4">
+      <div>
         <SearchCarbon
           id="flashcards-search"
           label="Buscar flashcards"
@@ -244,13 +244,13 @@ export default function CollectionDetailPage() {
         />
       </div>
 
-      <p className="mt-2 text-muted">
+      <p className="text-muted">
         Total: {flashcardsStats.total} | Con tags: {flashcardsStats.withTags} | Sin tags: {flashcardsStats.withoutTags}.
       </p>
       {actionError ? (
         <Alert
           variant="danger"
-          className="mt-3"
+          className="mt-1"
           action={
             lastFailedAction ? (
               <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
@@ -263,7 +263,7 @@ export default function CollectionDetailPage() {
         </Alert>
       ) : null}
 
-      <section className="section-stack">
+      <section className="section-stack mt-0">
         <div className="card-stack-1">
           {editingFlashcard ? (
             <FlashcardForm

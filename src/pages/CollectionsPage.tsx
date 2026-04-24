@@ -127,10 +127,10 @@ export default function CollectionsPage() {
 
   if (network.status === 'loading' && collections.length === 0) {
     return (
-      <main className="page-shell">
+      <main className="page-shell space-y-5 md:space-y-6">
         <h1 className="page-title">{PAGE_TITLE}</h1>
         <p className="page-subtitle">{PAGE_SUBTITLE}</p>
-        <section className="section-stack mt-6">
+        <section className="section-stack mt-0">
           <CollectionListSkeleton count={4} />
         </section>
       </main>
@@ -139,10 +139,10 @@ export default function CollectionsPage() {
 
   if (network.status === 'error') {
     return (
-      <main className="page-shell">
+      <main className="page-shell space-y-5 md:space-y-6">
         <h1 className="page-title">{PAGE_TITLE}</h1>
         <p className="page-subtitle">{PAGE_SUBTITLE}</p>
-        <section className="section-stack">
+        <section className="section-stack mt-0">
           <EmptyStateCarbon
             title="No se pudieron cargar las colecciones"
             description={network.error ?? 'Error desconocido'}
@@ -158,16 +158,16 @@ export default function CollectionsPage() {
   }
 
   return (
-    <main className="page-shell">
+    <main className="page-shell space-y-5 md:space-y-6">
       <h1 className="page-title">{PAGE_TITLE}</h1>
       <p className="page-subtitle">{PAGE_SUBTITLE}</p>
       {network.isRefreshing ? (
-        <p className="text-muted mt-2" role="status" aria-live="polite">
+        <p className="text-muted" role="status" aria-live="polite">
           Actualizando colecciones...
         </p>
       ) : null}
 
-      <div className="mt-4">
+      <div>
         <SearchCarbon
           id="collections-search"
           label="Buscar colecciones"
@@ -177,13 +177,13 @@ export default function CollectionsPage() {
         />
       </div>
 
-      <p className="mt-2 text-muted">
+      <p className="text-muted">
         Total: {collectionsStats.total} | Con descripción: {collectionsStats.withDescription} | Sin descripción: {collectionsStats.withoutDescription}.
       </p>
       {actionError ? (
         <Alert
           variant="danger"
-          className="mt-3"
+          className="mt-1"
           action={
             lastFailedAction ? (
               <ButtonCarbon type="button" variant="secondary" size="sm" onClick={() => void lastFailedAction()}>
@@ -196,7 +196,7 @@ export default function CollectionsPage() {
         </Alert>
       ) : null}
 
-      <section className="section-stack">
+      <section className="section-stack mt-0">
         <div className="card-stack-1">
           {editingCollection ? (
             <CollectionForm
