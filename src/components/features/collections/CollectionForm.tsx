@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ButtonCarbon from '../../ui-carbon/ButtonCarbon'
 import CardCarbon from '../../ui-carbon/CardCarbon'
 import InputCarbon from '../../ui-carbon/InputCarbon'
@@ -7,6 +7,7 @@ import type { CreateCollectionInput } from '../../../types/domain'
 interface CollectionFormProps {
   onSubmit: (data: CreateCollectionInput) => void
   isSubmitting?: boolean
+  autoFocusName?: boolean
   mode?: 'create' | 'edit'
   initialValues?: {
     name: string
@@ -21,6 +22,7 @@ interface CollectionFormProps {
 export default function CollectionForm({
   onSubmit,
   isSubmitting = false,
+  autoFocusName = false,
   mode = 'create',
   initialValues,
   submitLabel,
@@ -32,6 +34,19 @@ export default function CollectionForm({
   const [description, setDescription] = useState(initialValues?.description ?? '')
   const [nameError, setNameError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+
+  useEffect(() => {
+    if (!autoFocusName) return
+
+    const frame = window.requestAnimationFrame(() => {
+      const input = document.getElementById('collection-name') as HTMLInputElement | null
+      input?.focus()
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frame)
+    }
+  }, [autoFocusName])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -96,6 +111,7 @@ export default function CollectionForm({
           value={name}
           error={nameError}
           placeholder="Ej: React Hooks"
+          autoFocus={autoFocusName}
           onChange={(event) => {
             setName(event.target.value)
             if (nameError) setNameError('')

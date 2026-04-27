@@ -216,6 +216,7 @@ export default function CollectionsPage() {
           ) : (
             <CollectionForm
               key="create-collection"
+              autoFocusName
               onSubmit={(data) =>
                 void runWithRetry(
                   async () => {
