@@ -305,6 +305,10 @@ h4 {
   padding-inline: 1rem !important;
 }
 
+.fl-modal-action-button {
+  min-width: 6.5rem;
+}
+
 .fl-list-stack {
   display: flex;
   flex-direction: column;
@@ -362,6 +366,7 @@ h4 {
   border: 1px solid var(--fl-border-strong);
   border-radius: 0.75rem;
   background: var(--fl-surface);
+  overflow: hidden;
   box-shadow: 0 20px 40px rgba(30, 41, 59, 0.16);
 }
 
@@ -388,13 +393,15 @@ h4 {
   padding-top: 0.25rem;
 }
 
-.fl-modal-carbon .cds--modal-footer {
-  border-top: 1px solid var(--fl-border);
-  background: var(--fl-surface);
+.fl-modal-carbon__footer {
+  border-top: 0;
+  background: inherit;
+  display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 1rem;
+  padding: 0.75rem 1rem 1rem;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
 }
 
 .fl-empty-state {

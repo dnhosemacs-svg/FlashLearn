@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
-import { ComposedModal, ModalBody, ModalFooter, ModalHeader } from '@carbon/react'
+import { ComposedModal, ModalBody, ModalHeader } from '@carbon/react'
 import { cn } from '../../lib/cn'
 import ButtonCarbon from './ButtonCarbon'
 
@@ -48,13 +48,13 @@ export default function ModalCarbon({
     >
       <ModalHeader title={title ?? 'Dialogo'} label={description ?? ''} />
       <ModalBody>{children}</ModalBody>
-      <ModalFooter>
+      <div className="fl-modal-carbon__footer">
         {footer ?? (
           <ButtonCarbon type="button" variant="ghost" onClick={onClose}>
             Cerrar
           </ButtonCarbon>
         )}
-      </ModalFooter>
+      </div>
     </ComposedModal>
   )
 }

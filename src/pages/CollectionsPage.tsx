@@ -239,20 +239,32 @@ export default function CollectionsPage() {
         open={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         title="Borrar colección"
-        description="Esta acción no se puede deshacer."
         size="sm"
         footer={
           <>
-            <ButtonCarbon type="button" variant="ghost" onClick={handleCloseDeleteModal}>
+            <ButtonCarbon
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="fl-modal-action-button fl-button-center-text"
+              onClick={handleCloseDeleteModal}
+            >
               Cancelar
             </ButtonCarbon>
-            <ButtonCarbon type="button" variant="danger" onClick={handleConfirmDeleteCollection}>
+            <ButtonCarbon
+              type="button"
+              variant="danger"
+              size="sm"
+              className="fl-modal-action-button fl-button-center-text"
+              onClick={handleConfirmDeleteCollection}
+            >
               Borrar
             </ButtonCarbon>
           </>
         }
       >
         <p>¿Seguro que quieres borrar esta colección?</p>
+        <p className="text-muted" style={{ marginTop: '0.5rem' }}>Esta acción no se puede deshacer.</p>
       </ModalCarbon>
     </main>
   )
